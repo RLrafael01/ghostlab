@@ -30,3 +30,4 @@ Aplicar `grill-with-docs` à proposta em `docs/PROJECT-BRIEF.md`, distinguindo o
 ## Comments
 
 - 28/10/2026: setup aprovado; primeira rodada de definição iniciada. A cancela automática continua como proposta, não como escolha confirmada.
+- 28/10/2026: entrevista retomada a pedido do usuário após publicar o GhostLab privado. Rodada sobre público, cancela e liberdade de montagem; aguardando respostas antes de fixar o escopo.
