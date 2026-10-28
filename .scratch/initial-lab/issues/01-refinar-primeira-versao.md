@@ -18,11 +18,13 @@ Aplicar `grill-with-docs` à proposta em `docs/PROJECT-BRIEF.md`, distinguindo o
 - Primeiro exemplo: cancela automática, confirmado após explicação do fluxo.
 - Editor textual com exemplos comentados e painel de leituras e estados junto ao terminal serial.
 - Permitir erros de montagem e mostrar falhas simuladas, inclusive possível curto, com explicações educativas sem impedir a experimentação.
+- Dano virtual persistente até substituição ou restauração; explicação sob demanda por “Por que isso aconteceu?”.
+- Navegador de computador com teclado e mouse; persistência local e exportação/importação de projetos, sem contas na primeira versão.
 
 ## Em aberto
 
 - Profundidade de aprendizado esperada.
-- Catálogo inicial de falhas simuladas e sua recuperação.
+- Catálogo inicial de falhas simuladas e critérios para representar dano.
 - Placa, linguagem e limites de fidelidade, a definir após alinhar a experiência e investigar a viabilidade técnica.
 
 ## Critérios de aceitação
@@ -39,3 +41,5 @@ Aplicar `grill-with-docs` à proposta em `docs/PROJECT-BRIEF.md`, distinguindo o
 - 28/10/2026: usuário confirmou público e bancada livre com exemplo editável (itens 1 e 3). Pediu esclarecimento sobre o item 2; tema do exemplo permanece pendente.
 - 28/10/2026: após esclarecimento, usuário aceitou a cancela automática como primeiro exemplo. Próxima rodada trata de código, erros de ligação e acompanhamento da execução.
 - 28/10/2026: usuário aceitou editor textual e painel; esclareceu que erros devem poder acontecer e ter consequências observáveis. Termo “falha simulada” registrado em GLOSSARY.md. Recuperação e catálogo de falhas seguem em aberto.
+- 28/10/2026: usuário confirmou dano virtual persistente e explicação sob demanda. Apuração técnica delegada conforme `grilling`: execução de firmware, placa inicial e limites do modelo elétrico.
+- 28/10/2026: usuário confirmou computador primeiro e armazenamento local com exportação/importação. Investigação registrada em docs/TECHNICAL-FEASIBILITY.md; recomendação técnica aguarda decisão e validação prática.

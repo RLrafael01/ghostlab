@@ -18,6 +18,10 @@ Permitir montar, programar e experimentar circuitos com um microcontrolador virt
 - Programação em editor de código textual, com exemplos comentados.
 - Painel com leituras dos sensores e estados dos componentes, além do terminal serial.
 - Aprender com erros: permitir executar montagens incorretas, observar consequências simuladas e receber explicações. Avisos de montagem não devem impedir a experimentação.
+- Quando a falha representar dano, o componente permanece marcado como danificado e sem funcionar até substituição ou restauração da simulação.
+- Explicação sob demanda pelo botão “Por que isso aconteceu?”, revelando causa e sugestão de correção após o efeito observável.
+- Primeira versão para navegador de computador, com teclado e mouse.
+- Projetos salvos localmente no navegador, com exportação/importação de arquivo para compartilhar; sem contas na primeira versão.
 
 ## Recorte inicial proposto
 
@@ -37,7 +41,7 @@ O usuário conecta o sensor e o servo a pinos compatíveis, executa firmware sup
 
 As ligações precisam influenciar os sinais usados pelo firmware. Cada componente terá um contrato explícito de comportamento e limitações. Não apresentar animações predefinidas como execução de firmware nem afirmar precisão elétrica sem validação.
 
-As falhas simuladas fazem parte da experiência: um possível curto deve poder ser experimentado e ter efeitos observáveis e explicáveis, em vez de apenas bloquear a execução. O usuário deve conseguir comparar montagens corretas e incorretas. O catálogo inicial de falhas, seus efeitos e a forma de recuperação ainda precisam ser definidos; representar dano não implica prever com precisão danos físicos reais.
+As falhas simuladas fazem parte da experiência: um possível curto deve poder ser experimentado e ter efeitos observáveis e explicáveis, em vez de apenas bloquear a execução. O usuário deve conseguir comparar montagens corretas e incorretas. O catálogo inicial e os efeitos de cada falha ainda precisam ser definidos; representar dano não implica prever com precisão danos físicos reais. Nos casos que representam dano, a recuperação exige substituição ou restauração, conforme confirmado acima.
 
 ## Fora da primeira entrega proposta
 
@@ -45,11 +49,13 @@ Simulação analógica de propósito geral, projeto de PCB, múltiplas famílias
 
 ## Decisões pendentes
 
-1. Catálogo inicial de falhas simuladas e recuperação de componentes afetados.
+1. Catálogo inicial de falhas simuladas e critérios para representar dano.
 2. Microcontrolador e linguagem da primeira versão.
 3. Motor de execução: avaliar emulação existente, licenças, compilação e custo de integração.
 4. Fidelidade elétrica necessária para o primeiro circuito.
-5. Bibliotecas de 3D, editor e persistência.
+5. Bibliotecas de 3D, editor e mecanismo de persistência local.
+
+Investigação inicial: `docs/TECHNICAL-FEASIBILITY.md`. Arduino Uno com AVR8js e compilação em serviço próprio é uma recomendação ainda sujeita à decisão e prova de viabilidade.
 
 ## Maior risco
 
