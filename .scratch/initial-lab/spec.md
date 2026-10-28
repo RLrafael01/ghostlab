@@ -104,6 +104,14 @@ Outras placas, celular como alvo prioritário, simulação elétrica de propósi
 
 ## Further Notes
 
+### Apresentações e marcos de entrega
+
+Em 28/10/2026, o usuário definiu dois prazos: interface interativa na sexta-feira 30/10/2026 e V1 funcional na sexta-feira 06/11/2026, no fuso America/Sao_Paulo. O escopo funcional final permanece o aprovado acima.
+
+O primeiro marco permite uma prévia interativa: bancada, montagem visual, fios, área de código e cancela com comportamento demonstrativo claramente identificado. Nesse marco, editar código não equivale a executá-lo; a interface deve informar essa limitação. A verificação do primeiro marco observa as interações da prévia, sem usá-las como evidência de execução de firmware.
+
+O segundo marco deve cumprir os comportamentos funcionais e os testes definidos nesta especificação. O piloto de firmware será iniciado cedo e não bloqueará a interface. Sua integração substituirá o comportamento demonstrativo, mantendo os dados do projeto. Reservar 05/11 para integração, correções e ensaio; datas são metas que ainda exigem validação da velocidade de implementação.
+
 O escopo foi confirmado em 28/10/2026. A primeira entrega técnica é um sketch compilado controlando LED por botão na bancada 3D e emitindo serial. A implementação completa amplia esse caminho até montagem livre, componentes, falhas, persistência e exemplo da cancela.
 
 A ordem e a granularidade das tarefas são propostas para revisão antes de publicar os tickets. A escolha das bibliotecas de interface, 3D e persistência é uma decisão de implementação; não há aplicativo executável nem prova técnica realizada até aqui.

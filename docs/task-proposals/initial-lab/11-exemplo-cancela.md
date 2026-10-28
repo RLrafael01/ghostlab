@@ -1,5 +1,7 @@
 # 11 — Entregar a cancela editável com o ciclo completo
 
+> Versão substituída em 28/10/2026 pela [divisão por prazo](../deadline-plan/README.md). Preservada como histórico; não usar para publicar tickets.
+
 Status: draft
 Blocked by: 05, 06, 08, 09, 10
 

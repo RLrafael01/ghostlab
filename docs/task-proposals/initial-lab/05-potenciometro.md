@@ -1,5 +1,7 @@
 # 05 — Controlar uma entrada analógica por potenciômetro
 
+> Versão substituída em 28/10/2026 pela [divisão por prazo](../deadline-plan/README.md). Preservada como histórico; não usar para publicar tickets.
+
 Status: draft
 Blocked by: 04
 

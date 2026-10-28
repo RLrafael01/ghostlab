@@ -4,7 +4,9 @@ Monte circuitos, programe um microcontrolador e experimente seu funcionamento no
 
 ## Estado do projeto
 
-Escopo da V1 aprovado e especificação publicada no rastreador local. Ainda não existe aplicativo executável. Arduino Uno, C++ e compilação em serviço próprio estão definidos; a integração e a escolha das bibliotecas serão validadas na primeira entrega técnica. A divisão em tarefas aguarda revisão.
+Escopo da V1 aprovado e especificação publicada no rastreador local. Ainda não existe aplicativo executável. Arduino Uno, C++ e compilação em serviço próprio estão definidos; a integração e a escolha das bibliotecas serão validadas na prova técnica. A divisão revisada por prazo aguarda revisão.
+
+Metas: **30/10/2026**, interface 3D interativa com prévia identificada; **06/11/2026**, V1 funcional com firmware real. O piloto técnico começa cedo sem bloquear a primeira apresentação.
 
 ## Experiência proposta
 
@@ -20,7 +22,7 @@ Uma cancela automática: um objeto se aproxima do sensor, o firmware decide quan
 
 - [Escopo e decisões em aberto](docs/PROJECT-BRIEF.md)
 - [Especificação da V1](.scratch/initial-lab/spec.md)
-- [10 propostas de tarefas e dependências](docs/task-proposals/initial-lab/README.md)
+- [11 propostas de tarefas por prazo e dependências](docs/task-proposals/deadline-plan/README.md)
 - [Etapas propostas](docs/ROADMAP.md)
 - [Revisão final da primeira versão](docs/V1-REVIEW.md)
 - [Rascunho do setup das skills](docs/SKILL-SETUP-DRAFT.md)

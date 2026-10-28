@@ -1,5 +1,7 @@
 # 02 — Executar firmware real com botão, LED 3D e serial
 
+> Versão substituída em 28/10/2026 pela [divisão por prazo](../deadline-plan/README.md). Preservada como histórico; não usar para publicar tickets.
+
 Status: draft
 Blocked by: none
 

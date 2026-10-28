@@ -1,5 +1,7 @@
 # Divisão proposta — GhostLab V1
 
+> Versão substituída em 28/10/2026 pela [divisão por prazo](../deadline-plan/README.md). Preservada como histórico; não usar para publicar tickets.
+
 Status: aguardando aprovação da granularidade e dependências. Cada proposta tem seu próprio arquivo; ainda não são tickets publicados no rastreador.
 
 A numeração começa em 02 porque a tarefa 01 de planejamento já foi concluída. Dependências abaixo são somente os bloqueios diretos; as dependências transitivas não são repetidas.

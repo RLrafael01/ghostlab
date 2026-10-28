@@ -1,6 +1,16 @@
 # Etapas propostas
 
-Escopo aprovado; especificação em `.scratch/initial-lab/spec.md`. Divisão detalhada em `docs/task-proposals/initial-lab/README.md`, aguardando revisão antes da publicação dos tickets.
+Escopo aprovado; especificação em `.scratch/initial-lab/spec.md`. Divisão vigente por prazo em `docs/task-proposals/deadline-plan/README.md`, aguardando revisão antes da publicação dos tickets. A divisão anterior foi preservada como histórico.
+
+## Marcos solicitados
+
+- **30/10/2026:** interface 3D interativa com bancada, componentes, fios, editor e prévia da cancela identificada; demonstração independente da compilação.
+- **06/11/2026:** V1 funcional com execução real do programa, catálogo aprovado, falhas, dano/recuperação e projetos locais.
+- **05/11/2026:** meta para integração e ensaio antes da apresentação final.
+
+A prova de compilação e emulação começa cedo, sem depender da entrega da interface. O prazo final é uma meta ambiciosa e será reavaliado pelos resultados técnicos; não há implementação concluída até aqui.
+
+## Caminho funcional
 
 1. **Alinhar o produto:** concluído; revisão final aprovada e spec publicada. Revisar as propostas de tarefas para iniciar implementação.
 2. **Provar a execução:** com Uno e C++ já aprovados, demonstrar firmware compilado controlando um LED a partir de um botão na cena 3D, com terminal serial; registrar licença e limitações da solução.
