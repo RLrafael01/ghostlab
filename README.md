@@ -4,7 +4,7 @@ Monte circuitos, programe um microcontrolador e experimente seu funcionamento no
 
 ## Estado do projeto
 
-Escopo da V1 aprovado e especificação publicada no rastreador local. Ainda não existe aplicativo executável. Arduino Uno, C++ e compilação em serviço próprio estão definidos; a integração e a escolha das bibliotecas serão validadas na prova técnica. A divisão revisada por prazo aguarda revisão.
+Escopo da V1 aprovado e especificação publicada no rastreador local. Ainda não existe aplicativo executável. Arduino Uno, C++ e compilação em serviço próprio estão definidos; a integração e a escolha das bibliotecas serão validadas na prova técnica. A divisão por prazo foi aprovada e os tickets locais foram publicados.
 
 Metas: **30/10/2026**, interface 3D interativa com prévia identificada; **06/11/2026**, V1 funcional com firmware real. O piloto técnico começa cedo sem bloquear a primeira apresentação.
 
@@ -22,7 +22,8 @@ Uma cancela automática: um objeto se aproxima do sensor, o firmware decide quan
 
 - [Escopo e decisões em aberto](docs/PROJECT-BRIEF.md)
 - [Especificação da V1](.scratch/initial-lab/spec.md)
-- [11 propostas de tarefas por prazo e dependências](docs/task-proposals/deadline-plan/README.md)
+- [Plano por prazo e dependências](docs/task-proposals/deadline-plan/README.md)
+- [Tickets de implementação](.scratch/initial-lab/issues/)
 - [Etapas propostas](docs/ROADMAP.md)
 - [Revisão final da primeira versão](docs/V1-REVIEW.md)
 - [Rascunho do setup das skills](docs/SKILL-SETUP-DRAFT.md)
@@ -37,4 +38,4 @@ Fluxo proposto: `setup-matt-pocock-skills` → `grill-with-docs` → `to-spec` �
 
 Setup concluído: tarefas em Markdown local em `.scratch/`, instruções em `AGENTS.md` e regras em `docs/agents/`. Nenhum framework GSD foi instalado.
 
-Planejamento concluído: [definir a primeira versão](.scratch/initial-lab/issues/01-refinar-primeira-versao.md). Próximo passo: revisar a divisão proposta para publicar os tickets de implementação.
+Planejamento concluído: [definir a primeira versão](.scratch/initial-lab/issues/01-refinar-primeira-versao.md). Divisão aprovada e tickets publicados; as tarefas 02 (bancada) e 05 (piloto de firmware) podem começar sem bloqueios.

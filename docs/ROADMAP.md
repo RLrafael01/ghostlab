@@ -1,6 +1,6 @@
 # Etapas propostas
 
-Escopo aprovado; especificação em `.scratch/initial-lab/spec.md`. Divisão vigente por prazo em `docs/task-proposals/deadline-plan/README.md`, aguardando revisão antes da publicação dos tickets. A divisão anterior foi preservada como histórico.
+Escopo aprovado; especificação em `.scratch/initial-lab/spec.md`. Divisão vigente por prazo em `docs/task-proposals/deadline-plan/README.md`, aprovada e com tickets publicados em `.scratch/initial-lab/issues/`. A divisão anterior foi preservada como histórico.
 
 ## Marcos solicitados
 
@@ -12,7 +12,7 @@ A prova de compilação e emulação começa cedo, sem depender da entrega da in
 
 ## Caminho funcional
 
-1. **Alinhar o produto:** concluído; revisão final aprovada e spec publicada. Revisar as propostas de tarefas para iniciar implementação.
+1. **Alinhar o produto:** concluído; revisão final aprovada e spec publicada. Tickets aprovados e publicados; iniciar pelas tarefas sem bloqueios.
 2. **Provar a execução:** com Uno e C++ já aprovados, demonstrar firmware compilado controlando um LED a partir de um botão na cena 3D, com terminal serial; registrar licença e limitações da solução.
 3. **Integrar uma cena mínima:** refletir o estado da saída em um objeto 3D e enviar uma interação da cena ao simulador.
 4. **Adicionar montagem:** componentes com pinos identificados, fios e topologia que determine os sinais efetivamente recebidos.

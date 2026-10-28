@@ -2,7 +2,7 @@
 
 Status: open
 Readiness: ready-for-agent
-Escopo e verificação aprovados pelo usuário em 28/10/2026. Implementação aguarda revisão da divisão em tarefas. Rastreador: Markdown local; sem etiquetas de triage configuradas.
+Escopo e verificação aprovados pelo usuário em 28/10/2026. Divisão em tarefas aprovada e tickets publicados em 28/10/2026. Rastreador: Markdown local; sem etiquetas de triage configuradas.
 
 ## Problem Statement
 
@@ -114,4 +114,4 @@ O segundo marco deve cumprir os comportamentos funcionais e os testes definidos 
 
 O escopo foi confirmado em 28/10/2026. A primeira entrega técnica é um sketch compilado controlando LED por botão na bancada 3D e emitindo serial. A implementação completa amplia esse caminho até montagem livre, componentes, falhas, persistência e exemplo da cancela.
 
-A ordem e a granularidade das tarefas são propostas para revisão antes de publicar os tickets. A escolha das bibliotecas de interface, 3D e persistência é uma decisão de implementação; não há aplicativo executável nem prova técnica realizada até aqui.
+A ordem e a granularidade das tarefas por prazo foram aprovadas pelo usuário; tickets publicados no rastreador local. A escolha das bibliotecas de interface, 3D e persistência é uma decisão de implementação; não há aplicativo executável nem prova técnica realizada até aqui.

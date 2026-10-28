@@ -51,7 +51,7 @@ Simulação analógica de propósito geral, projeto de PCB, múltiplas famílias
 
 ## Decisões pendentes
 
-1. Revisão da divisão de tarefas por prazo antes de publicar os tickets de implementação: interface interativa em 30/10/2026 e V1 funcional em 06/11/2026, com integração em 05/11. Plano em `docs/task-proposals/deadline-plan/README.md`.
+1. Executar os tickets da divisão por prazo aprovada: interface interativa em 30/10/2026 e V1 funcional em 06/11/2026, com integração em 05/11. Plano em `docs/task-proposals/deadline-plan/README.md`.
 2. Validação prática de AVR8js, toolchain de compilação e modelos de componentes.
 3. Bibliotecas de 3D, editor e mecanismo de persistência local: escolhas de implementação a documentar conforme a prova técnica.
 

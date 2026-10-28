@@ -1,6 +1,6 @@
 # Entregas por prazo — GhostLab
 
-Status: proposta revisada aguardando aprovação das entregas e dependências.
+Status: divisão aprovada pelo usuário em 28/10/2026. Os 11 tickets foram publicados em `.scratch/initial-lab/issues/`; os arquivos desta pasta preservam as propostas revisadas.
 
 Timezone: America/Sao_Paulo. Primeira apresentação: sexta-feira, **30/10/2026**. Apresentação funcional: sexta-feira, **06/11/2026**. Substitui a divisão anterior de 10 propostas, preservada apenas como histórico.
 
@@ -46,4 +46,4 @@ As datas não criam bloqueios artificiais: 05 pode começar imediatamente; 11 de
 
 A prévia deve compartilhar os dados da montagem com a implementação funcional, mas manter seu comportamento demonstrativo separado e identificado. A ordem prioriza uma apresentação observável, sem transformar artefatos visuais em evidência de execução de firmware.
 
-Cada proposta é uma entrega demonstrável, com critérios no próprio arquivo. Revisar tamanho, dependências e necessidade de dividir/mesclar antes de publicar tickets locais. Nenhuma automação ou lembrete foi criado; as datas são apenas o plano de entrega.
+Cada tarefa é uma entrega demonstrável, com critérios no próprio arquivo. Tamanho, dependências e divisão aprovados pelo usuário; tickets locais publicados. Nenhuma automação ou lembrete foi criado; as datas são apenas o plano de entrega.
