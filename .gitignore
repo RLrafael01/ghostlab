@@ -1,0 +1,13 @@
+# Dependencies and generated files
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+# Keep .agents/skills and project planning under version control.
