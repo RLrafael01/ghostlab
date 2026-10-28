@@ -20,6 +20,7 @@ Uma cancela automática: um objeto se aproxima do sensor, o firmware decide quan
 
 - [Escopo e decisões em aberto](docs/PROJECT-BRIEF.md)
 - [Etapas propostas](docs/ROADMAP.md)
+- [Revisão final da primeira versão](docs/V1-REVIEW.md)
 - [Rascunho do setup das skills](docs/SKILL-SETUP-DRAFT.md)
 - [Origem e licença das skills](THIRD_PARTY_NOTICES.md)
 - [Histórico de uso das skills](docs/SKILL-USAGE.md)

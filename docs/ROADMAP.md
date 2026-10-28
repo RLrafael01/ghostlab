@@ -2,8 +2,8 @@
 
 Plano preliminar; transformar em especificação e tarefas após refinamento.
 
-1. **Alinhar o produto:** definir usuário inicial, experiência da cancela e limites de fidelidade.
-2. **Provar a execução:** escolher uma placa e demonstrar firmware acionando uma saída a partir de uma entrada simulada; registrar licença e limitações da solução.
+1. **Alinhar o produto:** concluir a revisão final em `docs/V1-REVIEW.md`, depois publicar spec e tarefas.
+2. **Provar a execução:** com Uno e C++ já aprovados, demonstrar firmware compilado controlando um LED a partir de um botão na cena 3D, com terminal serial; registrar licença e limitações da solução.
 3. **Integrar uma cena mínima:** refletir o estado da saída em um objeto 3D e enviar uma interação da cena ao simulador.
 4. **Adicionar montagem:** componentes com pinos identificados, fios e topologia que determine os sinais efetivamente recebidos.
 5. **Completar a cancela:** editor, sensor, servo, terminal e exemplo pronto para experimentar.

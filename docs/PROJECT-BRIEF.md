@@ -1,6 +1,6 @@
 # Proposta inicial
 
-Status: rascunho para refinamento, baseado na conversa de 28/10/2026.
+Status: decisões consolidadas em 28/10/2026; revisão final do recorte antes da especificação.
 
 ## Problema e público
 
@@ -22,10 +22,12 @@ Permitir montar, programar e experimentar circuitos com um microcontrolador virt
 - Explicação sob demanda pelo botão “Por que isso aconteceu?”, revelando causa e sugestão de correção após o efeito observável.
 - Primeira versão para navegador de computador, com teclado e mouse.
 - Projetos salvos localmente no navegador, com exportação/importação de arquivo para compartilhar; sem contas na primeira versão.
+- Primeira placa: Arduino Uno; linguagem C++ no estilo Arduino; compilação em serviço próprio com conexão à internet.
+- Falhas com consequências funcionais e visuais baseadas em regras educativas explícitas e limites documentados.
 
 ## Recorte inicial proposto
 
-- Um modelo de microcontrolador, a escolher após investigação técnica.
+- Arduino Uno como único modelo de microcontrolador inicial; integração AVR8js e compilação precisam ser validadas na prova técnica.
 - Bancada 3D com navegação, seleção de componentes e conexões entre pinos.
 - Catálogo pequeno: LED, resistor, botão, potenciômetro, sensor de distância e servo.
 - Editor de código, execução com início/parada/reset e terminal serial.
@@ -49,13 +51,11 @@ Simulação analógica de propósito geral, projeto de PCB, múltiplas famílias
 
 ## Decisões pendentes
 
-1. Catálogo inicial de falhas simuladas e critérios para representar dano.
-2. Microcontrolador e linguagem da primeira versão.
-3. Motor de execução: avaliar emulação existente, licenças, compilação e custo de integração.
-4. Fidelidade elétrica necessária para o primeiro circuito.
-5. Bibliotecas de 3D, editor e mecanismo de persistência local.
+1. Revisão final do catálogo inicial de falhas e dos comportamentos de aceitação em `docs/V1-REVIEW.md`.
+2. Validação prática de AVR8js, toolchain de compilação e modelos de componentes.
+3. Bibliotecas de 3D, editor e mecanismo de persistência local: escolhas de implementação a documentar conforme a prova técnica.
 
-Investigação inicial: `docs/TECHNICAL-FEASIBILITY.md`. Arduino Uno com AVR8js e compilação em serviço próprio é uma recomendação ainda sujeita à decisão e prova de viabilidade.
+Investigação inicial: `docs/TECHNICAL-FEASIBILITY.md`. Uno com C++ e compilação em serviço próprio foi aprovado pelo usuário; viabilidade prática ainda não foi demonstrada.
 
 ## Maior risco
 

@@ -20,12 +20,12 @@ Aplicar `grill-with-docs` à proposta em `docs/PROJECT-BRIEF.md`, distinguindo o
 - Permitir erros de montagem e mostrar falhas simuladas, inclusive possível curto, com explicações educativas sem impedir a experimentação.
 - Dano virtual persistente até substituição ou restauração; explicação sob demanda por “Por que isso aconteceu?”.
 - Navegador de computador com teclado e mouse; persistência local e exportação/importação de projetos, sem contas na primeira versão.
+- Uno com C++ e compilação em serviço próprio; falhas educativas com consequências funcionais e visuais e limites documentados.
 
 ## Em aberto
 
-- Profundidade de aprendizado esperada.
-- Catálogo inicial de falhas simuladas e critérios para representar dano.
-- Placa, linguagem e limites de fidelidade, a definir após alinhar a experiência e investigar a viabilidade técnica.
+- Revisão final do catálogo de falhas, recuperação e comportamentos verificáveis em docs/V1-REVIEW.md.
+- Integração e desempenho da execução de firmware a validar na prova técnica.
 
 ## Critérios de aceitação
 
@@ -43,3 +43,4 @@ Aplicar `grill-with-docs` à proposta em `docs/PROJECT-BRIEF.md`, distinguindo o
 - 28/10/2026: usuário aceitou editor textual e painel; esclareceu que erros devem poder acontecer e ter consequências observáveis. Termo “falha simulada” registrado em GLOSSARY.md. Recuperação e catálogo de falhas seguem em aberto.
 - 28/10/2026: usuário confirmou dano virtual persistente e explicação sob demanda. Apuração técnica delegada conforme `grilling`: execução de firmware, placa inicial e limites do modelo elétrico.
 - 28/10/2026: usuário confirmou computador primeiro e armazenamento local com exportação/importação. Investigação registrada em docs/TECHNICAL-FEASIBILITY.md; recomendação técnica aguarda decisão e validação prática.
+- 28/10/2026: Uno/C++ com compilação em serviço próprio e falhas educativas aprovados. Decisão registrada em ADR-0001 e recorte consolidado em docs/V1-REVIEW.md para revisão final antes da spec.

@@ -2,6 +2,8 @@
 
 Data: 28/10/2026. Investigação documental, sem implementação ou testes. Recomendação para decisão durante `grill-with-docs`, não uma arquitetura aprovada.
 
+Atualização da entrevista: o usuário aprovou Uno/C++, compilação em serviço próprio e falhas educativas com limites explícitos. AVR8js continua como candidato da prova técnica; desempenho e integração permanecem sem validação.
+
 ## Firmware da primeira placa
 
 Recomendação: iniciar a prova com Arduino Uno (ATmega328P) e AVR8js. O projeto é MIT e oferece emulação AVR em JavaScript para navegador e Node.js. Exige firmware compilado e integração dos componentes externos; modelos de circuito e falhas não vêm prontos. [Fonte: AVR8js](https://github.com/wokwi/avr8js).
