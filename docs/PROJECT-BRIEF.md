@@ -10,6 +10,12 @@ Pessoas que querem aprender e experimentar sistemas embarcados podem não ter mi
 
 Permitir montar, programar e experimentar circuitos com um microcontrolador virtual em um ambiente 3D no navegador. O objetivo de longo prazo inclui sistemas complexos; a primeira versão precisa demonstrar um circuito completo funcionando.
 
+## Decisões confirmadas em 28/10/2026
+
+- Público inicial: pessoas com algum conhecimento de programação que estão aprendendo eletrônica.
+- Bancada livre para montar projetos do zero e um exemplo pronto com circuito e código editáveis.
+- O tema do primeiro exemplo ainda está em aberto; a proposta de cancela precisa ser esclarecida ao usuário antes da escolha.
+
 ## Recorte inicial proposto
 
 - Um modelo de microcontrolador, a escolher após investigação técnica.
@@ -34,7 +40,7 @@ Simulação analógica de propósito geral, projeto de PCB, múltiplas famílias
 
 ## Decisões pendentes
 
-1. Prioridade: aprendizado iniciante ou prototipagem de usuários experientes?
+1. Tema do primeiro exemplo completo, considerando o público iniciante em eletrônica já confirmado.
 2. Microcontrolador e linguagem da primeira versão.
 3. Motor de execução: avaliar emulação existente, licenças, compilação e custo de integração.
 4. Fidelidade elétrica necessária para o primeiro circuito.
