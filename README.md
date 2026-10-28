@@ -4,7 +4,7 @@ Monte circuitos, programe um microcontrolador e experimente seu funcionamento no
 
 ## Estado do projeto
 
-Repositório inicial de planejamento. Ainda não existe aplicativo executável. Stack, microcontrolador e estratégia de execução de firmware serão definidos após uma prova de viabilidade.
+Escopo da V1 aprovado e especificação publicada no rastreador local. Ainda não existe aplicativo executável. Arduino Uno, C++ e compilação em serviço próprio estão definidos; a integração e a escolha das bibliotecas serão validadas na primeira entrega técnica. A divisão em tarefas aguarda revisão.
 
 ## Experiência proposta
 
@@ -19,6 +19,8 @@ Repositório inicial de planejamento. Ainda não existe aplicativo executável. 
 Uma cancela automática: um objeto se aproxima do sensor, o firmware decide quando abrir e um servo movimenta a cancela na cena. LEDs e um botão permitem ampliar o projeto.
 
 - [Escopo e decisões em aberto](docs/PROJECT-BRIEF.md)
+- [Especificação da V1](.scratch/initial-lab/spec.md)
+- [10 propostas de tarefas e dependências](docs/task-proposals/initial-lab/README.md)
 - [Etapas propostas](docs/ROADMAP.md)
 - [Revisão final da primeira versão](docs/V1-REVIEW.md)
 - [Rascunho do setup das skills](docs/SKILL-SETUP-DRAFT.md)
@@ -33,4 +35,4 @@ Fluxo proposto: `setup-matt-pocock-skills` → `grill-with-docs` → `to-spec` �
 
 Setup concluído: tarefas em Markdown local em `.scratch/`, instruções em `AGENTS.md` e regras em `docs/agents/`. Nenhum framework GSD foi instalado.
 
-Primeira tarefa em andamento: [definir a primeira versão](.scratch/initial-lab/issues/01-refinar-primeira-versao.md).
+Planejamento concluído: [definir a primeira versão](.scratch/initial-lab/issues/01-refinar-primeira-versao.md). Próximo passo: revisar a divisão proposta para publicar os tickets de implementação.

@@ -1,8 +1,8 @@
 # Etapas propostas
 
-Plano preliminar; transformar em especificação e tarefas após refinamento.
+Escopo aprovado; especificação em `.scratch/initial-lab/spec.md`. Divisão detalhada em `docs/task-proposals/initial-lab/README.md`, aguardando revisão antes da publicação dos tickets.
 
-1. **Alinhar o produto:** concluir a revisão final em `docs/V1-REVIEW.md`, depois publicar spec e tarefas.
+1. **Alinhar o produto:** concluído; revisão final aprovada e spec publicada. Revisar as propostas de tarefas para iniciar implementação.
 2. **Provar a execução:** com Uno e C++ já aprovados, demonstrar firmware compilado controlando um LED a partir de um botão na cena 3D, com terminal serial; registrar licença e limitações da solução.
 3. **Integrar uma cena mínima:** refletir o estado da saída em um objeto 3D e enviar uma interação da cena ao simulador.
 4. **Adicionar montagem:** componentes com pinos identificados, fios e topologia que determine os sinais efetivamente recebidos.

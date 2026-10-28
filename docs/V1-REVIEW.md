@@ -1,6 +1,6 @@
 # GhostLab V1 — revisão final do recorte
 
-Status: aguardando confirmação final do usuário. Este documento consolida a entrevista; não é a spec publicada no rastreador.
+Status: aprovado pelo usuário em 28/10/2026, incluindo catálogo de falhas, recuperação e comportamentos de verificação. Documento histórico da entrevista; a especificação vigente está em `.scratch/initial-lab/spec.md`.
 
 ## Experiência já confirmada
 

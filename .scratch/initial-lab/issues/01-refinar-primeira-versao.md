@@ -1,6 +1,6 @@
 # 01 — Definir público e experiência da primeira versão
 
-Status: in-progress
+Status: done
 Blocked by: none
 
 ## Objetivo
@@ -24,7 +24,7 @@ Aplicar `grill-with-docs` à proposta em `docs/PROJECT-BRIEF.md`, distinguindo o
 
 ## Em aberto
 
-- Revisão final do catálogo de falhas, recuperação e comportamentos verificáveis em docs/V1-REVIEW.md.
+- Nenhuma decisão de produto pendente para publicar a spec; revisão final aprovada pelo usuário.
 - Integração e desempenho da execução de firmware a validar na prova técnica.
 
 ## Critérios de aceitação
@@ -44,3 +44,4 @@ Aplicar `grill-with-docs` à proposta em `docs/PROJECT-BRIEF.md`, distinguindo o
 - 28/10/2026: usuário confirmou dano virtual persistente e explicação sob demanda. Apuração técnica delegada conforme `grilling`: execução de firmware, placa inicial e limites do modelo elétrico.
 - 28/10/2026: usuário confirmou computador primeiro e armazenamento local com exportação/importação. Investigação registrada em docs/TECHNICAL-FEASIBILITY.md; recomendação técnica aguarda decisão e validação prática.
 - 28/10/2026: Uno/C++ com compilação em serviço próprio e falhas educativas aprovados. Decisão registrada em ADR-0001 e recorte consolidado em docs/V1-REVIEW.md para revisão final antes da spec.
+- 28/10/2026: usuário confirmou o escopo final e autorizou especificação e divisão em tarefas. Critérios de planejamento atendidos: público, cancela, falhas, recuperação, persistência e verificação aprovados; riscos técnicos explicitados na investigação. Entrevista concluída.

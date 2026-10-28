@@ -1,6 +1,6 @@
 # Proposta inicial
 
-Status: decisões consolidadas em 28/10/2026; revisão final do recorte antes da especificação.
+Status: escopo aprovado em 28/10/2026. Especificação vigente: `.scratch/initial-lab/spec.md`.
 
 ## Problema e público
 
@@ -43,7 +43,7 @@ O usuário conecta o sensor e o servo a pinos compatíveis, executa firmware sup
 
 As ligações precisam influenciar os sinais usados pelo firmware. Cada componente terá um contrato explícito de comportamento e limitações. Não apresentar animações predefinidas como execução de firmware nem afirmar precisão elétrica sem validação.
 
-As falhas simuladas fazem parte da experiência: um possível curto deve poder ser experimentado e ter efeitos observáveis e explicáveis, em vez de apenas bloquear a execução. O usuário deve conseguir comparar montagens corretas e incorretas. O catálogo inicial e os efeitos de cada falha ainda precisam ser definidos; representar dano não implica prever com precisão danos físicos reais. Nos casos que representam dano, a recuperação exige substituição ou restauração, conforme confirmado acima.
+As falhas simuladas fazem parte da experiência: um possível curto deve poder ser experimentado e ter efeitos observáveis e explicáveis, em vez de apenas bloquear a execução. O usuário deve conseguir comparar montagens corretas e incorretas. O catálogo e os efeitos aprovados constam na especificação; representar dano não implica prever com precisão danos físicos reais. Nos casos que representam dano, a recuperação exige substituição ou restauração, conforme confirmado acima.
 
 ## Fora da primeira entrega proposta
 
@@ -51,7 +51,7 @@ Simulação analógica de propósito geral, projeto de PCB, múltiplas famílias
 
 ## Decisões pendentes
 
-1. Revisão final do catálogo inicial de falhas e dos comportamentos de aceitação em `docs/V1-REVIEW.md`.
+1. Revisão da divisão de tarefas antes de publicar os tickets de implementação.
 2. Validação prática de AVR8js, toolchain de compilação e modelos de componentes.
 3. Bibliotecas de 3D, editor e mecanismo de persistência local: escolhas de implementação a documentar conforme a prova técnica.
 

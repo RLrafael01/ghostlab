@@ -2,7 +2,7 @@
 
 Laboratório eletrônico virtual 3D para montar, programar e experimentar sistemas embarcados no navegador.
 
-Antes de alterar o projeto, leia `README.md` e `docs/PROJECT-BRIEF.md`. O escopo inicial é proposto; resolva as decisões abertas antes de implementar o comportamento correspondente.
+Antes de alterar o projeto, leia `README.md` e `.scratch/initial-lab/spec.md`, a especificação do escopo aprovado. Para contexto e riscos da proposta, consulte `docs/PROJECT-BRIEF.md`.
 
 ## Agent skills
 
