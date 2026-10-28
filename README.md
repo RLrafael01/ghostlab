@@ -22,10 +22,11 @@ Uma cancela automática: um objeto se aproxima do sensor, o firmware decide quan
 - [Etapas propostas](docs/ROADMAP.md)
 - [Rascunho do setup das skills](docs/SKILL-SETUP-DRAFT.md)
 - [Origem e licença das skills](THIRD_PARTY_NOTICES.md)
+- [Histórico de uso das skills](docs/SKILL-USAGE.md)
 
 ## Desenvolvimento com as skills do Matt Pocock
 
-As skills estão instaladas neste projeto em `.agents/skills/`. São arquivos locais versionados, com atualização manual. Ficarão disponíveis para o Codex no próximo turno.
+As skills estão disponíveis neste projeto em `.agents/skills/`. São arquivos locais versionados, com atualização manual. Cada aplicação deve ser registrada em `docs/SKILL-USAGE.md`.
 
 Fluxo proposto: `setup-matt-pocock-skills` → `grill-with-docs` → `to-spec` → `to-tickets` → `implement` (com TDD e revisão).
 

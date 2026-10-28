@@ -8,6 +8,10 @@ Antes de alterar o projeto, leia `README.md` e `docs/PROJECT-BRIEF.md`. O escopo
 
 As skills do Matt Pocock estão em `.agents/skills/`. Leia o `SKILL.md` correspondente antes de aplicar uma delas.
 
+### Registro de uso
+
+Ao aplicar qualquer skill do Matt Pocock, inclusive como parte de outra skill, registre a aplicação em `docs/SKILL-USAGE.md` seguindo suas convenções. Atualize o resultado ao concluir ou interromper a aplicação; ao retomar a mesma aplicação, atualize sua entrada.
+
 ### Issue tracker
 
 Specs e tarefas em Markdown local em `.scratch/`. Antes de criar, consultar ou atualizar tarefas, leia `docs/agents/issue-tracker.md`.
