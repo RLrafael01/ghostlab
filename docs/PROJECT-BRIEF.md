@@ -14,7 +14,7 @@ Permitir montar, programar e experimentar circuitos com um microcontrolador virt
 
 - Público inicial: pessoas com algum conhecimento de programação que estão aprendendo eletrônica.
 - Bancada livre para montar projetos do zero e um exemplo pronto com circuito e código editáveis.
-- O tema do primeiro exemplo ainda está em aberto; a proposta de cancela precisa ser esclarecida ao usuário antes da escolha.
+- Primeiro exemplo: cancela automática com sensor de distância e servo, com circuito e código editáveis.
 
 ## Recorte inicial proposto
 
@@ -40,7 +40,7 @@ Simulação analógica de propósito geral, projeto de PCB, múltiplas famílias
 
 ## Decisões pendentes
 
-1. Tema do primeiro exemplo completo, considerando o público iniciante em eletrônica já confirmado.
+1. Experiência de programação e comportamento diante de erros de montagem.
 2. Microcontrolador e linguagem da primeira versão.
 3. Motor de execução: avaliar emulação existente, licenças, compilação e custo de integração.
 4. Fidelidade elétrica necessária para o primeiro circuito.
