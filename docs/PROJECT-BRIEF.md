@@ -15,6 +15,9 @@ Permitir montar, programar e experimentar circuitos com um microcontrolador virt
 - Público inicial: pessoas com algum conhecimento de programação que estão aprendendo eletrônica.
 - Bancada livre para montar projetos do zero e um exemplo pronto com circuito e código editáveis.
 - Primeiro exemplo: cancela automática com sensor de distância e servo, com circuito e código editáveis.
+- Programação em editor de código textual, com exemplos comentados.
+- Painel com leituras dos sensores e estados dos componentes, além do terminal serial.
+- Aprender com erros: permitir executar montagens incorretas, observar consequências simuladas e receber explicações. Avisos de montagem não devem impedir a experimentação.
 
 ## Recorte inicial proposto
 
@@ -34,13 +37,15 @@ O usuário conecta o sensor e o servo a pinos compatíveis, executa firmware sup
 
 As ligações precisam influenciar os sinais usados pelo firmware. Cada componente terá um contrato explícito de comportamento e limitações. Não apresentar animações predefinidas como execução de firmware nem afirmar precisão elétrica sem validação.
 
+As falhas simuladas fazem parte da experiência: um possível curto deve poder ser experimentado e ter efeitos observáveis e explicáveis, em vez de apenas bloquear a execução. O usuário deve conseguir comparar montagens corretas e incorretas. O catálogo inicial de falhas, seus efeitos e a forma de recuperação ainda precisam ser definidos; representar dano não implica prever com precisão danos físicos reais.
+
 ## Fora da primeira entrega proposta
 
 Simulação analógica de propósito geral, projeto de PCB, múltiplas famílias de placas, instrumentos avançados, colaboração ao vivo e serviços pagos. São possibilidades futuras, sujeitas a validação.
 
 ## Decisões pendentes
 
-1. Experiência de programação e comportamento diante de erros de montagem.
+1. Catálogo inicial de falhas simuladas e recuperação de componentes afetados.
 2. Microcontrolador e linguagem da primeira versão.
 3. Motor de execução: avaliar emulação existente, licenças, compilação e custo de integração.
 4. Fidelidade elétrica necessária para o primeiro circuito.

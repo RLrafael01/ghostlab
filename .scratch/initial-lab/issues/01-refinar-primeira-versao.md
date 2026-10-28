@@ -16,11 +16,13 @@ Aplicar `grill-with-docs` à proposta em `docs/PROJECT-BRIEF.md`, distinguindo o
 - Público inicial com algum conhecimento de programação e aprendendo eletrônica.
 - Bancada livre e exemplo pronto, ambos editáveis.
 - Primeiro exemplo: cancela automática, confirmado após explicação do fluxo.
+- Editor textual com exemplos comentados e painel de leituras e estados junto ao terminal serial.
+- Permitir erros de montagem e mostrar falhas simuladas, inclusive possível curto, com explicações educativas sem impedir a experimentação.
 
 ## Em aberto
 
 - Profundidade de aprendizado esperada.
-- Experiência de programação e comportamento diante de erros de montagem.
+- Catálogo inicial de falhas simuladas e sua recuperação.
 - Placa, linguagem e limites de fidelidade, a definir após alinhar a experiência e investigar a viabilidade técnica.
 
 ## Critérios de aceitação
@@ -36,3 +38,4 @@ Aplicar `grill-with-docs` à proposta em `docs/PROJECT-BRIEF.md`, distinguindo o
 - 28/10/2026: entrevista retomada a pedido do usuário após publicar o GhostLab privado. Rodada sobre público, cancela e liberdade de montagem; aguardando respostas antes de fixar o escopo.
 - 28/10/2026: usuário confirmou público e bancada livre com exemplo editável (itens 1 e 3). Pediu esclarecimento sobre o item 2; tema do exemplo permanece pendente.
 - 28/10/2026: após esclarecimento, usuário aceitou a cancela automática como primeiro exemplo. Próxima rodada trata de código, erros de ligação e acompanhamento da execução.
+- 28/10/2026: usuário aceitou editor textual e painel; esclareceu que erros devem poder acontecer e ter consequências observáveis. Termo “falha simulada” registrado em GLOSSARY.md. Recuperação e catálogo de falhas seguem em aberto.
