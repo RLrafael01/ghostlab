@@ -1,39 +1,12 @@
 import * as T from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import "./style.css";
-import { loadCAD, pinNameForHit } from "./cad-models.js";
+import { loadCAD, pinNameForHit, UNO_HEADERS } from "./cad-models.js";
 const catalog = {
   uno: {
     name: "Arduino Uno",
     color: 0x157c88,
-    pins: [
-      "D0",
-      "D1",
-      "D2",
-      "D3",
-      "D4",
-      "D5",
-      "D6",
-      "D7",
-      "D8",
-      "D9",
-      "D10",
-      "D11",
-      "D12",
-      "D13",
-      "5V",
-      "GND",
-      "A0",
-      "A1",
-      "A2",
-      "A3",
-      "A4",
-      "A5",
-      "AREF",
-      "RESET",
-      "3.3V",
-      "VIN",
-    ],
+    pins: UNO_HEADERS.flatMap((header) => header.names),
     size: [3, 0.25, 2.2],
   },
   board: {
@@ -142,7 +115,8 @@ async function add(type, x, z) {
   g.userData.item = item;
   scene.add(g);
   items.push(item);
-  select(item);
+  if (!drag) select(item);
+  else renderPanel();
 }
 function select(item) {
   selected = item;
@@ -163,6 +137,7 @@ function remove() {
   const item = selected;
   scene.remove(item.group);
   item.group.traverse((o) => {
+    if (o.isInstancedMesh) o.dispose();
     o.geometry?.dispose();
     if (o.material) {
       o.material.map?.dispose();

@@ -1,5 +1,34 @@
 import * as T from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+export const UNO_HEADERS = [
+  {
+    x: 8.2,
+    start: -7.89,
+    names: [
+      "SCL",
+      "SDA",
+      "AREF",
+      "GND",
+      "D13",
+      "D12",
+      "D11",
+      "D10",
+      "D9",
+      "D8",
+    ],
+  },
+  {
+    x: 8.2,
+    start: 17.61,
+    names: ["D7", "D6", "D5", "D4", "D3", "D2", "D1", "D0"],
+  },
+  {
+    x: -40.4,
+    start: 0.61,
+    names: ["NC", "IOREF", "RESET", "3.3V", "5V", "GND", "GND", "VIN"],
+  },
+  { x: -40.4, start: 22.61, names: ["A0", "A1", "A2", "A3", "A4", "A5"] },
+];
 const loader = new GLTFLoader();
 const templates = new Map();
 const rotations = {
@@ -104,33 +133,11 @@ function attachTerminals(scene, type) {
   const pins = [];
   const pin = (name, x, y, z) => pins.push({ name, position: [x, y, z] });
   if (type === "uno") {
-    const digital = [
-      "AREF",
-      "GND",
-      "D13",
-      "D12",
-      "D11",
-      "D10",
-      "D9",
-      "D8",
-      "D7",
-      "D6",
-      "D5",
-      "D4",
-      "D3",
-      "D2",
-      "D1",
-      "D0",
-    ];
-    digital.forEach((name, i) =>
-      pin(name, 8.2, 10.1, i < 8 ? -7.89 + i * 2.5 : 15.11 + (i - 8) * 2.5),
-    );
-    ["RESET", "3.3V", "5V", "GND", "GND", "VIN"].forEach((name, i) =>
-      pin(name, -40.4, 10.1, -0.89 + i * 2.5),
-    );
-    ["A0", "A1", "A2", "A3", "A4", "A5"].forEach((name, i) =>
-      pin(name, -40.4, 10.1, 20.11 + i * 2.5),
-    );
+    for (const header of UNO_HEADERS) {
+      header.names.forEach((name, i) =>
+        pin(name, header.x, 10.1, header.start + i * 2.5),
+      );
+    }
   } else if (type === "board") {
     for (let side = 0; side < 2; side++) {
       for (let row = 0; row < 5; row++)
