@@ -1,3 +1,4 @@
+import { BREADBOARD } from "./breadboard-layout.js";
 import * as T from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import "./style.css";
@@ -224,13 +225,21 @@ function snapToBoard(item) {
         ? leadTip(item, "1")
         : terminalPosition(item, "1");
   const reference = tip ?? item.group.position.clone();
-  const pitch = 0.00254 * 44.5;
-  const x = anchor.x + Math.round((reference.x - anchor.x) / pitch) * pitch;
+  const pitch = BREADBOARD.pitch * BREADBOARD.sceneScale;
+  const column = T.MathUtils.clamp(
+    Math.round((reference.x - anchor.x) / pitch),
+    0,
+    BREADBOARD.columns - 1,
+  );
+  const x = anchor.x + column * pitch;
   const side = reference.z < board.group.position.z ? -1 : 1;
   const rows = Array.from(
-    { length: 5 },
+    { length: BREADBOARD.rowsPerSide },
     (_, row) =>
-      board.group.position.z + side * (0.01397 - row * 0.00254) * 44.5,
+      board.group.position.z +
+      side *
+        (BREADBOARD.outerRowZ - row * BREADBOARD.pitch) *
+        BREADBOARD.sceneScale,
   );
   const z = rows.reduce((a, b) =>
     Math.abs(a - reference.z) < Math.abs(b - reference.z) ? a : b,
@@ -359,9 +368,9 @@ async function loadPresentation() {
     add("led", 1.3, -0.4),
     add("resistor", 0.4, -0.4),
   ]);
-  if (board && led) snapToBoard(led);
-  if (board && resistor) snapToBoard(resistor);
-  if (uno && board) {
+  if (items.includes(board) && items.includes(led)) snapToBoard(led);
+  if (items.includes(board) && items.includes(resistor)) snapToBoard(resistor);
+  if (items.includes(uno) && items.includes(board)) {
     visualWires.connect(uno, "5V", board, "Superior + 2", "#c43c34", 0.55);
     visualWires.connect(uno, "GND", board, "Superior − 3", "#262b30", 0.8);
     visualWires.connect(uno, "D9", board, "a16", "#20a79a", 1);

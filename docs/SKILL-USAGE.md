@@ -52,4 +52,6 @@ A skill `tdd` foi lida, mas não aplicada em ciclo red/green nesta implementaç�
 
 | 020 | 29/10/2026 | `code-review` | Revisar navegação pelo teclado | concluído | Base 064922e, implementação d8633ff. Standards: 0 achados; Spec: 0 achados. Revisores independentes verificaram foco, liberação de teclas, movimento no plano e preservação do arraste. |
 
-| 021 | 29/10/2026 | `implement` | Aproximar o acabamento visual da referência enviada | em andamento | Serigrafia, materiais, iluminação, fios curvos e encaixe visual na protoboard. |
+| 021 | 29/10/2026 | `implement` | Aproximar o acabamento visual da referência enviada | concluído | Serigrafia autoral, materiais, iluminação, fios curvos, foco de peça e encaixe visual. Build e 2 testes de fios aprovados; transporte do LED com a base e remoção da protoboard verificados no navegador. |
+
+| 022 | 29/10/2026 | `code-review` | Revisar acabamento, fios e montagem visual | concluído | Dois eixos contra 5de36b8. Corrigidos criação de fios para peças removidas durante carregamento e encaixe fora das colunas válidas; medidas da protoboard centralizadas. Ver VISUAL-REVIEW.md. |

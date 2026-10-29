@@ -1,3 +1,4 @@
+import { BREADBOARD } from "./breadboard-layout.js";
 import * as T from "three";
 import { finishSurface } from "./surface-finish.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -144,13 +145,13 @@ function attachTerminals(scene, type) {
     }
   } else if (type === "board") {
     for (let side = 0; side < 2; side++) {
-      for (let row = 0; row < 5; row++)
-        for (let col = 0; col < 63; col++) {
+      for (let row = 0; row < BREADBOARD.rowsPerSide; row++)
+        for (let col = 0; col < BREADBOARD.columns; col++) {
           pin(
             `${"abcdefghij"[side * 5 + row]}${col + 1}`,
-            -0.078735 + col * 0.00254,
+            BREADBOARD.firstColumnX + col * BREADBOARD.pitch,
             0.0091,
-            (side ? 1 : -1) * (0.01397 - row * 0.00254),
+            (side ? 1 : -1) * (BREADBOARD.outerRowZ - row * BREADBOARD.pitch),
           );
         }
       for (let rail = 0; rail < 2; rail++)
