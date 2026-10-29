@@ -32,3 +32,12 @@ Skills de implementação, TDD e revisão ainda não foram aplicadas.
 ## Limite do registro
 
 Este histórico é mantido por instrução aos agentes; não existe interceptação automática de chamadas. Aplicações feitas por outras ferramentas ou pessoas precisam ser registradas por quem as executar.
+
+## Aplicações de 29/10/2026
+
+| ID | Data | Skill | Objetivo | Estado | Resultado |
+| --- | --- | --- | --- | --- | --- |
+| 013 | 29/10/2026 | `implement` | Implementar tarefa 02 | concluído | Bancada Three.js/Vite, catálogo, seleção, posição, remoção, câmera e editor visual. Build aprovado; verificação no navegador realizada. |
+| 014 | 29/10/2026 | `code-review` | Revisar tarefa 02 | concluído | Dois revisores: padrões e especificação. Corrigidos campos de posição, identificação de pinos por tooltip, instruções locais e licença indevida. Formatação aplicada; modularização futura permanece recomendação. |
+
+A skill `tdd` foi lida, mas não aplicada em ciclo red/green nesta implementação; não há testes automatizados adicionados até este registro.

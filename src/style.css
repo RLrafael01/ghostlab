@@ -1,0 +1,382 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: #0c141d;
+  color: #dce8ef;
+  font:
+    14px system-ui,
+    sans-serif;
+}
+header {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  border-bottom: 1px solid #263643;
+}
+.brand {
+  color: #76e2c2;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand b {
+  color: #f1f6fa;
+  letter-spacing: -1px;
+}
+.brand span {
+  font: 9px monospace;
+  letter-spacing: 2px;
+  max-width: 90px;
+  margin-left: 14px;
+  line-height: 1.8;
+  color: #8098a8;
+}
+.project {
+  font-size: 12px;
+}
+.project span {
+  color: #71899b;
+}
+.badge {
+  font: 10px monospace;
+  letter-spacing: 1px;
+  color: #e8c782;
+  background: #342d20;
+  padding: 9px 12px;
+  border: 1px solid #5a4a2b;
+  border-radius: 5px;
+}
+main {
+  height: calc(100vh - 108px);
+  min-height: 600px;
+  display: grid;
+  grid-template-columns: 240px minmax(350px, 1fr) 265px;
+}
+aside {
+  padding: 24px 18px;
+  overflow: auto;
+  background: #101923;
+}
+.eyebrow {
+  font: 9px monospace;
+  letter-spacing: 1.5px;
+  color: #78909f;
+  margin-bottom: 10px;
+}
+h2 {
+  font-size: 20px;
+  font-weight: 550;
+  margin: 0 0 20px;
+}
+h3 {
+  font-size: 14px;
+  font-weight: 550;
+  margin: 20px 0 12px;
+}
+input,
+textarea {
+  background: #0c151e;
+  border: 1px solid #304352;
+  color: #dce8ef;
+  border-radius: 5px;
+  padding: 10px;
+  font: 12px system-ui;
+}
+#search {
+  width: 100%;
+  margin-bottom: 20px;
+}
+button {
+  font: 12px system-ui;
+  color: #c8d8e3;
+  background: #182633;
+  border: 1px solid #2b3f4e;
+  border-radius: 5px;
+  padding: 9px 12px;
+  cursor: pointer;
+}
+button:hover {
+  border-color: #66d9ba;
+  color: #fff;
+  background: #203c40;
+}
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+#scene:focus-visible {
+  outline: 2px solid #71e6bf;
+  outline-offset: -2px;
+}
+.catalog-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  background: #14212d;
+  margin-bottom: 8px;
+  border-color: #243440;
+  padding: 13px 10px;
+}
+.catalog-item strong {
+  margin-left: auto;
+  color: #80b8a6;
+}
+.catalog-item small {
+  display: block;
+  color: #6e8799;
+  font-size: 10px;
+  margin-top: 4px;
+}
+.chip {
+  width: 29px;
+  height: 29px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+}
+.workspace {
+  display: flex;
+  flex-direction: column;
+  border-inline: 1px solid #263643;
+  min-width: 0;
+}
+.toolbar {
+  height: 58px;
+  flex-shrink: 0;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #111d28;
+}
+.toolbar b {
+  font-size: 12px;
+}
+.toolbar span {
+  margin-left: 14px;
+  color: #6c8495;
+  font-size: 10px;
+}
+#scene {
+  position: relative;
+  flex: 1;
+  min-height: 280px;
+  overflow: hidden;
+}
+canvas {
+  display: block;
+}
+.scene-tag {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font: 9px monospace;
+  letter-spacing: 2px;
+  color: #526f83;
+  pointer-events: none;
+}
+.guide {
+  position: absolute;
+  bottom: 15px;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+  color: #7a96a8;
+  font-size: 10px;
+}
+.editor {
+  height: 215px;
+  flex-shrink: 0;
+  border-top: 1px solid #2a3b49;
+  background: #0e1822;
+}
+.editor-head {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  color: #92b9ab;
+  font-size: 11px;
+}
+.editor-head span {
+  color: #7c8c9b;
+  font-size: 10px;
+}
+.editor textarea {
+  border: 0;
+  background: transparent;
+  resize: none;
+  width: 100%;
+  height: 172px;
+  padding: 10px 22px;
+  font: 12px/1.7 monospace;
+  color: #9ab9c9;
+}
+.note {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #6f8797;
+  border-top: 1px solid #293845;
+  margin-top: 24px;
+  padding-top: 18px;
+}
+.empty {
+  color: #7590a3;
+  font-size: 12px;
+  line-height: 1.8;
+  padding: 22px 0 30px;
+}
+.selected-icon {
+  font-size: 42px;
+  color: #69ddbb;
+  background: #192d34;
+  padding: 15px;
+  border-radius: 7px;
+  text-align: center;
+}
+.coords {
+  display: flex;
+  gap: 10px;
+}
+.coords label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.coords input {
+  width: 75px;
+}
+.hint {
+  font-size: 11px;
+  line-height: 1.6;
+  color: #7c96a7;
+}
+.pins {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.pins span {
+  font: 10px monospace;
+  border: 1px solid #345044;
+  background: #172c29;
+  color: #a0d9bd;
+  padding: 5px;
+  border-radius: 3px;
+}
+.danger {
+  margin-top: 20px;
+  color: #ed9696;
+  width: 100%;
+}
+.part {
+  display: block;
+  width: 100%;
+  margin: 6px 0;
+  text-align: left;
+}
+.part.active {
+  border-color: #69dbb6;
+  color: #79e2bf;
+}
+small {
+  color: #6c8698;
+}
+footer {
+  height: 32px;
+  border-top: 1px solid #263643;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 24px;
+  font: 9px monospace;
+  letter-spacing: 1px;
+  color: #617f91;
+}
+footer i {
+  display: inline-block;
+  background: #6dd6ac;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  margin-right: 7px;
+}
+@media (max-width: 1000px) {
+  main {
+    grid-template-columns: 190px minmax(300px, 1fr) 210px;
+  }
+  .project {
+    display: none;
+  }
+  aside {
+    padding: 18px 12px;
+  }
+  .coords input {
+    width: 65px;
+  }
+}
+@media (max-width: 760px) {
+  header {
+    height: auto;
+    min-height: 70px;
+    padding: 14px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .brand span {
+    display: none;
+  }
+  main {
+    height: auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  aside {
+    max-height: 230px;
+  }
+  #catalog {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .note {
+    display: none;
+  }
+  #scene {
+    height: 400px;
+    flex: none;
+  }
+  .inspector {
+    max-height: none;
+  }
+  .guide {
+    padding: 0 20px;
+  }
+  .editor-head {
+    gap: 10px;
+  }
+  footer {
+    height: auto;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+}
+
+.pin-tip {
+  position: absolute;
+  pointer-events: none;
+  background: #62dbb4;
+  color: #102322;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font: 12px monospace;
+  z-index: 5;
+}

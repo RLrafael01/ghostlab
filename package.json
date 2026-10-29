@@ -1,0 +1,34 @@
+{
+  "name": "ghostlab",
+  "version": "1.0.0",
+  "description": "Monte circuitos, programe um microcontrolador e experimente seu funcionamento no navegador antes de construir no mundo f\u00edsico.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RLrafael01/ghostlab.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/RLrafael01/ghostlab/issues"
+  },
+  "homepage": "https://github.com/RLrafael01/ghostlab#readme",
+  "dependencies": {
+    "three": "^0.186.1",
+    "vite": "^8.3.5"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.10"
+  },
+  "private": true
+}

@@ -4,7 +4,7 @@ Monte circuitos, programe um microcontrolador e experimente seu funcionamento no
 
 ## Estado do projeto
 
-Escopo da V1 aprovado e especificação publicada no rastreador local. Ainda não existe aplicativo executável. Arduino Uno, C++ e compilação em serviço próprio estão definidos; a integração e a escolha das bibliotecas serão validadas na prova técnica. A divisão por prazo foi aprovada e os tickets locais foram publicados.
+Escopo da V1 aprovado e especificação publicada no rastreador local. A primeira bancada interativa já pode ser executada localmente. Arduino Uno, C++ e compilação em serviço próprio estão definidos; a integração e a escolha das bibliotecas serão validadas na prova técnica. A divisão por prazo foi aprovada e os tickets locais foram publicados.
 
 Metas: **30/10/2026**, interface 3D interativa com prévia identificada; **06/11/2026**, V1 funcional com firmware real. O piloto técnico começa cedo sem bloquear a primeira apresentação.
 
@@ -39,3 +39,16 @@ Fluxo proposto: `setup-matt-pocock-skills` → `grill-with-docs` → `to-spec` �
 Setup concluído: tarefas em Markdown local em `.scratch/`, instruções em `AGENTS.md` e regras em `docs/agents/`. Nenhum framework GSD foi instalado.
 
 Planejamento concluído: [definir a primeira versão](.scratch/initial-lab/issues/01-refinar-primeira-versao.md). Divisão aprovada e tickets publicados; as tarefas 02 (bancada) e 05 (piloto de firmware) podem começar sem bloqueios.
+
+## Executar a bancada
+
+Requer Node.js 22.12+ (ou 20.19+) e navegador com WebGL.
+
+```sh
+npm ci
+npm run dev
+```
+
+Abra o endereço mostrado no terminal (normalmente http://127.0.0.1:5173). Para gerar a versão de apresentação: `npm run build` e `npm run preview`.
+
+Clique no catálogo para adicionar; selecione na cena ou lista; ajuste X/Z no inspetor ou use as setas com a bancada em foco. Delete remove a seleção. Arraste o fundo para orbitar e use o scroll para zoom; “Visão inicial” restaura a câmera. Código ainda não é executado; conexões são a tarefa 03.
