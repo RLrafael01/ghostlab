@@ -47,3 +47,5 @@ A skill `tdd` foi lida, mas não aplicada em ciclo red/green nesta implementaç�
 
 | 017 | 29/10/2026 | `implement` | Substituir representações procedurais por modelos CAD importados | concluído | Oito modelos importados com fontes/licenças; conversão STEP→GLB reproduzível. Build e sintaxe aprovados; adição dos oito tipos, arraste do Uno e remoção de segunda protoboard verificados no navegador. |
 | 018 | 29/10/2026 | `code-review` | Revisar integração de modelos CAD | concluído | Dois revisores contra 66533f9: corrigidos 32 alvos de pinos Uno, descarte de buffers instanciados e seleção durante arraste. Metadados dos headers compartilhados com catálogo. Ver CAD-REVIEW.md. |
+
+| 019 | 29/10/2026 | `implement` | Navegar sobre a bancada com WASD e setas | em andamento | Movimento contínuo da câmera no plano, relativo à vista, isolado do editor e dos campos do inspetor. |

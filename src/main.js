@@ -1,6 +1,7 @@
 import * as T from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import "./style.css";
+import { createBenchNavigation } from "./bench-navigation.js";
 import { loadCAD, pinNameForHit, UNO_HEADERS } from "./cad-models.js";
 const catalog = {
   uno: {
@@ -53,7 +54,7 @@ const catalog = {
   },
 };
 document.querySelector("#app").innerHTML =
-  `<header><div class="brand">◈ <b>ghostlab</b><span>LABORATÓRIO VIRTUAL</span></div><div class="project">Minha primeira bancada <span> / rascunho</span></div><span class="badge">● PRÉVIA INTERATIVA</span></header><main><aside><div class="eyebrow">SUA CAIXA DE FERRAMENTAS</div><h2>Componentes</h2><input id="search" placeholder="Buscar componente…" aria-label="Buscar componente"><div id="catalog"></div><div class="note">Construa uma ideia.<br>Comece adicionando uma peça à bancada.</div></aside><section class="workspace"><div class="toolbar"><div><b>Bancada 3D</b><span id="count"></span></div><button id="home">⌂ Visão inicial</button></div><div id="scene" tabindex="0" aria-label="Bancada 3D interativa"><div class="scene-tag">GHOSTLAB / WORKSPACE 01</div><div class="guide">Arraste o fundo para orbitar · Scroll para zoom · Arraste as peças para mover</div></div><div class="editor"><div class="editor-head"><b>〈/〉 sketch.ino</b><span>Prévia — código ainda não executado</span></div><textarea spellcheck="false" aria-label="Código Arduino">// Seu próximo projeto começa aqui.
+  `<header><div class="brand">◈ <b>ghostlab</b><span>LABORATÓRIO VIRTUAL</span></div><div class="project">Minha primeira bancada <span> / rascunho</span></div><span class="badge">● PRÉVIA INTERATIVA</span></header><main><aside><div class="eyebrow">SUA CAIXA DE FERRAMENTAS</div><h2>Componentes</h2><input id="search" placeholder="Buscar componente…" aria-label="Buscar componente"><div id="catalog"></div><div class="note">Construa uma ideia.<br>Comece adicionando uma peça à bancada.</div></aside><section class="workspace"><div class="toolbar"><div><b>Bancada 3D</b><span id="count"></span></div><button id="home">⌂ Visão inicial</button></div><div id="scene" tabindex="0" aria-label="Bancada 3D interativa"><div class="scene-tag">GHOSTLAB / WORKSPACE 01</div><div class="guide">WASD / setas: navegar · Arraste o fundo: orbitar · Scroll: zoom · Arraste peças: mover</div></div><div class="editor"><div class="editor-head"><b>〈/〉 sketch.ino</b><span>Prévia — código ainda não executado</span></div><textarea spellcheck="false" aria-label="Código Arduino">// Seu próximo projeto começa aqui.
 // Nesta prévia, o código não é executado.
 void setup() {
   pinMode(13, OUTPUT);
@@ -76,7 +77,9 @@ controls.enableDamping = true;
 controls.maxPolarAngle = Math.PI / 2.1;
 controls.minDistance = 4;
 controls.maxDistance = 35;
+const navigation = createBenchNavigation(host, camera, controls);
 function home() {
+  navigation.reset();
   camera.position.set(8, 10, 12);
   controls.target.set(0, 0, 0);
   controls.update();
@@ -150,7 +153,7 @@ function remove() {
 function renderPanel() {
   document.querySelector("#count").textContent = `${items.length} componentes`;
   document.querySelector("#details").innerHTML = selected
-    ? `<div class="selected-icon">◈</div><h3>${catalog[selected.type].name} <small>#${selected.id}</small></h3><div class="eyebrow">POSIÇÃO NA BANCADA</div><div class="coords"><label>X <input id="x" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.x}"></label><label>Z <input id="z" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.z}"></label></div><p class="hint">Arraste a peça na cena. As setas e coordenadas permitem ajustes finos.</p><div class="eyebrow">PINOS</div><div class="pins">${catalog[selected.type].pins.map((p) => `<span>${p}</span>`).join("")}</div><button id="delete" class="danger">Remover componente</button>`
+    ? `<div class="selected-icon">◈</div><h3>${catalog[selected.type].name} <small>#${selected.id}</small></h3><div class="eyebrow">POSIÇÃO NA BANCADA</div><div class="coords"><label>X <input id="x" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.x}"></label><label>Z <input id="z" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.z}"></label></div><p class="hint">Arraste a peça na cena ou ajuste X/Z. WASD e setas navegam pela bancada.</p><div class="eyebrow">PINOS</div><div class="pins">${catalog[selected.type].pins.map((p) => `<span>${p}</span>`).join("")}</div><button id="delete" class="danger">Remover componente</button>`
     : '<div class="empty">Selecione um componente na cena ou na lista para inspecionar seus pinos e ajustar a posição.</div>';
   for (const axis of ["x", "z"])
     document.querySelector("#" + axis)?.addEventListener("change", (e) => {
@@ -186,6 +189,8 @@ renderer.domElement.addEventListener(
   "pointerdown",
   (event) => {
     if (event.button !== 0 || drag) return;
+    host.focus({ preventScroll: true });
+    navigation.reset();
     updateRay(event);
     let object = ray.intersectObjects(
       items.map((item) => item.group),
@@ -242,26 +247,11 @@ function endDrag(event) {
 for (const event of ["pointerup", "pointercancel", "lostpointercapture"])
   renderer.domElement.addEventListener(event, endDrag);
 host.addEventListener("keydown", (e) => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
   if (e.key === "Home") {
+    e.preventDefault();
     home();
     return;
-  }
-  if (!selected) return;
-  const movement = {
-    ArrowLeft: ["x", -0.5],
-    ArrowRight: ["x", 0.5],
-    ArrowUp: ["z", -0.5],
-    ArrowDown: ["z", 0.5],
-  }[e.key];
-  if (movement) {
-    e.preventDefault();
-    selected.group.position[movement[0]] = T.MathUtils.clamp(
-      selected.group.position[movement[0]] + movement[1],
-      -15,
-      15,
-    );
-    outline?.update();
-    renderPanel();
   }
   if (e.key === "Delete") remove();
 });
@@ -291,8 +281,14 @@ showCatalog();
 Promise.all([add("uno", -3.6, 0), add("board", 2.1, 0)]).then(() =>
   select(null),
 );
-renderer.setAnimationLoop(() => {
-  if (!drag) controls.update();
+let lastFrame = performance.now();
+renderer.setAnimationLoop((now) => {
+  const deltaSeconds = Math.max(0, (now - lastFrame) / 1000);
+  lastFrame = now;
+  if (!drag) {
+    navigation.update(deltaSeconds);
+    controls.update();
+  }
   renderer.render(scene, camera);
 });
 
