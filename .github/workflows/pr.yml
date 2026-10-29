@@ -45,8 +45,10 @@ jobs:
     concurrency:
       group: ghostlab-pages
       cancel-in-progress: false
+      queue: max
     permissions:
       contents: write
+      pull-requests: read
       pages: write
       id-token: write
     environment:
@@ -62,6 +64,16 @@ jobs:
         with:
           name: preview
           path: built
+      - name: Reject obsolete or closed PR runs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              ...context.repo, pull_number: context.payload.pull_request.number
+            });
+            if (pr.state !== 'open' || pr.head.sha !== context.payload.pull_request.head.sha) {
+              core.setFailed('Prévia cancelada: este PR foi fechado ou já tem commits mais recentes.');
+            }
       - name: Update this preview only
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}

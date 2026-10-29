@@ -65,7 +65,7 @@ A skill `tdd` foi lida, mas não aplicada em ciclo red/green nesta implementaç�
 | 027 | 29/10/2026 | `code-review` | Revisar dock circular e fullscreen nativo | concluído | Standards: 2 achados corrigidos (estilos da prévia arrastada e cancelamento de gesto no fundo). Spec: 0 achados. Base 9f639c1. |
 | 028 | 29/10/2026 | `pr` | Atualizar PR #1 para o novo dock | concluído | PR #1 atualizado com fullscreen nativo, dock circular e SVGs. Título e descrição refletem o resultado; sem merge na main. |
 
-| 029 | 29/10/2026 | `implement` | Fluxo de revisão, CI, prévias por PR e editor normal visível | em andamento | Implementação na branch do PR #1; proteção da main aplicada pelo GitHub. |
+| 029 | 29/10/2026 | `implement` | Fluxo de revisão, CI, prévias por PR e editor normal visível | concluído | Editor normal restaurado; 4 testes e build aprovados. Proteção da main aplicada; workflow de CI/prévias adicionado ao PR #1. |
 | 030 | 29/10/2026 | `tdd` | Comportamento público do editor ao alternar fullscreen | concluído | Dois ciclos red/green: editor visível inicialmente; fullscreen recolhe e saída restaura sem perder texto. Fronteira: interação da interface aprovada no pedido e na spec. |
-| 031 | 29/10/2026 | `code-review` | Revisar colaboração e comportamento do editor | em andamento | Base 044de3e, pedido do usuário como escopo complementar. |
-| 032 | 29/10/2026 | `pr` | Atualizar PR #1 com editor e fluxo de colaboração | em andamento | Manter alterações sem merge na main. |
+| 031 | 29/10/2026 | `code-review` | Revisar colaboração e comportamento do editor | concluído | Base 044de3e. Standards: 2 achados; Spec: 1 (sobreposto). Corrigidos cancelamento de fila e sobrescrita por commit obsoleto. |
+| 032 | 29/10/2026 | `pr` | Atualizar PR #1 com editor e fluxo de colaboração | concluído | PR #1 atualizado com CI, prévias, proteção e editor; sem merge. |
