@@ -380,3 +380,44 @@ footer i {
   font: 12px monospace;
   z-index: 5;
 }
+
+.snap-control {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: #a7b9c0;
+}
+.snap-control input {
+  accent-color: #71d4b5;
+}
+.toolbar {
+  gap: 10px;
+  flex-wrap: wrap;
+  height: auto;
+  min-height: 58px;
+  padding-block: 10px;
+}
+.scene-tag {
+  color: #b2c1c6;
+  background: #20292ec9;
+  border: 1px solid #53636a;
+  padding: 7px 9px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+.guide {
+  color: #c1cdd0;
+  text-shadow: 0 1px 3px #111;
+}
+.editor {
+  height: 175px;
+}
+.editor textarea {
+  height: 132px;
+}
+
+.focus-part {
+  width: 100%;
+  margin-top: 15px;
+}

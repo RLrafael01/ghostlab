@@ -54,3 +54,14 @@ Abra o endereço mostrado no terminal (normalmente http://127.0.0.1:5173). Para 
 Clique no catálogo para adicionar; arraste diretamente as peças sobre a bancada para mover. Selecione na cena ou lista; ajuste X/Z no inspetor para posicionar a peça. Clique na bancada e mantenha WASD ou as setas pressionadas para navegar com a câmera sobre sua superfície; essas teclas não movem as peças. Delete remove a seleção. Arraste o fundo para orbitar e use o scroll para zoom; “Visão inicial” restaura a câmera. Código ainda não é executado; conexões são a tarefa 03.
 
 Os oito componentes usam modelos 3D importados, incluindo geometrias CAD convertidas de STEP. Escala comum: 1 mm = 0,0445 unidade da cena. Materiais e alvos de interação são adaptações visuais; não há validação de tolerâncias para fabricação. Fontes, autores e licenças: [atribuições dos modelos](public/models/ATTRIBUTION.md). Para reproduzir as conversões: `node scripts/convert-cad.mjs`.
+
+
+## Acabamento e montagem de apresentação
+
+A bancada abre com Uno, protoboard, LED, resistor e quatro jumpers **visuais**. Fios curvos acompanham os terminais ao mover as peças e desaparecem quando uma ponta é removida. Essa composição não é um circuito validado e ainda não executa firmware; criar/remover conexões livremente continua na tarefa 03.
+
+“Encaixe visual” aproxima LED, resistor e botão dos contatos da protoboard; é uma ajuda de posicionamento, não valida passo de todos os terminais, polaridade, colisões ou conectividade. Componentes apoiados acompanham a protoboard; removê-la os devolve à bancada. Desative a opção para posicionamento livre. No inspetor, “Focar peça” aproxima a câmera para examinar inscrições e materiais.
+
+Iluminação de estúdio, sombras de contato, materiais de plástico/metal/encapsulamento e serigrafia autoral melhoram a leitura. Inscrições do GhostLab não reproduzem o layout de fabricação do fabricante. A referência visual orienta o acabamento; a placa permanece Uno, sem adicionar Pico ou display OLED ao escopo.
+
+Verificação de fios: `node --test tests/*.test.js`.

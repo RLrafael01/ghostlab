@@ -1,4 +1,5 @@
 import * as T from "three";
+import { finishSurface } from "./surface-finish.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 export const UNO_HEADERS = [
   {
@@ -96,6 +97,7 @@ export async function loadCAD(type) {
             });
           });
         }
+        finishSurface(scene, type, UNO_HEADERS);
         attachTerminals(scene, type);
         const oriented = new T.Group();
         oriented.add(scene);
@@ -123,8 +125,10 @@ export async function loadCAD(type) {
     object.geometry = object.geometry.clone();
     object.material = object.material.clone();
     if (object.material.map) object.material.map = object.material.map.clone();
-    object.castShadow = true;
-    object.receiveShadow = true;
+    if (object.userData.surfaceDecal) object.raycast = () => {};
+    object.castShadow =
+      !object.isInstancedMesh && !object.userData.surfaceDecal;
+    object.receiveShadow = !object.isInstancedMesh;
   });
   return model;
 }
@@ -194,6 +198,25 @@ function attachTerminals(scene, type) {
     targets.setMatrixAt(i, new T.Matrix4().makeTranslation(...p.position)),
   );
   scene.add(targets);
+  if (type === "board") {
+    const sockets = new T.InstancedMesh(
+      new T.BoxGeometry(0.00085, 0.00015, 0.00085),
+      new T.MeshStandardMaterial({
+        color: "#35414a",
+        metalness: 0.35,
+        roughness: 0.7,
+      }),
+      pins.length,
+    );
+    pins.forEach((p, i) =>
+      sockets.setMatrixAt(
+        i,
+        new T.Matrix4().makeTranslation(p.position[0], 0.0088, p.position[2]),
+      ),
+    );
+    sockets.userData.pinNames = pins.map((p) => p.name);
+    scene.add(sockets);
+  }
 }
 
 export function pinNameForHit(hit) {

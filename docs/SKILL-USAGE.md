@@ -51,3 +51,5 @@ A skill `tdd` foi lida, mas não aplicada em ciclo red/green nesta implementaç�
 | 019 | 29/10/2026 | `implement` | Navegar sobre a bancada com WASD e setas | concluído | Câmera e alvo movem-se no plano com WASD/setas enquanto a bancada tem foco. Build aprovado; W/setas, posição preservada da peça e digitação no editor verificados no navegador. |
 
 | 020 | 29/10/2026 | `code-review` | Revisar navegação pelo teclado | concluído | Base 064922e, implementação d8633ff. Standards: 0 achados; Spec: 0 achados. Revisores independentes verificaram foco, liberação de teclas, movimento no plano e preservação do arraste. |
+
+| 021 | 29/10/2026 | `implement` | Aproximar o acabamento visual da referência enviada | em andamento | Serigrafia, materiais, iluminação, fios curvos e encaixe visual na protoboard. |

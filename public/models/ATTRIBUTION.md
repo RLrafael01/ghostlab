@@ -9,3 +9,5 @@
 A biblioteca FreeCAD declara CC BY 3.0 para suas peças no README. Autores identificados pelo histórico dos arquivos. Fontes fixadas em commits, arquivos e SHA-256 em manifest.json. Nenhum endosso dos autores ou fabricantes é sugerido.
 
 Conversão: `node scripts/convert-cad.mjs`. STEP de origem em assets/cad. Malhas de visualização não estabelecem tolerâncias de fabricação. Materiais adicionados e alvos de interação são aproximações visuais; não simulam eletricidade. O catálogo funcional ainda será conectado aos contratos da simulação.
+
+Acabamento adicional do GhostLab: serigrafia autoral em canvas, contatos escuros da protoboard, acabamento visual do USB e materiais do sensor/LED. Geometrias e licenças de origem continuam preservadas; esses detalhes não são arte oficial dos fabricantes.

@@ -1,6 +1,12 @@
 import * as T from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import "./style.css";
+import { lightWorkbench } from "./workbench-lighting.js";
+import {
+  createVisualWires,
+  terminalPosition,
+  leadTip,
+} from "./visual-wires.js";
 import { createBenchNavigation } from "./bench-navigation.js";
 import { loadCAD, pinNameForHit, UNO_HEADERS } from "./cad-models.js";
 const catalog = {
@@ -54,7 +60,7 @@ const catalog = {
   },
 };
 document.querySelector("#app").innerHTML =
-  `<header><div class="brand">◈ <b>ghostlab</b><span>LABORATÓRIO VIRTUAL</span></div><div class="project">Minha primeira bancada <span> / rascunho</span></div><span class="badge">● PRÉVIA INTERATIVA</span></header><main><aside><div class="eyebrow">SUA CAIXA DE FERRAMENTAS</div><h2>Componentes</h2><input id="search" placeholder="Buscar componente…" aria-label="Buscar componente"><div id="catalog"></div><div class="note">Construa uma ideia.<br>Comece adicionando uma peça à bancada.</div></aside><section class="workspace"><div class="toolbar"><div><b>Bancada 3D</b><span id="count"></span></div><button id="home">⌂ Visão inicial</button></div><div id="scene" tabindex="0" aria-label="Bancada 3D interativa"><div class="scene-tag">GHOSTLAB / WORKSPACE 01</div><div class="guide">WASD / setas: navegar · Arraste o fundo: orbitar · Scroll: zoom · Arraste peças: mover</div></div><div class="editor"><div class="editor-head"><b>〈/〉 sketch.ino</b><span>Prévia — código ainda não executado</span></div><textarea spellcheck="false" aria-label="Código Arduino">// Seu próximo projeto começa aqui.
+  `<header><div class="brand">◈ <b>ghostlab</b><span>LABORATÓRIO VIRTUAL</span></div><div class="project">Minha primeira bancada <span> / rascunho</span></div><span class="badge">● PRÉVIA INTERATIVA</span></header><main><aside><div class="eyebrow">SUA CAIXA DE FERRAMENTAS</div><h2>Componentes</h2><input id="search" placeholder="Buscar componente…" aria-label="Buscar componente"><div id="catalog"></div><div class="note">Construa uma ideia.<br>Comece adicionando uma peça à bancada.</div></aside><section class="workspace"><div class="toolbar"><div><b>Bancada 3D</b><span id="count"></span></div><label class="snap-control"><input type="checkbox" id="snap" checked title="Aproxima LED, resistor e botão aos contatos; não valida ligações elétricas"> Encaixe visual</label><button id="home">⌂ Visão inicial</button></div><div id="scene" tabindex="0" aria-label="Bancada 3D interativa"><div class="scene-tag">MONTAGEM VISUAL · SEM SIMULAÇÃO ELÉTRICA</div><div class="guide">WASD / setas: navegar · Arraste o fundo: orbitar · Scroll: zoom · Arraste peças: mover</div></div><div class="editor"><div class="editor-head"><b>〈/〉 sketch.ino</b><span>Prévia — código ainda não executado</span></div><textarea spellcheck="false" aria-label="Código Arduino">// Seu próximo projeto começa aqui.
 // Nesta prévia, o código não é executado.
 void setup() {
   pinMode(13, OUTPUT);
@@ -65,31 +71,26 @@ void loop() {
 }</textarea></div></section><aside class="inspector"><div class="eyebrow">DETALHES DA MONTAGEM</div><h2>Inspetor</h2><div id="details"></div><h3>Na bancada</h3><div id="parts"></div><div class="note">Montagem visual disponível.<br>Execução de firmware e conexões elétricas serão integradas nas próximas etapas.</div></aside></main><footer><span><i></i> Bancada pronta</span><span>UNO · PRÉVIA VISUAL</span><span>GhostLab / 2026</span></footer>`;
 const host = document.querySelector("#scene"),
   scene = new T.Scene();
-scene.background = new T.Color("#101c28");
-scene.fog = new T.Fog("#101c28", 25, 55);
+
 const camera = new T.PerspectiveCamera(40, 1, 0.1, 100);
 const renderer = new T.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 host.append(renderer.domElement);
-renderer.shadowMap.enabled = true;
+lightWorkbench(renderer, scene);
+const visualWires = createVisualWires(scene);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.maxPolarAngle = Math.PI / 2.1;
-controls.minDistance = 4;
+controls.minDistance = 1.2;
 controls.maxDistance = 35;
 const navigation = createBenchNavigation(host, camera, controls);
 function home() {
   navigation.reset();
-  camera.position.set(8, 10, 12);
-  controls.target.set(0, 0, 0);
+  camera.position.set(3, 10, 14);
+  controls.target.set(0.3, 0, 0);
   controls.update();
 }
 home();
-scene.add(new T.HemisphereLight(0xe1efff, 0x284039, 2));
-const light = new T.DirectionalLight(0xffffff, 3);
-light.position.set(3, 10, 5);
-scene.add(light);
-scene.add(new T.GridHelper(40, 80, 0x36505e, 0x203441));
 const ray = new T.Raycaster(),
   pointer = new T.Vector2();
 const items = [];
@@ -120,6 +121,7 @@ async function add(type, x, z) {
   items.push(item);
   if (!drag) select(item);
   else renderPanel();
+  return item;
 }
 function select(item) {
   selected = item;
@@ -138,6 +140,12 @@ function select(item) {
 function remove() {
   if (!selected || drag) return;
   const item = selected;
+  visualWires.removeFor(item);
+  for (const child of items)
+    if (child.mountedTo === item) {
+      child.mountedTo = null;
+      child.group.position.y = 0;
+    }
   scene.remove(item.group);
   item.group.traverse((o) => {
     if (o.isInstancedMesh) o.dispose();
@@ -153,18 +161,33 @@ function remove() {
 function renderPanel() {
   document.querySelector("#count").textContent = `${items.length} componentes`;
   document.querySelector("#details").innerHTML = selected
-    ? `<div class="selected-icon">◈</div><h3>${catalog[selected.type].name} <small>#${selected.id}</small></h3><div class="eyebrow">POSIÇÃO NA BANCADA</div><div class="coords"><label>X <input id="x" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.x}"></label><label>Z <input id="z" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.z}"></label></div><p class="hint">Arraste a peça na cena ou ajuste X/Z. WASD e setas navegam pela bancada.</p><div class="eyebrow">PINOS</div><div class="pins">${catalog[selected.type].pins.map((p) => `<span>${p}</span>`).join("")}</div><button id="delete" class="danger">Remover componente</button>`
+    ? `<div class="selected-icon">◈</div><h3>${catalog[selected.type].name} <small>#${selected.id}</small></h3><div class="eyebrow">POSIÇÃO NA BANCADA</div><div class="coords"><label>X <input id="x" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.x}"></label><label>Z <input id="z" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.z}"></label></div><p class="hint">Arraste a peça na cena ou ajuste X/Z. WASD e setas navegam pela bancada.</p><div class="eyebrow">PINOS</div><div class="pins">${catalog[selected.type].pins.map((p) => `<span>${p}</span>`).join("")}</div><button id="focus-part" class="focus-part">⌕ Focar peça</button><button id="delete" class="danger">Remover componente</button>`
     : '<div class="empty">Selecione um componente na cena ou na lista para inspecionar seus pinos e ajustar a posição.</div>';
   for (const axis of ["x", "z"])
     document.querySelector("#" + axis)?.addEventListener("change", (e) => {
       const n = Number(e.target.value);
       if (Number.isFinite(n)) {
-        selected.group.position[axis] = Math.max(-15, Math.min(15, n));
+        const position = selected.group.position.clone();
+        position[axis] = Math.max(-15, Math.min(15, n));
+        moveItem(selected, position);
+        snapToBoard(selected);
         e.target.value = String(selected.group.position[axis]);
         outline?.update();
+        renderPanel();
       }
     });
   document.querySelector("#delete")?.addEventListener("click", remove);
+  document.querySelector("#focus-part")?.addEventListener("click", () => {
+    const bounds = new T.Box3().setFromObject(selected.group);
+    const center = bounds.getCenter(new T.Vector3());
+    const size = bounds.getSize(new T.Vector3());
+    const direction = camera.position.clone().sub(controls.target).normalize();
+    const distance = Math.max(1.8, Math.max(size.x, size.y, size.z) * 1.8);
+    navigation.reset();
+    controls.target.copy(center);
+    camera.position.copy(center).addScaledVector(direction, distance);
+    controls.update();
+  });
   const list = document.querySelector("#parts");
   list.innerHTML = "";
   items.forEach((item) => {
@@ -174,6 +197,53 @@ function renderPanel() {
     b.onclick = () => select(item);
     list.append(b);
   });
+}
+function moveItem(item, position) {
+  const delta = position.clone().sub(item.group.position);
+  item.group.position.copy(position);
+  for (const child of items)
+    if (child.mountedTo === item) child.group.position.add(delta);
+}
+function snapToBoard(item) {
+  if (!["led", "resistor", "button"].includes(item.type)) return;
+  item.mountedTo = null;
+  item.group.position.y = 0;
+  if (!document.querySelector("#snap").checked) return;
+  const board = items.find(
+    (candidate) =>
+      candidate.type === "board" &&
+      Math.abs(item.group.position.x - candidate.group.position.x) < 3.5 &&
+      Math.abs(item.group.position.z - candidate.group.position.z) < 0.7,
+  );
+  if (!board) return;
+  const anchor = terminalPosition(board, "a1");
+  const tip =
+    item.type === "led"
+      ? leadTip(item, "Ânodo +")
+      : item.type === "button"
+        ? leadTip(item, "1")
+        : terminalPosition(item, "1");
+  const reference = tip ?? item.group.position.clone();
+  const pitch = 0.00254 * 44.5;
+  const x = anchor.x + Math.round((reference.x - anchor.x) / pitch) * pitch;
+  const side = reference.z < board.group.position.z ? -1 : 1;
+  const rows = Array.from(
+    { length: 5 },
+    (_, row) =>
+      board.group.position.z + side * (0.01397 - row * 0.00254) * 44.5,
+  );
+  const z = rows.reduce((a, b) =>
+    Math.abs(a - reference.z) < Math.abs(b - reference.z) ? a : b,
+  );
+  item.group.position.add(
+    new T.Vector3(
+      x - reference.x,
+      anchor.y - 0.055 - reference.y,
+      z - reference.z,
+    ),
+  );
+  item.mountedTo = board;
+  outline?.update();
 }
 let drag = null;
 const dragPlane = new T.Plane(new T.Vector3(0, 1, 0), 0);
@@ -224,11 +294,15 @@ renderer.domElement.addEventListener("pointermove", (event) => {
   const point = ray.ray.intersectPlane(dragPlane, new T.Vector3());
   if (!point) return;
   point.add(drag.offset);
-  drag.item.group.position.set(
-    T.MathUtils.clamp(point.x, -15, 15),
-    0,
-    T.MathUtils.clamp(point.z, -15, 15),
+  moveItem(
+    drag.item,
+    new T.Vector3(
+      T.MathUtils.clamp(point.x, -15, 15),
+      0,
+      T.MathUtils.clamp(point.z, -15, 15),
+    ),
   );
+  snapToBoard(drag.item);
   outline?.update();
   for (const axis of ["x", "z"]) {
     const input = document.querySelector("#" + axis);
@@ -278,9 +352,24 @@ new ResizeObserver(() => {
   camera.updateProjectionMatrix();
 }).observe(host);
 showCatalog();
-Promise.all([add("uno", -3.6, 0), add("board", 2.1, 0)]).then(() =>
-  select(null),
-);
+async function loadPresentation() {
+  const [uno, board, led, resistor] = await Promise.all([
+    add("uno", -3.8, 0),
+    add("board", 1.7, 0),
+    add("led", 1.3, -0.4),
+    add("resistor", 0.4, -0.4),
+  ]);
+  if (board && led) snapToBoard(led);
+  if (board && resistor) snapToBoard(resistor);
+  if (uno && board) {
+    visualWires.connect(uno, "5V", board, "Superior + 2", "#c43c34", 0.55);
+    visualWires.connect(uno, "GND", board, "Superior − 3", "#262b30", 0.8);
+    visualWires.connect(uno, "D9", board, "a16", "#20a79a", 1);
+    visualWires.connect(board, "c20", board, "g26", "#e9b640", 0.35);
+  }
+  select(null);
+}
+loadPresentation();
 let lastFrame = performance.now();
 renderer.setAnimationLoop((now) => {
   const deltaSeconds = Math.max(0, (now - lastFrame) / 1000);
@@ -289,6 +378,7 @@ renderer.setAnimationLoop((now) => {
     navigation.update(deltaSeconds);
     controls.update();
   }
+  visualWires.update();
   renderer.render(scene, camera);
 });
 
