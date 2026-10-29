@@ -70,6 +70,6 @@ A skill `tdd` foi lida, mas não aplicada em ciclo red/green nesta implementaç�
 | 031 | 29/10/2026 | `code-review` | Revisar colaboração e comportamento do editor | concluído | Base 044de3e. Standards: 2 achados; Spec: 1 (sobreposto). Corrigidos cancelamento de fila e sobrescrita por commit obsoleto. |
 | 032 | 29/10/2026 | `pr` | Atualizar PR #1 com editor e fluxo de colaboração | concluído | PR #1 atualizado com CI, prévias, proteção e editor; sem merge. |
 
-| 033 | 29/10/2026 | `implement` | Publicação automática da main em link fixo | em andamento | Workflow compartilhado publica main/ ou pr-N/ com build/testes e rejeição de revisão obsoleta. |
-| 034 | 29/10/2026 | `code-review` | Revisar publicação automática da main | em andamento | Base 9d2dc4a; escopo: pedido de link fixo após cada merge, preservando PRs e proteção. |
-| 035 | 29/10/2026 | `pr` | Atualizar PR #1 com link fixo da main | em andamento | Ativação após aprovação e merge, sem contornar proteção. |
+| 033 | 29/10/2026 | `implement` | Publicação automática da main em link fixo | concluído | 4 testes e build main aprovados; script de publicação exercitado em Git temporário preservou outras prévias. Ativação depende do merge autorizado do PR. |
+| 034 | 29/10/2026 | `code-review` | Revisar publicação automática da main | concluído | Base 9d2dc4a até 705811a: Standards 0 achados; Spec 0 achados. Trigger real da main será confirmado após o merge. |
+| 035 | 29/10/2026 | `pr` | Atualizar PR #1 com link fixo da main | concluído | PR #1 atualizado com link main/, evidências e dependência de aprovação/merge. |
