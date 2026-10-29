@@ -1,4 +1,4 @@
-name: GhostLab PR
+name: GhostLab CI and Pages
 on:
   pull_request:
     branches: [main]
@@ -11,6 +11,8 @@ jobs:
     name: Build and tests
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      directory: ${{ steps.target.outputs.directory }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,25 +23,30 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
-      - name: Build preview
+      - name: Choose publication directory
+        id: target
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          if [ -n "$PR_NUMBER" ]; then
-            npm run build -- --base="/${GITHUB_REPOSITORY#*/}/pr-$PR_NUMBER/"
+          if [ "$GITHUB_EVENT_NAME" = push ]; then
+            echo 'directory=main' >> "$GITHUB_OUTPUT"
           else
-            npm run build
+            test "$PR_NUMBER" -gt 0
+            echo "directory=pr-$PR_NUMBER" >> "$GITHUB_OUTPUT"
           fi
+      - name: Build site
+        env:
+          DIRECTORY: ${{ steps.target.outputs.directory }}
+        run: npm run build -- --base="/${GITHUB_REPOSITORY#*/}/$DIRECTORY/"
       - uses: actions/upload-artifact@v4
-        if: github.event_name == 'pull_request'
         with:
-          name: preview
+          name: site-build
           path: dist
           retention-days: 7
   preview:
-    name: Publish preview
+    name: Publish site
     needs: verify
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     concurrency:
@@ -53,43 +60,52 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}pr-${{ github.event.pull_request.number }}/
+      url: ${{ steps.deploy.outputs.page_url }}${{ needs.verify.outputs.directory }}/
     steps:
-      - name: Read published previews (never execute PR source here)
+      - name: Read published sites (never execute source here)
         uses: actions/checkout@v4
         with:
           ref: preview-pages
           path: published
       - uses: actions/download-artifact@v4
         with:
-          name: preview
+          name: site-build
           path: built
-      - name: Reject obsolete or closed PR runs
+      - name: Reject obsolete source revisions
         uses: actions/github-script@v7
         with:
           script: |
-            const { data: pr } = await github.rest.pulls.get({
-              ...context.repo, pull_number: context.payload.pull_request.number
-            });
-            if (pr.state !== 'open' || pr.head.sha !== context.payload.pull_request.head.sha) {
-              core.setFailed('Prévia cancelada: este PR foi fechado ou já tem commits mais recentes.');
+            if (context.eventName === 'push') {
+              const { data: ref } = await github.rest.git.getRef({
+                ...context.repo, ref: 'heads/main'
+              });
+              if (ref.object.sha !== context.sha) {
+                core.setFailed('Publicação cancelada: a main já tem commits mais recentes.');
+              }
+            } else {
+              const { data: pr } = await github.rest.pulls.get({
+                ...context.repo, pull_number: context.payload.pull_request.number
+              });
+              if (pr.state !== 'open' || pr.head.sha !== context.payload.pull_request.head.sha) {
+                core.setFailed('Prévia cancelada: este PR foi fechado ou já tem commits mais recentes.');
+              }
             }
-      - name: Update this preview only
+      - name: Update only this publication directory
         env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          DIRECTORY: ${{ needs.verify.outputs.directory }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          test "$PR_NUMBER" -gt 0
+          [[ "$DIRECTORY" =~ ^(main|pr-[0-9]+)$ ]]
           test -f built/index.html
-          rm -rf "published/pr-$PR_NUMBER"
-          mkdir -p "published/pr-$PR_NUMBER"
-          cp -R built/. "published/pr-$PR_NUMBER/"
-          printf '%s\n' "$HEAD_SHA" > "published/pr-$PR_NUMBER/revision.txt"
+          rm -rf "published/$DIRECTORY"
+          mkdir -p "published/$DIRECTORY"
+          cp -R built/. "published/$DIRECTORY/"
+          printf '%s\n' "$HEAD_SHA" > "published/$DIRECTORY/revision.txt"
           cd published
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "pr-$PR_NUMBER"
-          git diff --cached --quiet || git commit -m "Preview PR $PR_NUMBER at $HEAD_SHA"
+          git add "$DIRECTORY"
+          git diff --cached --quiet || git commit -m "Publish $DIRECTORY at $HEAD_SHA"
           git push origin HEAD:preview-pages
       - name: Package static files without Git metadata
         run: |
@@ -104,8 +120,8 @@ jobs:
       - name: Link for reviewers
         env:
           PAGE_URL: ${{ steps.deploy.outputs.page_url }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          DIRECTORY: ${{ needs.verify.outputs.directory }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          echo "### [Abrir prévia do PR $PR_NUMBER](${PAGE_URL}pr-$PR_NUMBER/)" >> "$GITHUB_STEP_SUMMARY"
+          echo "### [Abrir $DIRECTORY](${PAGE_URL}$DIRECTORY/)" >> "$GITHUB_STEP_SUMMARY"
           echo "Commit: $HEAD_SHA" >> "$GITHUB_STEP_SUMMARY"

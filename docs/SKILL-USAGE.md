@@ -69,3 +69,7 @@ A skill `tdd` foi lida, mas não aplicada em ciclo red/green nesta implementaç�
 | 030 | 29/10/2026 | `tdd` | Comportamento público do editor ao alternar fullscreen | concluído | Dois ciclos red/green: editor visível inicialmente; fullscreen recolhe e saída restaura sem perder texto. Fronteira: interação da interface aprovada no pedido e na spec. |
 | 031 | 29/10/2026 | `code-review` | Revisar colaboração e comportamento do editor | concluído | Base 044de3e. Standards: 2 achados; Spec: 1 (sobreposto). Corrigidos cancelamento de fila e sobrescrita por commit obsoleto. |
 | 032 | 29/10/2026 | `pr` | Atualizar PR #1 com editor e fluxo de colaboração | concluído | PR #1 atualizado com CI, prévias, proteção e editor; sem merge. |
+
+| 033 | 29/10/2026 | `implement` | Publicação automática da main em link fixo | em andamento | Workflow compartilhado publica main/ ou pr-N/ com build/testes e rejeição de revisão obsoleta. |
+| 034 | 29/10/2026 | `code-review` | Revisar publicação automática da main | em andamento | Base 9d2dc4a; escopo: pedido de link fixo após cada merge, preservando PRs e proteção. |
+| 035 | 29/10/2026 | `pr` | Atualizar PR #1 com link fixo da main | em andamento | Ativação após aprovação e merge, sem contornar proteção. |
