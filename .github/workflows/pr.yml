@@ -1,0 +1,99 @@
+name: GhostLab PR
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  verify:
+    name: Build and tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Build preview
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if [ -n "$PR_NUMBER" ]; then
+            npm run build -- --base="/${GITHUB_REPOSITORY#*/}/pr-$PR_NUMBER/"
+          else
+            npm run build
+          fi
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'pull_request'
+        with:
+          name: preview
+          path: dist
+          retention-days: 7
+  preview:
+    name: Publish preview
+    needs: verify
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: ghostlab-pages
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}pr-${{ github.event.pull_request.number }}/
+    steps:
+      - name: Read published previews (never execute PR source here)
+        uses: actions/checkout@v4
+        with:
+          ref: preview-pages
+          path: published
+      - uses: actions/download-artifact@v4
+        with:
+          name: preview
+          path: built
+      - name: Update this preview only
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          test "$PR_NUMBER" -gt 0
+          test -f built/index.html
+          rm -rf "published/pr-$PR_NUMBER"
+          mkdir -p "published/pr-$PR_NUMBER"
+          cp -R built/. "published/pr-$PR_NUMBER/"
+          printf '%s\n' "$HEAD_SHA" > "published/pr-$PR_NUMBER/revision.txt"
+          cd published
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "pr-$PR_NUMBER"
+          git diff --cached --quiet || git commit -m "Preview PR $PR_NUMBER at $HEAD_SHA"
+          git push origin HEAD:preview-pages
+      - name: Package static files without Git metadata
+        run: |
+          mkdir site
+          git -C published archive HEAD | tar -x -C site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Deploy
+        id: deploy
+        uses: actions/deploy-pages@v4
+      - name: Link for reviewers
+        env:
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          echo "### [Abrir prévia do PR $PR_NUMBER](${PAGE_URL}pr-$PR_NUMBER/)" >> "$GITHUB_STEP_SUMMARY"
+          echo "Commit: $HEAD_SHA" >> "$GITHUB_STEP_SUMMARY"

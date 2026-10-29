@@ -777,3 +777,16 @@ main:fullscreen .editor textarea {
     line-height: 1.5;
   }
 }
+
+/* Keep the editor in view on desktop; only fullscreen can collapse it. */
+main:not(:fullscreen) #code-toggle,
+main:not(:fullscreen) #close-code {
+  display: none;
+}
+@media (min-width: 761px) {
+  main { min-height: 0; height: calc(100dvh - 108px); }
+  .workspace { min-height: 0; overflow: hidden; }
+  #scene { min-height: 100px; }
+  .editor { height: clamp(150px, 27vh, 240px); }
+  .editor textarea { height: calc(100% - 40px); }
+}

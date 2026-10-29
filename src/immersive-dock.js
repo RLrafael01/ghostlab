@@ -72,7 +72,7 @@ export function setupImmersiveDock(catalog, { add, preview, drop }) {
         String(!document.querySelector("#code-panel").hidden),
       );
     }
-    card.innerHTML = `<img src="/illustrations/${entry.type}.svg" alt="" draggable="false">`;
+    card.innerHTML = `<img src="${import.meta.env.BASE_URL}illustrations/${entry.type}.svg" alt="" draggable="false">`;
     makeCatalogDraggable(card, entry.type, {
       preview: entry.type in catalog ? preview : () => false,
       drop: entry.type in catalog ? drop : () => {},

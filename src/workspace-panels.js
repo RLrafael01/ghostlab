@@ -3,6 +3,7 @@ export function setupWorkspacePanels() {
   const fullscreen = document.querySelector("#fullscreen");
   const codeButton = document.querySelector("#code-toggle");
   const editor = document.querySelector("#code-panel");
+  setCodeOpen(true);
   function showExpanded(value) {
     shell.classList.toggle("expanded-workbench", value);
     fullscreen.textContent = value ? "⤢ Sair da tela cheia" : "⤢ Tela cheia";
@@ -28,17 +29,23 @@ export function setupWorkspacePanels() {
     }
   });
   document.addEventListener("fullscreenchange", () => {
-    showExpanded(document.fullscreenElement === shell);
+    const expanded = document.fullscreenElement === shell;
+    showExpanded(expanded);
+    setCodeOpen(!expanded);
     shell.dispatchEvent(new CustomEvent("workbench-fullscreen"));
   });
-  function toggleCode() {
-    const open = editor.hidden;
+  function setCodeOpen(open) {
     editor.hidden = !open;
     codeButton.setAttribute("aria-expanded", String(open));
     codeButton.textContent = open ? "⌄ Recolher código" : "〈/〉 Código";
     document
       .querySelector('[data-dock-action="code"]')
       ?.setAttribute("aria-expanded", String(open));
+  }
+  function toggleCode() {
+    if (document.fullscreenElement !== shell) return;
+    const open = editor.hidden;
+    setCodeOpen(open);
     if (open) editor.querySelector("textarea").focus();
     else if (document.fullscreenElement === shell)
       document.querySelector('.dock-card[aria-current="true"]')?.focus();
