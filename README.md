@@ -51,4 +51,6 @@ npm run dev
 
 Abra o endereço mostrado no terminal (normalmente http://127.0.0.1:5173). Para gerar a versão de apresentação: `npm run build` e `npm run preview`.
 
-Clique no catálogo para adicionar; selecione na cena ou lista; ajuste X/Z no inspetor ou use as setas com a bancada em foco. Delete remove a seleção. Arraste o fundo para orbitar e use o scroll para zoom; “Visão inicial” restaura a câmera. Código ainda não é executado; conexões são a tarefa 03.
+Clique no catálogo para adicionar; arraste diretamente as peças sobre a bancada para mover. Selecione na cena ou lista; ajuste X/Z no inspetor ou use as setas para ajustes finos. Delete remove a seleção. Arraste o fundo para orbitar e use o scroll para zoom; “Visão inicial” restaura a câmera. Código ainda não é executado; conexões são a tarefa 03.
+
+Os modelos procedurais possuem detalhes visuais de componentes eletrônicos, mas usam proporções ilustrativas: não são modelos CAD dimensionais.

@@ -1,6 +1,7 @@
 import * as T from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import "./style.css";
+import { decorate } from "./models.js";
 const catalog = {
   uno: {
     name: "Arduino Uno",
@@ -71,7 +72,7 @@ const catalog = {
   },
 };
 document.querySelector("#app").innerHTML =
-  `<header><div class="brand">◈ <b>ghostlab</b><span>LABORATÓRIO VIRTUAL</span></div><div class="project">Minha primeira bancada <span> / rascunho</span></div><span class="badge">● PRÉVIA INTERATIVA</span></header><main><aside><div class="eyebrow">SUA CAIXA DE FERRAMENTAS</div><h2>Componentes</h2><input id="search" placeholder="Buscar componente…" aria-label="Buscar componente"><div id="catalog"></div><div class="note">Construa uma ideia.<br>Comece adicionando uma peça à bancada.</div></aside><section class="workspace"><div class="toolbar"><div><b>Bancada 3D</b><span id="count"></span></div><button id="home">⌂ Visão inicial</button></div><div id="scene" tabindex="0" aria-label="Bancada 3D interativa"><div class="scene-tag">GHOSTLAB / WORKSPACE 01</div><div class="guide">Arraste o fundo para orbitar · Scroll para zoom · Selecione uma peça para mover</div></div><div class="editor"><div class="editor-head"><b>〈/〉 sketch.ino</b><span>Prévia — código ainda não executado</span></div><textarea spellcheck="false" aria-label="Código Arduino">// Seu próximo projeto começa aqui.
+  `<header><div class="brand">◈ <b>ghostlab</b><span>LABORATÓRIO VIRTUAL</span></div><div class="project">Minha primeira bancada <span> / rascunho</span></div><span class="badge">● PRÉVIA INTERATIVA</span></header><main><aside><div class="eyebrow">SUA CAIXA DE FERRAMENTAS</div><h2>Componentes</h2><input id="search" placeholder="Buscar componente…" aria-label="Buscar componente"><div id="catalog"></div><div class="note">Construa uma ideia.<br>Comece adicionando uma peça à bancada.</div></aside><section class="workspace"><div class="toolbar"><div><b>Bancada 3D</b><span id="count"></span></div><button id="home">⌂ Visão inicial</button></div><div id="scene" tabindex="0" aria-label="Bancada 3D interativa"><div class="scene-tag">GHOSTLAB / WORKSPACE 01</div><div class="guide">Arraste o fundo para orbitar · Scroll para zoom · Arraste as peças para mover</div></div><div class="editor"><div class="editor-head"><b>〈/〉 sketch.ino</b><span>Prévia — código ainda não executado</span></div><textarea spellcheck="false" aria-label="Código Arduino">// Seu próximo projeto começa aqui.
 // Nesta prévia, o código não é executado.
 void setup() {
   pinMode(13, OUTPUT);
@@ -95,7 +96,7 @@ controls.maxPolarAngle = Math.PI / 2.1;
 controls.minDistance = 4;
 controls.maxDistance = 35;
 function home() {
-  camera.position.set(10, 13, 15);
+  camera.position.set(8, 10, 12);
   controls.target.set(0, 0, 0);
   controls.update();
 }
@@ -120,82 +121,11 @@ function box(group, w, h, d, color, x = 0, y = 0, z = 0) {
   group.add(m);
   return m;
 }
-function text(group, label, x, y, z) {
-  const c = document.createElement("canvas");
-  c.width = 512;
-  c.height = 80;
-  const ctx = c.getContext("2d");
-  ctx.font = "bold 30px monospace";
-  ctx.textAlign = "center";
-  ctx.fillStyle = "#ecf8ff";
-  ctx.fillText(label, 256, 50);
-  const s = new T.Sprite(
-    new T.SpriteMaterial({ map: new T.CanvasTexture(c), depthTest: false }),
-  );
-  s.position.set(x, y, z);
-  s.scale.set(2.6, 0.4, 1);
-  group.add(s);
-}
 function add(type, x, z) {
   const data = catalog[type],
     g = new T.Group();
   const [w, h, d] = data.size;
-  box(g, w, h, d, data.color, 0, h / 2, 0);
-  if (type === "uno") {
-    box(g, 1.1, 0.18, 0.55, 0x192328, 0, 0.3, 0);
-    box(g, 0.55, 0.35, 0.5, 0xb9c4c8, -1.2, 0.3, 0);
-    text(g, "UNO", 0, 0.6, 0);
-  }
-  if (type === "board") {
-    for (let a = 0; a < 24; a++)
-      for (let b = 0; b < 8; b++)
-        box(
-          g,
-          0.055,
-          0.02,
-          0.055,
-          0x68737a,
-          -1.7 + a * 0.145,
-          0.26,
-          -0.75 + b * 0.21,
-        );
-  }
-  if (type === "sensor") {
-    for (const x of [-0.45, 0.45]) {
-      const m = new T.Mesh(
-        new T.CylinderGeometry(0.3, 0.3, 0.35, 24),
-        new T.MeshStandardMaterial({ color: 0xc7d1d7 }),
-      );
-      m.rotation.x = Math.PI / 2;
-      m.position.set(x, 0.3, 0.3);
-      g.add(m);
-    }
-  }
-  if (type === "servo") box(g, 1.4, 0.12, 0.15, 0xe2e9ef, 0.3, 1.1, 0);
-  if (type === "led") {
-    const m = new T.Mesh(
-      new T.SphereGeometry(0.28, 20, 12),
-      new T.MeshStandardMaterial({ color: data.color }),
-    );
-    m.position.y = 0.7;
-    g.add(m);
-  }
-  data.pins.forEach((p, i) => {
-    const row = i % 2,
-      idx = Math.floor(i / 2),
-      n = Math.ceil(data.pins.length / 2);
-    const terminal = box(
-      g,
-      0.09,
-      0.16,
-      0.09,
-      0xd6bc74,
-      -w * 0.4 + (n === 1 ? 0 : (idx * w * 0.8) / (n - 1)),
-      h + 0.08,
-      (row ? 1 : -1) * d * 0.4,
-    );
-    terminal.userData.pinName = p;
-  });
+  decorate(g, type, data.pins);
   const item = { id: ++serial, type, group: g };
   g.position.set(
     x ?? ((items.length % 4) - 1.5) * 2.4,
@@ -222,7 +152,7 @@ function select(item) {
   renderPanel();
 }
 function remove() {
-  if (!selected) return;
+  if (!selected || drag) return;
   const item = selected;
   scene.remove(item.group);
   item.group.traverse((o) => {
@@ -238,7 +168,7 @@ function remove() {
 function renderPanel() {
   document.querySelector("#count").textContent = `${items.length} componentes`;
   document.querySelector("#details").innerHTML = selected
-    ? `<div class="selected-icon">◈</div><h3>${catalog[selected.type].name} <small>#${selected.id}</small></h3><div class="eyebrow">POSIÇÃO NA BANCADA</div><div class="coords"><label>X <input id="x" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.x}"></label><label>Z <input id="z" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.z}"></label></div><p class="hint">Use as setas do teclado com a bancada em foco para mover a peça.</p><div class="eyebrow">PINOS</div><div class="pins">${catalog[selected.type].pins.map((p) => `<span>${p}</span>`).join("")}</div><button id="delete" class="danger">Remover componente</button>`
+    ? `<div class="selected-icon">◈</div><h3>${catalog[selected.type].name} <small>#${selected.id}</small></h3><div class="eyebrow">POSIÇÃO NA BANCADA</div><div class="coords"><label>X <input id="x" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.x}"></label><label>Z <input id="z" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.z}"></label></div><p class="hint">Arraste a peça na cena. As setas e coordenadas permitem ajustes finos.</p><div class="eyebrow">PINOS</div><div class="pins">${catalog[selected.type].pins.map((p) => `<span>${p}</span>`).join("")}</div><button id="delete" class="danger">Remover componente</button>`
     : '<div class="empty">Selecione um componente na cena ou na lista para inspecionar seus pinos e ajustar a posição.</div>';
   for (const axis of ["x", "z"])
     document.querySelector("#" + axis)?.addEventListener("change", (e) => {
@@ -260,27 +190,75 @@ function renderPanel() {
     list.append(b);
   });
 }
-let down;
-renderer.domElement.addEventListener("pointerdown", (e) => {
-  down = [e.clientX, e.clientY];
-  host.focus();
-});
-renderer.domElement.addEventListener("pointerup", (e) => {
-  if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 5) return;
-  const r = host.getBoundingClientRect();
+let drag = null;
+const dragPlane = new T.Plane(new T.Vector3(0, 1, 0), 0);
+function updateRay(event) {
+  const r = renderer.domElement.getBoundingClientRect();
   pointer.set(
-    ((e.clientX - r.left) / r.width) * 2 - 1,
-    (-(e.clientY - r.top) / r.height) * 2 + 1,
+    ((event.clientX - r.left) / r.width) * 2 - 1,
+    (-(event.clientY - r.top) / r.height) * 2 + 1,
   );
   ray.setFromCamera(pointer, camera);
-  const hit = ray.intersectObjects(
-    items.map((i) => i.group),
-    true,
-  )[0];
-  let o = hit?.object;
-  while (o && !o.userData.item) o = o.parent;
-  select(o?.userData.item ?? null);
+}
+renderer.domElement.addEventListener(
+  "pointerdown",
+  (event) => {
+    if (event.button !== 0 || drag) return;
+    updateRay(event);
+    let object = ray.intersectObjects(
+      items.map((item) => item.group),
+      true,
+    )[0]?.object;
+    while (object && !object.userData.item) object = object.parent;
+    const item = object?.userData.item;
+    if (!item) {
+      select(null);
+      return;
+    }
+    const point = ray.ray.intersectPlane(dragPlane, new T.Vector3());
+    if (!point) return;
+    controls.enabled = false;
+    event.stopImmediatePropagation();
+    select(item);
+    host.focus();
+    drag = {
+      item,
+      id: event.pointerId,
+      offset: item.group.position.clone().sub(point),
+    };
+    renderer.domElement.setPointerCapture(event.pointerId);
+    renderer.domElement.style.cursor = "grabbing";
+  },
+  true,
+);
+renderer.domElement.addEventListener("pointermove", (event) => {
+  if (!drag || event.pointerId !== drag.id) return;
+  updateRay(event);
+  const point = ray.ray.intersectPlane(dragPlane, new T.Vector3());
+  if (!point) return;
+  point.add(drag.offset);
+  drag.item.group.position.set(
+    T.MathUtils.clamp(point.x, -15, 15),
+    0,
+    T.MathUtils.clamp(point.z, -15, 15),
+  );
+  outline?.update();
+  for (const axis of ["x", "z"]) {
+    const input = document.querySelector("#" + axis);
+    if (input) input.value = drag.item.group.position[axis].toFixed(2);
+  }
 });
+function endDrag(event) {
+  if (!drag || event.pointerId !== drag.id) return;
+  drag = null;
+  controls.enabled = true;
+  renderer.domElement.style.cursor = "grab";
+  renderPanel();
+  if (renderer.domElement.hasPointerCapture(event.pointerId))
+    renderer.domElement.releasePointerCapture(event.pointerId);
+}
+for (const event of ["pointerup", "pointercancel", "lostpointercapture"])
+  renderer.domElement.addEventListener(event, endDrag);
 host.addEventListener("keydown", (e) => {
   if (e.key === "Home") {
     home();
@@ -332,7 +310,7 @@ add("uno", -2, 0);
 add("board", 2, 0);
 select(null);
 renderer.setAnimationLoop(() => {
-  controls.update();
+  if (!drag) controls.update();
   renderer.render(scene, camera);
 });
 
@@ -364,3 +342,7 @@ renderer.domElement.addEventListener(
   "pointerleave",
   () => (pinTip.hidden = true),
 );
+
+window.addEventListener("blur", () => {
+  if (drag) endDrag({ pointerId: drag.id });
+});

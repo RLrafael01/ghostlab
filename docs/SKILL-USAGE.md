@@ -41,3 +41,6 @@ Este histórico é mantido por instrução aos agentes; não existe interceptaç
 | 014 | 29/10/2026 | `code-review` | Revisar tarefa 02 | concluído | Dois revisores: padrões e especificação. Corrigidos campos de posição, identificação de pinos por tooltip, instruções locais e licença indevida. Formatação aplicada; modularização futura permanece recomendação. |
 
 A skill `tdd` foi lida, mas não aplicada em ciclo red/green nesta implementação; não há testes automatizados adicionados até este registro.
+
+| 015 | 29/10/2026 | `implement` | Refinar modelos e permitir arraste direto | concluído | Modelos procedurais detalhados; arraste com captura de ponteiro e câmera desativada durante movimento. Arraste da Uno verificado no navegador. |
+| 016 | 29/10/2026 | `code-review` | Revisar arraste e modelos | concluído | Dois eixos revisados: corrigida inércia da câmera durante arraste e associados nomes aos terminais reais dos modelos. |
