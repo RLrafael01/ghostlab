@@ -60,4 +60,7 @@ A skill `tdd` foi lida, mas não aplicada em ciclo red/green nesta implementaç�
 | 024 | 29/10/2026 | `code-review` | Revisar tela cheia, miniaturas e arraste do catálogo | concluído | Standards: 1 achado (cache de falha da miniatura), corrigido; Spec: 0 achados. Listeners de cancelamento limitados ao arraste ativo. |
 | 025 | 29/10/2026 | `pr` | Preparar PR para colaboração no GhostLab | concluído | PR #1 aberto: https://github.com/RLrafael01/ghostlab/pull/1. Descrição com estrutura, evidências e impacto; sem merge na main. |
 
-| 026 | 29/10/2026 | `implement` | Redesenhar fullscreen com dock circular e ilustrações | em andamento | Revisão do PR #1: fullscreen exclusivamente nativo, ícones vetoriais e carrossel com escala/desvanecimento. |
+| 026 | 29/10/2026 | `implement` | Redesenhar fullscreen com dock circular e ilustrações | concluído | Fullscreen nativo verificado; carrossel horizontal, abertura de Código e inserção vertical de LED testados no navegador. SVGs autorais substituem os renders das miniaturas. |
+
+| 027 | 29/10/2026 | `code-review` | Revisar dock circular e fullscreen nativo | concluído | Standards: 2 achados corrigidos (estilos da prévia arrastada e cancelamento de gesto no fundo). Spec: 0 achados. Base 9f639c1. |
+| 028 | 29/10/2026 | `pr` | Atualizar PR #1 para o novo dock | em andamento | Reescrever título e descrição pelo comportamento final; manter sem merge. |

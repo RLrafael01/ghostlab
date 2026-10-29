@@ -106,6 +106,7 @@ export function makeCatalogDraggable(card, type, { preview, drop, swipe }) {
     if (!drag.ghost) {
       suppressClick = true;
       drag.ghost = card.cloneNode(true);
+      drag.ghost.removeAttribute("style");
       drag.ghost.removeAttribute("id");
       drag.ghost.removeAttribute("aria-label");
       drag.ghost.setAttribute("aria-hidden", "true");

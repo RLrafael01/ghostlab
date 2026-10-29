@@ -134,6 +134,22 @@ export function setupImmersiveDock(catalog, { add, preview, drop }) {
       if (track.hasPointerCapture(event.pointerId))
         track.releasePointerCapture(event.pointerId);
     });
+  function cancelBackground() {
+    if (!background) return;
+    const pointerId = background.id;
+    background = null;
+    swipe(0, true);
+    if (track.hasPointerCapture(pointerId))
+      track.releasePointerCapture(pointerId);
+  }
+  window.addEventListener("blur", cancelBackground);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) cancelBackground();
+  });
+  document.addEventListener("fullscreenchange", cancelBackground);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") cancelBackground();
+  });
   new ResizeObserver(render).observe(track);
   render();
 }
