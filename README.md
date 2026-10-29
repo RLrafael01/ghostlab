@@ -65,3 +65,37 @@ A bancada abre com Uno, protoboard, LED, resistor e quatro jumpers **visuais**. 
 Iluminação de estúdio, sombras de contato, materiais de plástico/metal/encapsulamento e serigrafia autoral melhoram a leitura. Inscrições do GhostLab não reproduzem o layout de fabricação do fabricante. A referência visual orienta o acabamento; a placa permanece Uno, sem adicionar Pico ou display OLED ao escopo.
 
 Verificação de fios: `node --test tests/*.test.js`.
+
+
+## Tela cheia e catálogo
+
+“Tela cheia” usa a API nativa do navegador: catálogo lateral, inspetor e barras somem. Escape ou “Sair da tela cheia” retorna ao layout normal. Se o navegador não permitir, o app informa a falha e permanece no modo normal; não há substituição por uma janela expandida.
+
+Na tela cheia, um dock circular mantém componentes, Código e Visão inicial acessíveis. Arraste horizontalmente, use a roda/trackpad, as setas laterais ou as teclas esquerda/direita para percorrer. O item central aumenta; os laterais diminuem e desaparecem. Clique num item lateral para centralizá-lo e no centro para adicionar/ativar. Arraste uma peça para cima e solte na bancada para posicioná-la; soltar sobre o dock, editor ou fora da cena cancela.
+
+O catálogo e o dock usam ilustrações SVG autorais, sem renderização WebGL para as miniaturas. As peças da bancada continuam usando os modelos CAD. O editor abre como painel sobre a bancada, preservando o código ao recolher ou sair da tela cheia. A animação respeita a preferência de movimento reduzido.
+
+Mudanças passam por branch e Pull Request; não enviar trabalho compartilhado diretamente à main.
+
+## Colaboração e prévias dos PRs
+
+A `main` exige PR, uma aprovação de outra pessoa, conversas resolvidas e o check **Build and tests** passando com a branch atualizada. Novos commits invalidam aprovações anteriores. A regra inclui administradores; force-push e exclusão da main estão bloqueados.
+
+1. Atualize a main e crie uma branch para sua tarefa.
+2. Envie os commits e abra um PR para main.
+3. Em **Checks → Publish site**, abra o link da prévia no resumo da execução ou em **View deployment**. O endereço é `https://rlrafael01.github.io/ghostlab/pr-N/`, substituindo N pelo número do PR.
+4. A outra pessoa testa, revisa Files changed e aprova. Então faça merge e atualize a main local.
+
+O workflow `.github/workflows/pr.yml` instala dependências, roda `npm test`, faz o build e publica cada PR do próprio repositório em uma pasta independente. A etapa de publicação não executa o código do PR. Forks recebem testes/build, sem publicação automática com permissões de escrita. As prévias são públicas e visuais; não coloque segredos no frontend. A branch `preview-pages` guarda somente arquivos gerados e nunca deve ser mesclada na main. As prévias permanecem disponíveis após fechar o PR; a limpeza é manual nesta versão. Publicações são serializadas em uma fila de até 100 execuções; execuções de commits ultrapassados ou PRs fechados são interrompidas antes de alterar os arquivos publicados. `revision.txt` na pasta da prévia identifica o commit publicado.
+
+Os workflows passam a acompanhar as novas branches criadas da main depois que este PR de configuração for aprovado e mesclado. A prévia do Sites criada anteriormente é uma cópia manual separada.
+
+Fora da tela cheia, o editor permanece aberto na parte inferior da bancada. Em tela cheia começa recolhido e pode ser aberto pelo dock; sair restaura o editor sem perder texto.
+
+## Site da main
+
+Link fixo: https://rlrafael01.github.io/ghostlab/main/
+
+Após o merge do PR que adiciona esta configuração, cada push na main (incluindo merges) roda testes e build e publica automaticamente neste endereço. Aguarde **Build and tests** e **Publish site** ficarem verdes no GitHub Actions. Não é necessário pull para testar pelo navegador; pull continua necessário para atualizar o código local.
+
+Falha nos testes/build preserva o último site publicado. A main e os PRs compartilham uma fila de publicação, mas usam pastas independentes. Execuções ultrapassadas da main são rejeitadas antes de publicar. O arquivo `main/revision.txt` identifica o commit publicado. O site só muda após a publicação terminar; aprovar um PR sem fazer merge não atualiza a main.

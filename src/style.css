@@ -421,3 +421,372 @@ footer i {
   width: 100%;
   margin-top: 15px;
 }
+
+[hidden] {
+  display: none !important;
+}
+#code-toggle {
+  border-radius: 0;
+  border-inline: 0;
+  border-bottom: 0;
+  color: #91e8cd;
+  min-height: 38px;
+  text-align: left;
+  padding-left: 20px;
+  background: #15262e;
+}
+.editor {
+  animation: reveal-code 180ms ease-out;
+}
+@keyframes reveal-code {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+main.expanded-workbench,
+main:fullscreen {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  min-height: 0;
+  z-index: 100;
+  background: #101923;
+  grid-template-columns: 230px minmax(0, 1fr);
+}
+.expanded-workbench .inspector,
+main:fullscreen .inspector {
+  display: none;
+}
+.expanded-workbench .toolbox,
+main:fullscreen .toolbox {
+  max-height: none;
+  height: 100%;
+}
+.expanded-workbench .workspace,
+main:fullscreen .workspace {
+  min-height: 0;
+}
+.catalog-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 9px;
+  gap: 7px;
+  user-select: none;
+  cursor: grab;
+}
+.component-preview {
+  grid-column: 1 / -1;
+  height: 94px;
+  display: grid;
+  place-items: center;
+  border-radius: 5px;
+  background: radial-gradient(ellipse, #304552, #14212d 75%);
+  overflow: hidden;
+  color: #97aebc;
+  font-size: 10px;
+}
+.component-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+.catalog-item small {
+  font-size: 9px;
+}
+.catalog-drag-ghost {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  width: 145px;
+  padding: 8px;
+  background: #162832ed;
+  border: 1px solid #77919f;
+  border-radius: 10px;
+  box-shadow: 0 12px 35px #0007;
+  opacity: 0.9;
+  transform: rotate(-4deg);
+}
+.catalog-drag-ghost .component-preview {
+  height: 75px;
+}
+.catalog-drag-ghost small,
+.catalog-drag-ghost strong {
+  display: none;
+}
+.catalog-drag-ghost.valid-drop {
+  border-color: #6ff0ca;
+}
+#scene.drop-ready {
+  box-shadow: inset 0 0 0 2px #6ff0ca;
+}
+@media (max-width: 760px) {
+  main.expanded-workbench,
+  main:fullscreen {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+  }
+  .expanded-workbench #catalog,
+  main:fullscreen #catalog {
+    display: block;
+  }
+  .expanded-workbench #scene,
+  main:fullscreen #scene {
+    flex: 1;
+    height: auto;
+    min-height: 120px;
+  }
+  .expanded-workbench .toolbar,
+  main:fullscreen .toolbar {
+    padding: 6px;
+    gap: 5px;
+  }
+  .expanded-workbench .toolbox,
+  main:fullscreen .toolbox {
+    padding: 10px 6px;
+  }
+  .expanded-workbench .eyebrow,
+  main:fullscreen .eyebrow {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .editor {
+    animation: none;
+  }
+}
+
+/* Native fullscreen becomes an unobstructed desktop with a carousel dock. */
+.immersive-dock {
+  display: none;
+}
+main:fullscreen {
+  display: block !important;
+  overflow: hidden;
+}
+main:fullscreen .toolbox,
+main:fullscreen .inspector,
+main:fullscreen #code-toggle {
+  display: none !important;
+}
+main:fullscreen .workspace {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+main:fullscreen #scene {
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+}
+main:fullscreen .toolbar {
+  position: absolute;
+  right: 20px;
+  top: 18px;
+  z-index: 25;
+  background: transparent;
+  padding: 0;
+  min-height: 0;
+}
+main:fullscreen .toolbar > :not(#fullscreen) {
+  display: none;
+}
+main:fullscreen #fullscreen {
+  background: #172831c9;
+  backdrop-filter: blur(14px);
+}
+main:fullscreen .scene-tag {
+  top: 24px;
+}
+main:fullscreen .guide {
+  bottom: 205px;
+}
+main:fullscreen .immersive-dock {
+  display: block;
+}
+.immersive-dock {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(740px, 96vw);
+  z-index: 30;
+  user-select: none;
+}
+.dock-caption {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 7px;
+  text-shadow: 0 2px 6px #000;
+}
+.dock-caption b {
+  font-size: 15px;
+  color: #ecfff8;
+}
+.dock-caption span,
+.dock-position {
+  font-size: 10px;
+  color: #a6bfc7;
+}
+.dock-body {
+  position: relative;
+  height: 122px;
+  border: 1px solid #afdddb38;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #6d92934a, #152735b8);
+  backdrop-filter: blur(24px);
+  box-shadow:
+    0 18px 60px #0008,
+    inset 0 1px #d7ffff24;
+}
+.dock-track {
+  position: absolute;
+  inset: -12px 48px 0;
+  overflow: hidden;
+  touch-action: none;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+}
+.dock-card {
+  position: absolute;
+  left: 50%;
+  top: 12px;
+  width: 104px;
+  height: 106px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 22px;
+  transform-origin: 50% 80%;
+  transition:
+    transform 220ms ease,
+    opacity 220ms ease;
+  cursor: grab;
+}
+.dock-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 5px #0005);
+}
+.dock-card:hover {
+  background: #bddcdb12;
+  border-color: #bfe4df42;
+}
+.dock-card[aria-current="true"] {
+  background: linear-gradient(#b2f9df12, #b2f9df04);
+  border-color: #8feac84d;
+}
+.swiping .dock-card {
+  transition: none;
+}
+.dock-prev,
+.dock-next {
+  position: absolute;
+  top: 38px;
+  width: 34px;
+  height: 42px;
+  border: 0;
+  border-radius: 12px;
+  background: #10202a77;
+  font-size: 26px;
+  padding: 0;
+  z-index: 20;
+}
+.dock-prev {
+  left: 9px;
+}
+.dock-next {
+  right: 9px;
+}
+.dock-position {
+  text-align: center;
+  margin-top: 8px;
+}
+main:fullscreen .editor {
+  position: absolute;
+  z-index: 26;
+  bottom: 210px;
+  left: max(20px, calc((100vw - 960px) / 2));
+  right: max(20px, calc((100vw - 960px) / 2));
+  height: min(300px, 43vh);
+  border: 1px solid #648e9166;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0e1c27f0;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 10px 50px #0008;
+}
+main:fullscreen .editor textarea {
+  height: calc(100% - 40px);
+}
+.fullscreen-message {
+  position: fixed;
+  right: 20px;
+  top: 130px;
+  z-index: 120;
+  max-width: 360px;
+  background: #422e21;
+  color: #ffdbb3;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+.catalog-drag-ghost > img {
+  width: 110px;
+  height: 90px;
+  object-fit: contain;
+}
+.component-preview {
+  background: radial-gradient(ellipse at 50% 65%, #314a56, #172530 75%);
+}
+.component-preview img {
+  filter: drop-shadow(0 6px 5px #0003);
+}
+@media (prefers-reduced-motion: reduce) {
+  .dock-card {
+    transition: none;
+  }
+}
+@media (max-width: 600px) {
+  .dock-caption span {
+    font-size: 9px;
+  }
+  .dock-track {
+    inset-inline: 32px;
+  }
+  .dock-card {
+    width: 82px;
+  }
+  main:fullscreen .scene-tag {
+    max-width: 180px;
+    line-height: 1.5;
+  }
+}
+
+/* Keep the editor in view on desktop; only fullscreen can collapse it. */
+main:not(:fullscreen) #code-toggle,
+main:not(:fullscreen) #close-code {
+  display: none;
+}
+@media (min-width: 761px) {
+  main { min-height: 0; height: calc(100dvh - 108px); }
+  .workspace { min-height: 0; overflow: hidden; }
+  #scene { min-height: 100px; }
+  .editor { height: clamp(150px, 27vh, 240px); }
+  .editor textarea { height: calc(100% - 40px); }
+}

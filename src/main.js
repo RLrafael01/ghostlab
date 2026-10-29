@@ -1,3 +1,9 @@
+import { setupImmersiveDock } from "./immersive-dock.js";
+import { componentPreview } from "./catalog-previews.js";
+import {
+  setupWorkspacePanels,
+  makeCatalogDraggable,
+} from "./workspace-panels.js";
 import { BREADBOARD } from "./breadboard-layout.js";
 import * as T from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -61,7 +67,7 @@ const catalog = {
   },
 };
 document.querySelector("#app").innerHTML =
-  `<header><div class="brand">◈ <b>ghostlab</b><span>LABORATÓRIO VIRTUAL</span></div><div class="project">Minha primeira bancada <span> / rascunho</span></div><span class="badge">● PRÉVIA INTERATIVA</span></header><main><aside><div class="eyebrow">SUA CAIXA DE FERRAMENTAS</div><h2>Componentes</h2><input id="search" placeholder="Buscar componente…" aria-label="Buscar componente"><div id="catalog"></div><div class="note">Construa uma ideia.<br>Comece adicionando uma peça à bancada.</div></aside><section class="workspace"><div class="toolbar"><div><b>Bancada 3D</b><span id="count"></span></div><label class="snap-control"><input type="checkbox" id="snap" checked title="Aproxima LED, resistor e botão aos contatos; não valida ligações elétricas"> Encaixe visual</label><button id="home">⌂ Visão inicial</button></div><div id="scene" tabindex="0" aria-label="Bancada 3D interativa"><div class="scene-tag">MONTAGEM VISUAL · SEM SIMULAÇÃO ELÉTRICA</div><div class="guide">WASD / setas: navegar · Arraste o fundo: orbitar · Scroll: zoom · Arraste peças: mover</div></div><div class="editor"><div class="editor-head"><b>〈/〉 sketch.ino</b><span>Prévia — código ainda não executado</span></div><textarea spellcheck="false" aria-label="Código Arduino">// Seu próximo projeto começa aqui.
+  `<header><div class="brand">◈ <b>ghostlab</b><span>LABORATÓRIO VIRTUAL</span></div><div class="project">Minha primeira bancada <span> / rascunho</span></div><span class="badge">● PRÉVIA INTERATIVA</span></header><main><aside class="toolbox"><div class="eyebrow">SUA CAIXA DE FERRAMENTAS</div><h2>Componentes</h2><input id="search" placeholder="Buscar componente…" aria-label="Buscar componente"><div id="catalog"></div><div class="note">Construa uma ideia.<br>Comece adicionando uma peça à bancada.</div></aside><section class="workspace"><div class="toolbar"><div><b>Bancada 3D</b><span id="count"></span></div><label class="snap-control"><input type="checkbox" id="snap" checked title="Aproxima LED, resistor e botão aos contatos; não valida ligações elétricas"> Encaixe visual</label><button id="fullscreen" aria-pressed="false">⤢ Tela cheia</button><button id="home">⌂ Visão inicial</button></div><div id="scene" tabindex="0" aria-label="Bancada 3D interativa"><div class="scene-tag">MONTAGEM VISUAL · SEM SIMULAÇÃO ELÉTRICA</div><div class="guide">WASD / setas: navegar · Arraste o fundo: orbitar · Scroll: zoom · Arraste peças: mover</div></div><button id="code-toggle" aria-expanded="false" aria-controls="code-panel">〈/〉 Código</button><div class="editor" id="code-panel"><div class="editor-head"><b>〈/〉 sketch.ino</b><span>Prévia — código ainda não executado</span><button id="close-code" aria-label="Recolher código">⌄</button></div><textarea spellcheck="false" aria-label="Código Arduino">// Seu próximo projeto começa aqui.
 // Nesta prévia, o código não é executado.
 void setup() {
   pinMode(13, OUTPUT);
@@ -70,6 +76,7 @@ void setup() {
 void loop() {
   digitalWrite(13, HIGH);
 }</textarea></div></section><aside class="inspector"><div class="eyebrow">DETALHES DA MONTAGEM</div><h2>Inspetor</h2><div id="details"></div><h3>Na bancada</h3><div id="parts"></div><div class="note">Montagem visual disponível.<br>Execução de firmware e conexões elétricas serão integradas nas próximas etapas.</div></aside></main><footer><span><i></i> Bancada pronta</span><span>UNO · PRÉVIA VISUAL</span><span>GhostLab / 2026</span></footer>`;
+setupWorkspacePanels();
 const host = document.querySelector("#scene"),
   scene = new T.Scene();
 
@@ -98,7 +105,8 @@ const items = [];
 let selected = null,
   serial = 0,
   outline = null;
-async function add(type, x, z) {
+const placements = new Map();
+async function add(type, x, z, animate = false) {
   const data = catalog[type],
     g = new T.Group();
   const status = document.querySelector("footer span");
@@ -120,6 +128,11 @@ async function add(type, x, z) {
   g.userData.item = item;
   scene.add(g);
   items.push(item);
+  if (animate) {
+    snapToBoard(item);
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
+      placements.set(item, performance.now());
+  }
   if (!drag) select(item);
   else renderPanel();
   return item;
@@ -141,6 +154,7 @@ function select(item) {
 function remove() {
   if (!selected || drag) return;
   const item = selected;
+  placements.delete(item);
   visualWires.removeFor(item);
   for (const child of items)
     if (child.mountedTo === item) {
@@ -277,6 +291,11 @@ renderer.domElement.addEventListener(
     )[0]?.object;
     while (object && !object.userData.item) object = object.parent;
     const item = object?.userData.item;
+    if (item && placements.has(item)) {
+      placements.delete(item);
+      item.group.children[0].scale.setScalar(1);
+      item.group.children[0].position.y = 0;
+    }
     if (!item) {
       select(null);
       return;
@@ -338,6 +357,46 @@ host.addEventListener("keydown", (e) => {
   }
   if (e.key === "Delete") remove();
 });
+const dropMarker = new T.Mesh(
+  new T.RingGeometry(0.2, 0.27, 32),
+  new T.MeshBasicMaterial({
+    color: 0x6ff0ca,
+    side: T.DoubleSide,
+    depthTest: false,
+  }),
+);
+dropMarker.rotation.x = -Math.PI / 2;
+dropMarker.visible = false;
+dropMarker.renderOrder = 10;
+scene.add(dropMarker);
+function dropPosition(event) {
+  if (!event) return null;
+  const rect = renderer.domElement.getBoundingClientRect();
+  const surface = document.elementFromPoint(event.clientX, event.clientY);
+  if (surface !== renderer.domElement && surface !== host) return null;
+  if (
+    event.clientX < rect.left ||
+    event.clientX > rect.right ||
+    event.clientY < rect.top ||
+    event.clientY > rect.bottom
+  )
+    return null;
+  updateRay(event);
+  const point = ray.ray.intersectPlane(dragPlane, new T.Vector3());
+  if (!point || Math.abs(point.x) > 15 || Math.abs(point.z) > 15) return null;
+  return point;
+}
+function previewDrop(event) {
+  const point = dropPosition(event);
+  dropMarker.visible = !!point;
+  host.classList.toggle("drop-ready", !!point);
+  if (point) dropMarker.position.set(point.x, 0.03, point.z);
+  return !!point;
+}
+function dropComponent(type, event) {
+  const point = dropPosition(event);
+  if (point) add(type, point.x, point.z, true);
+}
 function showCatalog(query = "") {
   const list = document.querySelector("#catalog");
   list.innerHTML = "";
@@ -346,8 +405,25 @@ function showCatalog(query = "") {
     .forEach(([type, v]) => {
       const b = document.createElement("button");
       b.className = "catalog-item";
-      b.innerHTML = `<span class="chip" style="background:#${v.color.toString(16).padStart(6, "0")}">◈</span><span>${v.name}<small>${type === "board" ? "830 contatos" : v.pins.length + " pinos"}</small></span><strong>＋</strong>`;
-      b.onclick = () => add(type);
+      b.setAttribute("aria-label", `Adicionar ${v.name}`);
+      b.innerHTML = `<span class="component-preview" aria-hidden="true"><span>Ilustração</span></span><span>${v.name}<small>${type === "board" ? "830 contatos" : v.pins.length + " pinos"} · arraste ou clique</small></span><strong>＋</strong>`;
+      componentPreview(type)
+        .then((url) => {
+          const image = document.createElement("img");
+          image.src = url;
+          image.alt = "";
+          image.draggable = false;
+          b.querySelector(".component-preview").replaceChildren(image);
+        })
+        .catch(() => {
+          b.querySelector(".component-preview").textContent =
+            "Prévia indisponível";
+        });
+      makeCatalogDraggable(b, type, {
+        preview: previewDrop,
+        drop: dropComponent,
+      });
+      b.onclick = () => add(type, undefined, undefined, true);
       list.append(b);
     });
 }
@@ -361,6 +437,11 @@ new ResizeObserver(() => {
   camera.updateProjectionMatrix();
 }).observe(host);
 showCatalog();
+setupImmersiveDock(catalog, {
+  add: (type) => add(type, undefined, undefined, true),
+  preview: previewDrop,
+  drop: dropComponent,
+});
 async function loadPresentation() {
   const [uno, board, led, resistor] = await Promise.all([
     add("uno", -3.8, 0),
@@ -386,6 +467,15 @@ renderer.setAnimationLoop((now) => {
   if (!drag) {
     navigation.update(deltaSeconds);
     controls.update();
+  }
+  for (const [item, started] of placements) {
+    const t = Math.min(1, (now - started) / 320);
+    const model = item.group.children[0];
+    const ease = 1 - Math.pow(1 - t, 3);
+    model.scale.setScalar(0.8 + 0.2 * ease);
+    model.position.y = 0.5 * (1 - ease);
+    if (t === 1) placements.delete(item);
+    if (selected === item) outline?.update();
   }
   visualWires.update();
   renderer.render(scene, camera);
