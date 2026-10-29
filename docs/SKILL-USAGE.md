@@ -44,3 +44,5 @@ A skill `tdd` foi lida, mas não aplicada em ciclo red/green nesta implementaç�
 
 | 015 | 29/10/2026 | `implement` | Refinar modelos e permitir arraste direto | concluído | Modelos procedurais detalhados; arraste com captura de ponteiro e câmera desativada durante movimento. Arraste da Uno verificado no navegador. |
 | 016 | 29/10/2026 | `code-review` | Revisar arraste e modelos | concluído | Dois eixos revisados: corrigida inércia da câmera durante arraste e associados nomes aos terminais reais dos modelos. |
+
+| 017 | 29/10/2026 | `implement` | Substituir representações procedurais por modelos CAD importados | em andamento | Geometria licenciada de Uno, Adafruit e biblioteca FreeCAD; conversão e validação visual em andamento. |

@@ -1,7 +1,7 @@
 import * as T from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import "./style.css";
-import { decorate } from "./models.js";
+import { loadCAD, pinNameForHit } from "./cad-models.js";
 const catalog = {
   uno: {
     name: "Arduino Uno",
@@ -25,6 +25,14 @@ const catalog = {
       "GND",
       "A0",
       "A1",
+      "A2",
+      "A3",
+      "A4",
+      "A5",
+      "AREF",
+      "RESET",
+      "3.3V",
+      "VIN",
     ],
     size: [3, 0.25, 2.2],
   },
@@ -112,25 +120,24 @@ const items = [];
 let selected = null,
   serial = 0,
   outline = null;
-function box(group, w, h, d, color, x = 0, y = 0, z = 0) {
-  const m = new T.Mesh(
-    new T.BoxGeometry(w, h, d),
-    new T.MeshStandardMaterial({ color, roughness: 0.6 }),
-  );
-  m.position.set(x, y, z);
-  group.add(m);
-  return m;
-}
-function add(type, x, z) {
+async function add(type, x, z) {
   const data = catalog[type],
     g = new T.Group();
-  const [w, h, d] = data.size;
-  decorate(g, type, data.pins);
+  const status = document.querySelector("footer span");
+  status.textContent = `Carregando ${data.name}…`;
+  try {
+    g.add(await loadCAD(type));
+  } catch (error) {
+    status.textContent = `Não foi possível carregar ${data.name}. Tente adicionar novamente.`;
+    console.error(error);
+    return;
+  }
+  status.textContent = "Bancada pronta · modelos CAD";
   const item = { id: ++serial, type, group: g };
   g.position.set(
     x ?? ((items.length % 4) - 1.5) * 2.4,
     0,
-    z ?? Math.floor(items.length / 4) * 2.5,
+    z ?? 3 + Math.floor(Math.max(0, items.length - 2) / 4) * 2,
   );
   g.userData.item = item;
   scene.add(g);
@@ -291,7 +298,7 @@ function showCatalog(query = "") {
     .forEach(([type, v]) => {
       const b = document.createElement("button");
       b.className = "catalog-item";
-      b.innerHTML = `<span class="chip" style="background:#${v.color.toString(16).padStart(6, "0")}">◈</span><span>${v.name}<small>${v.pins.length} pinos</small></span><strong>＋</strong>`;
+      b.innerHTML = `<span class="chip" style="background:#${v.color.toString(16).padStart(6, "0")}">◈</span><span>${v.name}<small>${type === "board" ? "830 contatos" : v.pins.length + " pinos"}</small></span><strong>＋</strong>`;
       b.onclick = () => add(type);
       list.append(b);
     });
@@ -306,9 +313,9 @@ new ResizeObserver(() => {
   camera.updateProjectionMatrix();
 }).observe(host);
 showCatalog();
-add("uno", -2, 0);
-add("board", 2, 0);
-select(null);
+Promise.all([add("uno", -3.6, 0), add("board", 2.1, 0)]).then(() =>
+  select(null),
+);
 renderer.setAnimationLoop(() => {
   if (!drag) controls.update();
   renderer.render(scene, camera);
@@ -329,7 +336,7 @@ renderer.domElement.addEventListener("pointermove", (event) => {
     items.map((item) => item.group),
     true,
   )[0];
-  const name = hit?.object.userData.pinName;
+  const name = pinNameForHit(hit);
   pinTip.hidden = !name;
   if (name) {
     pinTip.textContent = "Pino " + name;

@@ -1,0 +1,112 @@
+{
+  "uno": {
+    "author": "benjamino",
+    "source": "https://www.cadcrowd.com/3d-models/arduino-uno",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "files": [
+      "public/models/uno/source.gltf",
+      "public/models/uno/arduino-uno.step.bin"
+    ],
+    "sha256": {
+      "public/models/uno/source.gltf": "9af5da4b635f66d25a82dac708f614f78fbab7167b5fb3d9752b3564ac908ee4",
+      "public/models/uno/arduino-uno.step.bin": "55a210477c830377be1b53892bb99b5eb9f3dee5123182f89ef8910577cdf7cf"
+    }
+  },
+  "board": {
+    "author": "Innerscene",
+    "source": "https://www.innerscene.com/tools/library/3d-parts/830-point-breadboard-3c211feb",
+    "license": "CC0-1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "files": [
+      "public/models/board.glb"
+    ],
+    "sha256": {
+      "public/models/board.glb": "ba304a2348e97814a5b520637be8f5e76ebb8864e9ad458bdbefe798f0f1e9c3"
+    }
+  },
+  "servo": {
+    "author": "Adafruit Industries",
+    "source": "https://github.com/adafruit/Adafruit_CAD_Parts/blob/c128bceb1f96b6ea8b68f250bda986ba85da24ea/2201%20Submicro%20servo/2201%20Submicro%20Servo%20SG51R.step",
+    "license": "MIT",
+    "licenseUrl": "https://opensource.org/license/mit",
+    "files": [
+      "assets/cad/servo.step",
+      "public/models/servo.glb"
+    ],
+    "sha256": {
+      "assets/cad/servo.step": "66fa3c9570de91e698b0077e20adc652eaf3e21f98db499cfc4980c35e740013",
+      "public/models/servo.glb": "3ad5f1d3813387993e70d2c98a06a7cea8ce5d8ae67af90d8f40458e7540879d"
+    }
+  },
+  "button": {
+    "author": "Adafruit Industries",
+    "source": "https://github.com/adafruit/Adafruit_CAD_Parts/blob/c128bceb1f96b6ea8b68f250bda986ba85da24ea/3347%20Metal%20Ball%20Tactile%20Button%206mm/3347%20Metal%20Ball%20Tactile%20Button%206mm.step",
+    "license": "MIT",
+    "licenseUrl": "https://opensource.org/license/mit",
+    "files": [
+      "assets/cad/button.step",
+      "public/models/button.glb"
+    ],
+    "sha256": {
+      "assets/cad/button.step": "a48d39bdbda96d4dd77c609a2a17b9d2f204a35cc271d921033aa16b2077248f",
+      "public/models/button.glb": "28e596614420d95c8b2887c5a7d0b8323ab6387f2e1705df02e8a00b9505ef41"
+    }
+  },
+  "pot": {
+    "author": "Adafruit Industries",
+    "source": "https://github.com/adafruit/Adafruit_CAD_Parts/blob/c128bceb1f96b6ea8b68f250bda986ba85da24ea/562%2010K%20Potentiometer/562%2010K%20Potentiometer.step",
+    "license": "MIT",
+    "licenseUrl": "https://opensource.org/license/mit",
+    "files": [
+      "assets/cad/pot.step",
+      "public/models/pot.glb"
+    ],
+    "sha256": {
+      "assets/cad/pot.step": "38824c650c0cd53b3847c05e055ef209bbf4932c255e95424a3ac4dde7b9feff",
+      "public/models/pot.glb": "3dc3e78cf8085edc63a241b93a2d2c66a9068facfc5d001eadbd6b7dfb952753"
+    }
+  },
+  "led": {
+    "author": "berserkdesign",
+    "source": "https://github.com/FreeCAD/FreeCAD-library/blob/f5ca01cdcaa2f69b9295a6382719c2d90628780c/Electronics%20Parts/LEDs/led-5mm.step",
+    "license": "CC-BY-3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+    "files": [
+      "assets/cad/led.step",
+      "public/models/led.glb"
+    ],
+    "sha256": {
+      "assets/cad/led.step": "b242fbdb070c8e84e874f9be0d1a46ce782e4c64e864db956f1e78f6c82e53bb",
+      "public/models/led.glb": "b31d1e87dd8fd2362b1491d4bdcd470b863058ef387e2f18f1f36359cef14a0a"
+    }
+  },
+  "resistor": {
+    "author": "berserkdesign",
+    "source": "https://github.com/FreeCAD/FreeCAD-library/blob/f5ca01cdcaa2f69b9295a6382719c2d90628780c/Electronics%20Parts/Resistors/res-1_4w-220ohm.step",
+    "license": "CC-BY-3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+    "files": [
+      "assets/cad/resistor.step",
+      "public/models/resistor.glb"
+    ],
+    "sha256": {
+      "assets/cad/resistor.step": "c54f947813a92dbcca8a9f5460d014f8961f72ff238a9d243266ca32ca35847e",
+      "public/models/resistor.glb": "cd7384609f3565be0bdbb9e1e06b56bb7e8fd092f77057b54d463b568bd6ed54"
+    }
+  },
+  "sensor": {
+    "author": "Charles Fox",
+    "source": "https://github.com/FreeCAD/FreeCAD-library/blob/f5ca01cdcaa2f69b9295a6382719c2d90628780c/Sensors/Ultrasonic%20Sensors/HC-SR04.step",
+    "license": "CC-BY-3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+    "files": [
+      "assets/cad/sensor.step",
+      "public/models/sensor.glb"
+    ],
+    "sha256": {
+      "assets/cad/sensor.step": "707e770fe1b10bee6b6e58e62a47ae2f4dee7e28580ab0d0e20f815473aa0ef5",
+      "public/models/sensor.glb": "9609aeca1bc757e6f5b54467d8c52c55104cb624cd43a74022d8105e95ef3852"
+    }
+  }
+}

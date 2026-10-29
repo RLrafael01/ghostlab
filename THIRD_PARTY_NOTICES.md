@@ -5,3 +5,7 @@ As skills em `.agents/skills/` são provenientes de https://github.com/mattpococ
 Licença upstream: MIT. Texto integral em `licenses/mattpocock-skills-LICENSE`.
 
 Instalação inclui setup, planejamento, modelagem de domínio, implementação, TDD, revisão e suas dependências de entrevista e escrita. Consultar cada SKILL.md para condições de uso. A licença acima cobre as skills; a licença do aplicativo ainda será escolhida.
+
+## Modelos 3D
+
+O catálogo utiliza ativos sob CC BY 4.0, CC BY 3.0, CC0 e MIT. Ver [autores, alterações e licenças](public/models/ATTRIBUTION.md) e [manifesto de fontes](public/models/manifest.json). Essas licenças aplicam-se aos respectivos ativos.

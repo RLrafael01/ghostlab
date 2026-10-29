@@ -53,4 +53,4 @@ Abra o endereço mostrado no terminal (normalmente http://127.0.0.1:5173). Para 
 
 Clique no catálogo para adicionar; arraste diretamente as peças sobre a bancada para mover. Selecione na cena ou lista; ajuste X/Z no inspetor ou use as setas para ajustes finos. Delete remove a seleção. Arraste o fundo para orbitar e use o scroll para zoom; “Visão inicial” restaura a câmera. Código ainda não é executado; conexões são a tarefa 03.
 
-Os modelos procedurais possuem detalhes visuais de componentes eletrônicos, mas usam proporções ilustrativas: não são modelos CAD dimensionais.
+Os oito componentes usam modelos 3D importados, incluindo geometrias CAD convertidas de STEP. Escala comum: 1 mm = 0,0445 unidade da cena. Materiais e alvos de interação são adaptações visuais; não há validação de tolerâncias para fabricação. Fontes, autores e licenças: [atribuições dos modelos](public/models/ATTRIBUTION.md). Para reproduzir as conversões: `node scripts/convert-cad.mjs`.
