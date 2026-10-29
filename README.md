@@ -65,3 +65,12 @@ A bancada abre com Uno, protoboard, LED, resistor e quatro jumpers **visuais**. 
 Iluminação de estúdio, sombras de contato, materiais de plástico/metal/encapsulamento e serigrafia autoral melhoram a leitura. Inscrições do GhostLab não reproduzem o layout de fabricação do fabricante. A referência visual orienta o acabamento; a placa permanece Uno, sem adicionar Pico ou display OLED ao escopo.
 
 Verificação de fios: `node --test tests/*.test.js`.
+
+
+## Tela cheia e catálogo
+
+Use “Tela cheia” para ampliar a bancada mantendo o catálogo lateral; o inspetor fica oculto nesse modo. Escape ou “Sair da tela cheia” retorna ao layout normal. Em navegadores incorporados que recusam a API de fullscreen, a bancada ocupa a janela disponível.
+
+O editor começa recolhido. A aba “Código” abre e fecha o mesmo editor, preservando o texto, inclusive ao alternar tela cheia. As miniaturas são renderizações dos próprios modelos CAD. Arraste um cartão para a cena e solte sobre o marcador verde; soltar fora cancela. Clicar no cartão ou acioná-lo com Enter continua adicionando uma peça. A inserção tem uma animação curta, desativada quando o sistema pede movimento reduzido.
+
+Mudanças passam por branch e Pull Request; não enviar trabalho compartilhado diretamente à main.
