@@ -63,4 +63,4 @@ A skill `tdd` foi lida, mas não aplicada em ciclo red/green nesta implementaç�
 | 026 | 29/10/2026 | `implement` | Redesenhar fullscreen com dock circular e ilustrações | concluído | Fullscreen nativo verificado; carrossel horizontal, abertura de Código e inserção vertical de LED testados no navegador. SVGs autorais substituem os renders das miniaturas. |
 
 | 027 | 29/10/2026 | `code-review` | Revisar dock circular e fullscreen nativo | concluído | Standards: 2 achados corrigidos (estilos da prévia arrastada e cancelamento de gesto no fundo). Spec: 0 achados. Base 9f639c1. |
-| 028 | 29/10/2026 | `pr` | Atualizar PR #1 para o novo dock | em andamento | Reescrever título e descrição pelo comportamento final; manter sem merge. |
+| 028 | 29/10/2026 | `pr` | Atualizar PR #1 para o novo dock | concluído | PR #1 atualizado com fullscreen nativo, dock circular e SVGs. Título e descrição refletem o resultado; sem merge na main. |
