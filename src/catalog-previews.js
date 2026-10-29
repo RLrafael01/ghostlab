@@ -47,8 +47,12 @@ export function componentPreview(type) {
         renderer?.forceContextLoss();
       }
     });
-    previews.set(type, pending);
-    queue = pending.catch(() => {});
+    const retryable = pending.catch((error) => {
+      previews.delete(type);
+      throw error;
+    });
+    previews.set(type, retryable);
+    queue = retryable.catch(() => {});
   }
   return previews.get(type);
 }

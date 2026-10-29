@@ -56,4 +56,6 @@ A skill `tdd` foi lida, mas não aplicada em ciclo red/green nesta implementaç�
 
 | 022 | 29/10/2026 | `code-review` | Revisar acabamento, fios e montagem visual | concluído | Dois eixos contra 5de36b8. Corrigidos criação de fios para peças removidas durante carregamento e encaixe fora das colunas válidas; medidas da protoboard centralizadas. Ver VISUAL-REVIEW.md. |
 
-| 023 | 29/10/2026 | `implement` | Tela cheia, código recolhível e catálogo arrastável com miniaturas | em andamento | Branch codex/fullscreen-drag-catalog; entrega por PR conforme solicitado. |
+| 023 | 29/10/2026 | `implement` | Tela cheia, código recolhível e catálogo arrastável com miniaturas | concluído | Tela cheia com catálogo, editor recolhível, miniaturas CAD e arraste com animação. Build e testes existentes aprovados; navegador confirmou fullscreen, inserção por arraste e preservação do código. |
+| 024 | 29/10/2026 | `code-review` | Revisar tela cheia, miniaturas e arraste do catálogo | concluído | Standards: 1 achado (cache de falha da miniatura), corrigido; Spec: 0 achados. Listeners de cancelamento limitados ao arraste ativo. |
+| 025 | 29/10/2026 | `pr` | Preparar PR para colaboração no GhostLab | em andamento | Descrição com estrutura, evidências e impacto da alteração. |

@@ -54,6 +54,26 @@ export function makeCatalogDraggable(card, type, { preview, drop }) {
       y: event.clientY,
       ghost: null,
     };
+    drag.listeners = new AbortController();
+    const options = { signal: drag.listeners.signal };
+    const cancel = () => {
+      if (drag) finish({ pointerId: drag.id }, false);
+    };
+    window.addEventListener("blur", cancel, options);
+    document.addEventListener(
+      "visibilitychange",
+      () => {
+        if (document.hidden) cancel();
+      },
+      options,
+    );
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Escape") cancel();
+      },
+      options,
+    );
     suppressClick = false;
     card.setPointerCapture(event.pointerId);
   });
@@ -85,18 +105,13 @@ export function makeCatalogDraggable(card, type, { preview, drop }) {
     if (!drag || event.pointerId !== drag.id) return;
     const wasDragging = !!drag.ghost;
     drag.ghost?.remove();
+    drag.listeners.abort();
     drag = null;
     if (card.hasPointerCapture(event.pointerId))
       card.releasePointerCapture(event.pointerId);
     if (commit && wasDragging) drop(type, event);
     preview(null);
   }
-  window.addEventListener("blur", () => {
-    if (drag) finish({ pointerId: drag.id }, false);
-  });
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden && drag) finish({ pointerId: drag.id }, false);
-  });
   card.addEventListener("pointerup", (event) => finish(event, true));
   card.addEventListener("pointercancel", (event) => finish(event, false));
   card.addEventListener("lostpointercapture", (event) => finish(event, false));
