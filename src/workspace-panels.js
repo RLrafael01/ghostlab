@@ -3,46 +3,52 @@ export function setupWorkspacePanels() {
   const fullscreen = document.querySelector("#fullscreen");
   const codeButton = document.querySelector("#code-toggle");
   const editor = document.querySelector("#code-panel");
-  let expanded = false;
   function showExpanded(value) {
-    expanded = value;
     shell.classList.toggle("expanded-workbench", value);
     fullscreen.textContent = value ? "⤢ Sair da tela cheia" : "⤢ Tela cheia";
     fullscreen.setAttribute("aria-pressed", String(value));
   }
+  const message = document.createElement("p");
+  message.className = "fullscreen-message";
+  message.setAttribute("role", "alert");
+  message.hidden = true;
+  shell.append(message);
   fullscreen.addEventListener("click", async () => {
-    if (expanded) {
+    message.hidden = true;
+    try {
       if (document.fullscreenElement === shell) await document.exitFullscreen();
-      showExpanded(false);
-    } else {
-      showExpanded(true);
-      try {
-        await shell.requestFullscreen?.();
-      } catch {
-        /* Embedded browsers may deny native fullscreen; expanded mode remains usable. */
+      else {
+        if (!shell.requestFullscreen) throw new Error("unsupported");
+        await shell.requestFullscreen();
       }
+    } catch {
+      message.textContent =
+        "Tela cheia não foi permitida neste navegador. Abra o GhostLab no Chrome, Edge ou Firefox e tente novamente.";
+      message.hidden = false;
     }
   });
-  document.addEventListener("fullscreenchange", () =>
-    showExpanded(document.fullscreenElement === shell),
-  );
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && expanded && !document.fullscreenElement)
-      showExpanded(false);
+  document.addEventListener("fullscreenchange", () => {
+    showExpanded(document.fullscreenElement === shell);
+    shell.dispatchEvent(new CustomEvent("workbench-fullscreen"));
   });
   function toggleCode() {
     const open = editor.hidden;
     editor.hidden = !open;
     codeButton.setAttribute("aria-expanded", String(open));
     codeButton.textContent = open ? "⌄ Recolher código" : "〈/〉 Código";
+    document
+      .querySelector('[data-dock-action="code"]')
+      ?.setAttribute("aria-expanded", String(open));
     if (open) editor.querySelector("textarea").focus();
+    else if (document.fullscreenElement === shell)
+      document.querySelector('.dock-card[aria-current="true"]')?.focus();
     else codeButton.focus();
   }
   codeButton.addEventListener("click", toggleCode);
   document.querySelector("#close-code").addEventListener("click", toggleCode);
 }
 
-export function makeCatalogDraggable(card, type, { preview, drop }) {
+export function makeCatalogDraggable(card, type, { preview, drop, swipe }) {
   let drag = null;
   let suppressClick = false;
   card.style.touchAction = "none";
@@ -60,6 +66,7 @@ export function makeCatalogDraggable(card, type, { preview, drop }) {
       if (drag) finish({ pointerId: drag.id }, false);
     };
     window.addEventListener("blur", cancel, options);
+    document.addEventListener("fullscreenchange", cancel, options);
     document.addEventListener(
       "visibilitychange",
       () => {
@@ -84,6 +91,18 @@ export function makeCatalogDraggable(card, type, { preview, drop }) {
       Math.hypot(event.clientX - drag.x, event.clientY - drag.y) < 7
     )
       return;
+    if (swipe && !drag.mode) {
+      drag.mode =
+        Math.abs(event.clientX - drag.x) > Math.abs(event.clientY - drag.y)
+          ? "swipe"
+          : "place";
+    }
+    if (drag.mode === "swipe") {
+      suppressClick = true;
+      event.preventDefault();
+      swipe(event.clientX - drag.x, false);
+      return;
+    }
     if (!drag.ghost) {
       suppressClick = true;
       drag.ghost = card.cloneNode(true);
@@ -104,6 +123,7 @@ export function makeCatalogDraggable(card, type, { preview, drop }) {
   function finish(event, commit) {
     if (!drag || event.pointerId !== drag.id) return;
     const wasDragging = !!drag.ghost;
+    if (drag.mode === "swipe") swipe(commit ? event.clientX - drag.x : 0, true);
     drag.ghost?.remove();
     drag.listeners.abort();
     drag = null;

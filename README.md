@@ -69,8 +69,10 @@ Verificação de fios: `node --test tests/*.test.js`.
 
 ## Tela cheia e catálogo
 
-Use “Tela cheia” para ampliar a bancada mantendo o catálogo lateral; o inspetor fica oculto nesse modo. Escape ou “Sair da tela cheia” retorna ao layout normal. Em navegadores incorporados que recusam a API de fullscreen, a bancada ocupa a janela disponível.
+“Tela cheia” usa a API nativa do navegador: catálogo lateral, inspetor e barras somem. Escape ou “Sair da tela cheia” retorna ao layout normal. Se o navegador não permitir, o app informa a falha e permanece no modo normal; não há substituição por uma janela expandida.
 
-O editor começa recolhido. A aba “Código” abre e fecha o mesmo editor, preservando o texto, inclusive ao alternar tela cheia. As miniaturas são renderizações dos próprios modelos CAD. Arraste um cartão para a cena e solte sobre o marcador verde; soltar fora cancela. Clicar no cartão ou acioná-lo com Enter continua adicionando uma peça. A inserção tem uma animação curta, desativada quando o sistema pede movimento reduzido.
+Na tela cheia, um dock circular mantém componentes, Código e Visão inicial acessíveis. Arraste horizontalmente, use a roda/trackpad, as setas laterais ou as teclas esquerda/direita para percorrer. O item central aumenta; os laterais diminuem e desaparecem. Clique num item lateral para centralizá-lo e no centro para adicionar/ativar. Arraste uma peça para cima e solte na bancada para posicioná-la; soltar sobre o dock, editor ou fora da cena cancela.
+
+O catálogo e o dock usam ilustrações SVG autorais, sem renderização WebGL para as miniaturas. As peças da bancada continuam usando os modelos CAD. O editor abre como painel sobre a bancada, preservando o código ao recolher ou sair da tela cheia. A animação respeita a preferência de movimento reduzido.
 
 Mudanças passam por branch e Pull Request; não enviar trabalho compartilhado diretamente à main.

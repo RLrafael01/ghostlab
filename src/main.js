@@ -1,3 +1,4 @@
+import { setupImmersiveDock } from "./immersive-dock.js";
 import { componentPreview } from "./catalog-previews.js";
 import {
   setupWorkspacePanels,
@@ -371,6 +372,8 @@ scene.add(dropMarker);
 function dropPosition(event) {
   if (!event) return null;
   const rect = renderer.domElement.getBoundingClientRect();
+  const surface = document.elementFromPoint(event.clientX, event.clientY);
+  if (surface !== renderer.domElement && surface !== host) return null;
   if (
     event.clientX < rect.left ||
     event.clientX > rect.right ||
@@ -403,7 +406,7 @@ function showCatalog(query = "") {
       const b = document.createElement("button");
       b.className = "catalog-item";
       b.setAttribute("aria-label", `Adicionar ${v.name}`);
-      b.innerHTML = `<span class="component-preview" aria-hidden="true"><span>Carregando modelo…</span></span><span>${v.name}<small>${type === "board" ? "830 contatos" : v.pins.length + " pinos"} · arraste ou clique</small></span><strong>＋</strong>`;
+      b.innerHTML = `<span class="component-preview" aria-hidden="true"><span>Ilustração</span></span><span>${v.name}<small>${type === "board" ? "830 contatos" : v.pins.length + " pinos"} · arraste ou clique</small></span><strong>＋</strong>`;
       componentPreview(type)
         .then((url) => {
           const image = document.createElement("img");
@@ -434,6 +437,11 @@ new ResizeObserver(() => {
   camera.updateProjectionMatrix();
 }).observe(host);
 showCatalog();
+setupImmersiveDock(catalog, {
+  add: (type) => add(type, undefined, undefined, true),
+  preview: previewDrop,
+  drop: dropComponent,
+});
 async function loadPresentation() {
   const [uno, board, led, resistor] = await Promise.all([
     add("uno", -3.8, 0),

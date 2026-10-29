@@ -59,3 +59,5 @@ A skill `tdd` foi lida, mas não aplicada em ciclo red/green nesta implementaç�
 | 023 | 29/10/2026 | `implement` | Tela cheia, código recolhível e catálogo arrastável com miniaturas | concluído | Tela cheia com catálogo, editor recolhível, miniaturas CAD e arraste com animação. Build e testes existentes aprovados; navegador confirmou fullscreen, inserção por arraste e preservação do código. |
 | 024 | 29/10/2026 | `code-review` | Revisar tela cheia, miniaturas e arraste do catálogo | concluído | Standards: 1 achado (cache de falha da miniatura), corrigido; Spec: 0 achados. Listeners de cancelamento limitados ao arraste ativo. |
 | 025 | 29/10/2026 | `pr` | Preparar PR para colaboração no GhostLab | concluído | PR #1 aberto: https://github.com/RLrafael01/ghostlab/pull/1. Descrição com estrutura, evidências e impacto; sem merge na main. |
+
+| 026 | 29/10/2026 | `implement` | Redesenhar fullscreen com dock circular e ilustrações | em andamento | Revisão do PR #1: fullscreen exclusivamente nativo, ícones vetoriais e carrossel com escala/desvanecimento. |
