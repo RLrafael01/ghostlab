@@ -1,7 +1,7 @@
 {
   "name": "ghostlab",
   "version": "1.0.0",
-  "description": "Monte circuitos, programe um microcontrolador e experimente seu funcionamento no navegador antes de construir no mundo físico.",
+  "description": "Monte circuitos, programe um microcontrolador e experimente seu funcionamento no navegador antes de construir no mundo f\u00edsico.",
   "main": "index.js",
   "directories": {
     "doc": "docs"
@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
-    "preview": "vite preview --host 127.0.0.1"
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test tests/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "vite": "^8.3.5"
   },
   "devDependencies": {
+    "jsdom": "^30.1.3",
     "occt-import-js": "^0.0.23",
     "prettier": "^3.9.10"
   },

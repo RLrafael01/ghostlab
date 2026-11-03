@@ -13,8 +13,8 @@ export function lightWorkbench(renderer, scene) {
   scene.environmentIntensity = 0.35;
   room.dispose();
   generator.dispose();
-  scene.background = new T.Color("#20292e");
-  scene.fog = new T.Fog("#20292e", 30, 65);
+  scene.background = new T.Color("#141414");
+  scene.fog = new T.Fog("#141414", 30, 65);
   scene.add(new T.HemisphereLight(0xe9f3ff, 0x454b50, 0.55));
   const key = new T.DirectionalLight(0xfff5e6, 2);
   key.position.set(-4, 9, 6);
@@ -36,13 +36,13 @@ export function lightWorkbench(renderer, scene) {
   scene.add(fill);
   const table = new T.Mesh(
     new T.PlaneGeometry(160, 160),
-    new T.MeshStandardMaterial({ color: "#182226", roughness: 0.85 }),
+    new T.MeshStandardMaterial({ color: "#171717", roughness: 0.85 }),
   );
   table.rotation.x = -Math.PI / 2;
   table.position.y = -0.015;
   table.receiveShadow = true;
   scene.add(table);
-  const grid = new T.GridHelper(40, 80, 0x506168, 0x3c484e);
+  const grid = new T.GridHelper(40, 80, 0x646464, 0x414141);
   grid.material.transparent = true;
   grid.material.opacity = 0.32;
   scene.add(grid);

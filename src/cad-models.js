@@ -47,7 +47,7 @@ export async function loadCAD(type) {
   if (!templates.has(type)) {
     const pending = loader
       .loadAsync(
-        type === "uno" ? "/models/uno/source.gltf" : `/models/${type}.glb`,
+        type === "uno" ? `${import.meta.env.BASE_URL}models/uno/source.gltf` : `${import.meta.env.BASE_URL}models/${type}.glb`,
       )
       .then(({ scene }) => {
         // The Uno viewer file includes a Z-up transform; its vertex data is already Y-up.

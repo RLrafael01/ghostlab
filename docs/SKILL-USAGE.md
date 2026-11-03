@@ -55,3 +55,21 @@ A skill `tdd` foi lida, mas não aplicada em ciclo red/green nesta implementaç�
 | 021 | 29/10/2026 | `implement` | Aproximar o acabamento visual da referência enviada | concluído | Serigrafia autoral, materiais, iluminação, fios curvos, foco de peça e encaixe visual. Build e 2 testes de fios aprovados; transporte do LED com a base e remoção da protoboard verificados no navegador. |
 
 | 022 | 29/10/2026 | `code-review` | Revisar acabamento, fios e montagem visual | concluído | Dois eixos contra 5de36b8. Corrigidos criação de fios para peças removidas durante carregamento e encaixe fora das colunas válidas; medidas da protoboard centralizadas. Ver VISUAL-REVIEW.md. |
+
+| 023 | 29/10/2026 | `implement` | Tela cheia, código recolhível e catálogo arrastável com miniaturas | concluído | Tela cheia com catálogo, editor recolhível, miniaturas CAD e arraste com animação. Build e testes existentes aprovados; navegador confirmou fullscreen, inserção por arraste e preservação do código. |
+| 024 | 29/10/2026 | `code-review` | Revisar tela cheia, miniaturas e arraste do catálogo | concluído | Standards: 1 achado (cache de falha da miniatura), corrigido; Spec: 0 achados. Listeners de cancelamento limitados ao arraste ativo. |
+| 025 | 29/10/2026 | `pr` | Preparar PR para colaboração no GhostLab | concluído | PR #1 aberto: https://github.com/RLrafael01/ghostlab/pull/1. Descrição com estrutura, evidências e impacto; sem merge na main. |
+
+| 026 | 29/10/2026 | `implement` | Redesenhar fullscreen com dock circular e ilustrações | concluído | Fullscreen nativo verificado; carrossel horizontal, abertura de Código e inserção vertical de LED testados no navegador. SVGs autorais substituem os renders das miniaturas. |
+
+| 027 | 29/10/2026 | `code-review` | Revisar dock circular e fullscreen nativo | concluído | Standards: 2 achados corrigidos (estilos da prévia arrastada e cancelamento de gesto no fundo). Spec: 0 achados. Base 9f639c1. |
+| 028 | 29/10/2026 | `pr` | Atualizar PR #1 para o novo dock | concluído | PR #1 atualizado com fullscreen nativo, dock circular e SVGs. Título e descrição refletem o resultado; sem merge na main. |
+
+| 029 | 29/10/2026 | `implement` | Fluxo de revisão, CI, prévias por PR e editor normal visível | concluído | Editor normal restaurado; 4 testes e build aprovados. Proteção da main aplicada; workflow de CI/prévias adicionado ao PR #1. |
+| 030 | 29/10/2026 | `tdd` | Comportamento público do editor ao alternar fullscreen | concluído | Dois ciclos red/green: editor visível inicialmente; fullscreen recolhe e saída restaura sem perder texto. Fronteira: interação da interface aprovada no pedido e na spec. |
+| 031 | 29/10/2026 | `code-review` | Revisar colaboração e comportamento do editor | concluído | Base 044de3e. Standards: 2 achados; Spec: 1 (sobreposto). Corrigidos cancelamento de fila e sobrescrita por commit obsoleto. |
+| 032 | 29/10/2026 | `pr` | Atualizar PR #1 com editor e fluxo de colaboração | concluído | PR #1 atualizado com CI, prévias, proteção e editor; sem merge. |
+
+| 033 | 29/10/2026 | `implement` | Publicação automática da main em link fixo | concluído | 4 testes e build main aprovados; script de publicação exercitado em Git temporário preservou outras prévias. Ativação depende do merge autorizado do PR. |
+| 034 | 29/10/2026 | `code-review` | Revisar publicação automática da main | concluído | Base 9d2dc4a até 705811a: Standards 0 achados; Spec 0 achados. Trigger real da main será confirmado após o merge. |
+| 035 | 29/10/2026 | `pr` | Atualizar PR #1 com link fixo da main | concluído | PR #1 atualizado com link main/, evidências e dependência de aprovação/merge. |
