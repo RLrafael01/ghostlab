@@ -10,7 +10,7 @@ As skills do Matt Pocock estão em `.agents/skills/`. Leia o `SKILL.md` correspo
 
 ### Registro de uso
 
-Ao aplicar qualquer skill do Matt Pocock, inclusive como parte de outra skill, registre a aplicação em `docs/SKILL-USAGE.md` seguindo suas convenções. Atualize o resultado ao concluir ou interromper a aplicação; ao retomar a mesma aplicação, atualize sua entrada.
+Ao aplicar uma skill de Matt Pocock ou pstack, siga as convenções de `docs/SKILL-USAGE.md`. Registre o responsável e atualize os totais no PR da tarefa.
 
 ### Issue tracker
 
@@ -22,4 +22,4 @@ Contexto único: `GLOSSARY.md` e `docs/adr/`. Antes de explorar o código ou alt
 
 ### pstack
 
-Matt Pocock é o conjunto principal da atividade. A partir de agora, use também o pstack quando a tarefa se beneficiar de planejamento, verificação ou análise de impacto. Consulte `vendor/pstack/skills/<nome>/SKILL.md` antes de aplicar a skill e registre cada aplicação em `docs/PSTACK-USAGE.md`. Identifique o conjunto quando duas skills tiverem o mesmo nome.
+Matt Pocock é o conjunto principal da atividade. A partir de agora, use também o pstack quando a tarefa se beneficiar de planejamento, verificação ou análise de impacto. Consulte `vendor/pstack/skills/<nome>/SKILL.md` antes de aplicar a skill.
