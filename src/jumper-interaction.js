@@ -10,6 +10,7 @@ export function setupJumperInteraction({
   navigation,
   wires,
   items,
+  isComponentDragging = () => false,
 }) {
   const ray = new T.Raycaster();
   const pointer = new T.Vector2();
@@ -38,13 +39,27 @@ export function setupJumperInteraction({
   }
   function terminals() {
     return items.flatMap((item) => {
-      const names = new Set();
+      const names = new Map();
       item.group.traverse((object) => {
-        object.userData.pinNames?.forEach((name) => names.add(name));
-        if (object.userData.pinName) names.add(object.userData.pinName);
+        const counts = new Map();
+        object.userData.pinNames?.forEach((pin) => {
+          const occurrence = counts.get(pin) ?? 0;
+          counts.set(pin, occurrence + 1);
+          names.set(`${pin}:${occurrence}`, { pin, occurrence });
+        });
+        if (object.userData.pinName)
+          names.set(`${object.userData.pinName}:0`, {
+            pin: object.userData.pinName,
+            occurrence: 0,
+          });
       });
-      return [...names]
-        .map((pin) => ({ item, pin, position: terminalPosition(item, pin) }))
+      return [...names.values()]
+        .map(({ pin, occurrence }) => ({
+          item,
+          pin,
+          occurrence,
+          position: terminalPosition(item, pin, occurrence),
+        }))
         .filter((terminal) => terminal.position);
     });
   }
@@ -90,7 +105,12 @@ export function setupJumperInteraction({
   canvas.addEventListener(
     "pointerdown",
     (event) => {
-      if (event.button !== 0 || gesture) return;
+      if (gesture) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+      }
+      if (event.button !== 0 || isComponentDragging()) return;
       updateRay(event);
       // Handles are deliberately larger than the cable; a cable body never starts a component drag.
       const hit = ray.intersectObjects(wires.handles.children, false)[0];
@@ -120,8 +140,9 @@ export function setupJumperInteraction({
   canvas.addEventListener(
     "pointermove",
     (event) => {
-      if (!gesture || gesture.pointerId !== event.pointerId) return;
+      if (!gesture) return;
       event.stopImmediatePropagation();
+      if (gesture.pointerId !== event.pointerId) return;
       move(event);
     },
     true,
@@ -146,15 +167,24 @@ export function setupJumperInteraction({
   canvas.addEventListener(
     "pointerup",
     (event) => {
-      if (!gesture || gesture.pointerId !== event.pointerId) return;
+      if (!gesture) return;
       event.stopImmediatePropagation();
+      if (gesture.pointerId !== event.pointerId) return;
       move(event);
       end();
     },
     true,
   );
   for (const name of ["pointercancel", "lostpointercapture"])
-    canvas.addEventListener(name, () => end(true), true);
+    canvas.addEventListener(
+      name,
+      (event) => {
+        if (!gesture || gesture.pointerId !== event.pointerId) return;
+        event.stopImmediatePropagation();
+        end(true);
+      },
+      true,
+    );
   host.addEventListener(
     "keydown",
     (event) => {

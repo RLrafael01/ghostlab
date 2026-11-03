@@ -289,6 +289,7 @@ const jumperInteraction = setupJumperInteraction({
   navigation,
   wires: visualWires,
   items,
+  isComponentDragging: () => !!drag,
 });
 renderer.domElement.addEventListener(
   "pointerdown",

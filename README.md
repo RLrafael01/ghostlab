@@ -66,6 +66,12 @@ Iluminação de estúdio, sombras de contato, materiais de plástico/metal/encap
 
 Verificação de fios: `node --test tests/*.test.js`.
 
+### Encaixar e desencaixar jumpers
+
+Arraste um dos pequenos conectores coloridos nas pontas dos cabos existentes. A ponta sai do contato e o cabo acompanha o cursor; a outra ponta continua presa. Aproxime a ponta de um pino ou furo da protoboard: o contato fica destacado e seu nome aparece no aviso sobre a cena. Solte para encaixar, ou solte longe dos contatos para deixar a ponta livre. Escape cancela e restaura o estado anterior, inclusive quando a ponta já estava desconectada. Para facilitar o gesto, selecione o Uno e use “Focar peça”.
+
+A retirada e o encaixe têm transição curta; a preferência de movimento reduzido usa posicionamento imediato. Ligações incorretas são permitidas: este gesto altera referências de terminais, sem simular eletricidade. Os contatos GND fisicamente distintos do Uno mantêm referências separadas. Os testes cobrem reconexão, ponta solta, cancelamento, limpeza ao remover peças e movimento reduzido.
+
 
 ## Tela cheia e catálogo
 

@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import * as T from "three";
 import { createVisualWires } from "../src/visual-wires.js";
+import { terminalPosition } from "../src/visual-wires.js";
 
 function part(x, name) {
   const group = new T.Group();
@@ -126,4 +127,28 @@ test("reduced motion attaches immediately; normal motion settles at the new term
   assert.ok(
     wire.handles[0].position.distanceTo(new T.Vector3(2.1, 0.2, 0.3)) < 1e-6,
   );
+});
+
+test("physically distinct GND contacts retain distinct endpoint references", () => {
+  const scene = new T.Scene();
+  const uno = part(-2, "unused"),
+    board = part(2, "a1");
+  uno.id = 1;
+  board.id = 2;
+  const pins = new T.InstancedMesh(
+    new T.SphereGeometry(0.01),
+    new T.MeshBasicMaterial(),
+    3,
+  );
+  pins.userData.pinNames = ["GND", "GND", "GND"];
+  for (let i = 0; i < 3; i++)
+    pins.setMatrixAt(i, new T.Matrix4().makeTranslation(i, 0, 0));
+  uno.group.add(pins);
+  const wires = createVisualWires(scene);
+  const wire = wires.connect(uno, "GND", board, "a1", "black");
+  wires.begin(wire, 0);
+  wires.finish({ item: uno, pin: "GND", occurrence: 2 });
+  assert.equal(wires.snapshot()[0].ends[0].occurrence, 2);
+  assert.deepEqual(wires.snapshot()[0].ends[0].position, [0, 0, 0]);
+  assert.deepEqual(terminalPosition(uno, "GND", 1).toArray(), [-1, 0, 0]);
 });

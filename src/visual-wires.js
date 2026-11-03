@@ -1,17 +1,21 @@
 import * as T from "three";
 
-export function terminalPosition(item, name) {
+export function terminalPosition(item, name, occurrence = 0) {
   let point = null;
+  let seen = 0;
   item.group.updateWorldMatrix(true, true);
   item.group.traverse((object) => {
     if (point) return;
-    const index = object.userData.pinNames?.indexOf(name) ?? -1;
+    const index =
+      object.userData.pinNames?.findIndex(
+        (pin) => pin === name && seen++ === occurrence,
+      ) ?? -1;
     if (index >= 0) {
       const matrix = new T.Matrix4();
       object.getMatrixAt(index, matrix);
       point = new T.Vector3().setFromMatrixPosition(matrix);
       object.localToWorld(point);
-    } else if (object.userData.pinName === name) {
+    } else if (object.userData.pinName === name && seen++ === occurrence) {
       object.geometry.computeBoundingBox();
       point = object.geometry.boundingBox.getCenter(new T.Vector3());
       object.localToWorld(point);
@@ -27,7 +31,9 @@ export function createVisualWires(scene) {
     serial = 0;
   const handles = new T.Group();
   const endPosition = (end) =>
-    end.item ? terminalPosition(end.item, end.pin) : end.position.clone();
+    end.item
+      ? terminalPosition(end.item, end.pin, end.occurrence ?? 0)
+      : end.position.clone();
   const cloneEnd = (end) => ({ ...end, position: end.position.clone() });
   function dispose(wire) {
     if (gesture?.wire === wire) gesture = null;
@@ -51,6 +57,7 @@ export function createVisualWires(scene) {
         ends: wire.ends.map((end) => ({
           componentId: end.item?.id ?? null,
           pin: end.item ? end.pin : null,
+          occurrence: end.item ? (end.occurrence ?? 0) : null,
           position: endPosition(end)?.toArray() ?? null,
         })),
       }));
