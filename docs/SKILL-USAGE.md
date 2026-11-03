@@ -1,10 +1,10 @@
 # Uso de skills no GhostLab
 
-**39 aplicações registradas** · Matt Pocock: 39 · pstack: 0
+**40 aplicações registradas** · Matt Pocock: 40 · pstack: 0
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
-| Matt Pocock | `code-review` | 9 | 0 | 9 |
+| Matt Pocock | `code-review` | 9 | 1 | 10 |
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
@@ -15,7 +15,7 @@
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 1 | 0 | 1 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
-| **Total** | | **36** | **3** | **39** |
+| **Total** | | **36** | **4** | **40** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -69,3 +69,5 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 037 | 03/11/2026 | Enzo | Matt Pocock | `implement` | Implementar issue #2: encaixar e desencaixar pontas de jumpers. | em andamento | Critérios: reconectar, ponta solta, Escape e movimento reduzido. |
 | 038 | 03/11/2026 | Enzo | Matt Pocock | `tdd` | Verificar reconexão e cancelamento pela interface pública dos jumpers. | em andamento | Fronteira já prevista na spec: ligações e interação da bancada. |
 | 039 | 03/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR da issue #2. | em andamento | PR em rascunho antes da implementação. |
+
+| 040 | 03/11/2026 | Enzo | Matt Pocock | `code-review` | Revisar issue #2 nos eixos Standards e Spec desde 63a6404. | em andamento | Revisão independente da interação, reconexão e cancelamento. |

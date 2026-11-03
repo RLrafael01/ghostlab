@@ -5,6 +5,7 @@ import {
   makeCatalogDraggable,
 } from "./workspace-panels.js";
 import { BREADBOARD } from "./breadboard-layout.js";
+import { setupJumperInteraction } from "./jumper-interaction.js";
 import * as T from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import "./style.css";
@@ -153,6 +154,7 @@ function select(item) {
 }
 function remove() {
   if (!selected || drag) return;
+  jumperInteraction.cancel();
   const item = selected;
   placements.delete(item);
   visualWires.removeFor(item);
@@ -278,6 +280,16 @@ function updateRay(event) {
   );
   ray.setFromCamera(pointer, camera);
 }
+const jumperInteraction = setupJumperInteraction({
+  host,
+  canvas: renderer.domElement,
+  scene,
+  camera,
+  controls,
+  navigation,
+  wires: visualWires,
+  items,
+});
 renderer.domElement.addEventListener(
   "pointerdown",
   (event) => {
@@ -464,7 +476,7 @@ let lastFrame = performance.now();
 renderer.setAnimationLoop((now) => {
   const deltaSeconds = Math.max(0, (now - lastFrame) / 1000);
   lastFrame = now;
-  if (!drag) {
+  if (!drag && !visualWires.active) {
     navigation.update(deltaSeconds);
     controls.update();
   }
@@ -477,7 +489,10 @@ renderer.setAnimationLoop((now) => {
     if (t === 1) placements.delete(item);
     if (selected === item) outline?.update();
   }
-  visualWires.update();
+  visualWires.update(
+    deltaSeconds,
+    matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
   renderer.render(scene, camera);
 });
 

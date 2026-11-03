@@ -1,6 +1,20 @@
 * {
   box-sizing: border-box;
 }
+.jumper-status {
+  position: absolute;
+  top: 44px;
+  left: 20px;
+  right: 20px;
+  pointer-events: none;
+  color: #a1ebd4;
+  background: #0b1b24df;
+  border: 1px solid #345b60;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font: 11px/1.5 system-ui;
+  z-index: 6;
+}
 body {
   margin: 0;
   background: #080808;
@@ -791,16 +805,42 @@ main:not(:fullscreen) #close-code {
   display: none;
 }
 @media (min-width: 761px) {
-  main { min-height: 0; height: calc(100dvh - 108px); }
-  .workspace { min-height: 0; overflow: hidden; }
-  #scene { min-height: 100px; }
-  .editor { height: clamp(150px, 27vh, 240px); }
-  .editor textarea { height: calc(100% - 40px); }
+  main {
+    min-height: 0;
+    height: calc(100dvh - 108px);
+  }
+  .workspace {
+    min-height: 0;
+    overflow: hidden;
+  }
+  #scene {
+    min-height: 100px;
+  }
+  .editor {
+    height: clamp(150px, 27vh, 240px);
+  }
+  .editor textarea {
+    height: calc(100% - 40px);
+  }
 }
 
 /* Keep related controls together in both the editor and the inspector. */
-.editor-head { background: #191919; border-bottom: 1px solid #333; }
-.inspector #details { padding-bottom: 16px; border-bottom: 1px solid #353535; }
-.inspector #details .eyebrow { margin: 18px 0 6px; }
-.inspector #details .hint { margin-top: 6px; color: #aaa; }
-.catalog-item:focus-visible, .part.active { background: #15251f; }
+.editor-head {
+  background: #191919;
+  border-bottom: 1px solid #333;
+}
+.inspector #details {
+  padding-bottom: 16px;
+  border-bottom: 1px solid #353535;
+}
+.inspector #details .eyebrow {
+  margin: 18px 0 6px;
+}
+.inspector #details .hint {
+  margin-top: 6px;
+  color: #aaa;
+}
+.catalog-item:focus-visible,
+.part.active {
+  background: #15251f;
+}
