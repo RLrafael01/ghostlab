@@ -19,3 +19,7 @@ Specs e tarefas em Markdown local em `.scratch/`. Antes de criar, consultar ou a
 ### Domain docs
 
 Contexto único: `GLOSSARY.md` e `docs/adr/`. Antes de explorar o código ou alterar termos e decisões do domínio, leia `docs/agents/domain.md`.
+
+### pstack
+
+Matt Pocock é o conjunto principal da atividade. A partir de agora, use também o pstack quando a tarefa se beneficiar de planejamento, verificação ou análise de impacto. Consulte `vendor/pstack/skills/<nome>/SKILL.md` antes de aplicar a skill e registre cada aplicação em `docs/PSTACK-USAGE.md`. Identifique o conjunto quando duas skills tiverem o mesmo nome.
