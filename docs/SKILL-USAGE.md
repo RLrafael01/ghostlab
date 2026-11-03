@@ -1,6 +1,6 @@
 # Uso de skills no GhostLab
 
-**36 aplicações registradas** · Matt Pocock: 36 · pstack: 0
+**39 aplicações registradas** · Matt Pocock: 39 · pstack: 0
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
@@ -8,14 +8,14 @@
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
-| Matt Pocock | `implement` | 9 | 0 | 9 |
-| Matt Pocock | `pr` | 4 | 0 | 4 |
+| Matt Pocock | `implement` | 9 | 1 | 10 |
+| Matt Pocock | `pr` | 4 | 1 | 5 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
-| Matt Pocock | `tdd` | 1 | 0 | 1 |
+| Matt Pocock | `tdd` | 1 | 1 | 2 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 1 | 0 | 1 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
-| **Total** | | **36** | **0** | **36** |
+| **Total** | | **36** | **3** | **39** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -65,3 +65,7 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 034 | 29/10/2026 | Rafael | Matt Pocock | `code-review` | Revisar publicação automática da main | concluído | Base 9d2dc4a até 705811a: Standards 0 achados; Spec 0 achados. Trigger real da main será confirmado após o merge. |
 | 035 | 29/10/2026 | Rafael | Matt Pocock | `pr` | Atualizar PR #1 com link fixo da main | concluído | PR #1 atualizado com link main/, evidências e dependência de aprovação/merge. |
 | 036 | 03/11/2026 | Rafael | Matt Pocock | `writing-for-agents` | Unificar o histórico da dupla. | concluído | AGENTS.md orienta a registrar responsável e atualizar o resumo no mesmo PR. |
+
+| 037 | 03/11/2026 | Enzo | Matt Pocock | `implement` | Implementar issue #2: encaixar e desencaixar pontas de jumpers. | em andamento | Critérios: reconectar, ponta solta, Escape e movimento reduzido. |
+| 038 | 03/11/2026 | Enzo | Matt Pocock | `tdd` | Verificar reconexão e cancelamento pela interface pública dos jumpers. | em andamento | Fronteira já prevista na spec: ligações e interação da bancada. |
+| 039 | 03/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR da issue #2. | em andamento | PR em rascunho antes da implementação. |
