@@ -483,6 +483,9 @@ main:fullscreen .workspace {
 .component-preview {
   grid-column: 1 / -1;
   height: 94px;
+  box-sizing: border-box;
+  padding: 5px;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
   display: grid;
   place-items: center;
   border-radius: 5px;
