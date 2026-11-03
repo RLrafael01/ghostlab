@@ -685,12 +685,17 @@ main:fullscreen .immersive-dock {
   display: block;
 }
 .dock-card:hover {
-  background: #bddcdb12;
-  border-color: #bfe4df42;
+  background: transparent;
+  border-color: transparent;
 }
-.dock-card[aria-current="true"] {
-  background: linear-gradient(#b2f9df12, #b2f9df04);
-  border-color: #8feac84d;
+.dock-card[aria-current="true"]::after {
+  content: "";
+  position: absolute;
+  inset: auto 33% 2px;
+  height: 3px;
+  border-radius: 2px;
+  background: #8ae9c9;
+  pointer-events: none;
 }
 .swiping .dock-card {
   transition: none;
