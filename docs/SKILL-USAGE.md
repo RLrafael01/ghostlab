@@ -1,6 +1,6 @@
 # Uso de skills no GhostLab
 
-**40 aplicações registradas** · Matt Pocock: 40 · pstack: 0
+**41 aplicações registradas** · Matt Pocock: 41 · pstack: 0
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
@@ -9,13 +9,13 @@
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
 | Matt Pocock | `implement` | 9 | 1 | 10 |
-| Matt Pocock | `pr` | 4 | 1 | 5 |
+| Matt Pocock | `pr` | 4 | 2 | 6 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
 | Matt Pocock | `tdd` | 1 | 1 | 2 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 1 | 0 | 1 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
-| **Total** | | **36** | **4** | **40** |
+| **Total** | | **36** | **5** | **41** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -69,3 +69,4 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 038 | 03/11/2026 | Enzo | Matt Pocock | `tdd` | Verificar reconexão e cancelamento pela interface pública dos jumpers. | concluído | Ciclo red/green: teste de reconexão falhou por ausência de begin() e passou após implementação. 9 testes totais aprovados, incluindo Escape por evento DOM, ponteiros concorrentes, ponta solta, limpeza e GND distintos. Ver tests/visual-wires.test.js e tests/jumper-interaction.test.js. |
 | 039 | 03/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR da issue #2. | concluído | PR #4 aberto em rascunho antes da implementação e atualizado com código, testes, documentação e histórico: https://github.com/RLrafael01/ghostlab/pull/4. Sem merge na main. |
 | 040 | 03/11/2026 | Enzo | Matt Pocock | `code-review` | Revisar issue #2 nos eixos Standards e Spec desde 63a6404. | concluído | Standards: 2 achados corrigidos (concorrência de ponteiros e tabela do histórico). Spec: 1 corrigido (GND físicos distintos). Revisores revalidaram: 0 pendências em cada eixo; regressões cobertas em testes no PR #4. |
+| 041 | 03/11/2026 | Enzo | Matt Pocock | `pr` | Destacar o link público de teste no PR #4. | concluído | Link https://rlrafael01.github.io/ghostlab/pr-4/ destacado e confirmado na descrição do PR #4 via API; prévia HTTP 200 e revision.txt correspondente a eef9544 na verificação. |
