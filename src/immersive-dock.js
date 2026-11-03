@@ -29,10 +29,15 @@ export function setupImmersiveDock(catalog, { add, preview, drop }) {
     ((value % entries.length) + entries.length) % entries.length;
   function render() {
     const selected = Math.round(normalize(center)) % entries.length;
+    const step = spacing();
+    const maxSize = Math.min(116, track.clientWidth * 0.42);
     cards.forEach((card, index) => {
       const distance = circularDistance(index, center, entries.length);
       const abs = Math.abs(distance);
-      card.style.transform = `translate(-50%, ${abs * 7}px) translateX(${distance * spacing()}px) scale(${Math.max(0.45, 1.16 - abs * 0.22)})`;
+      const size = Math.round(maxSize * Math.max(0.4, 1 - abs * 0.19));
+      card.style.width = `${size}px`;
+      card.style.height = `${size}px`;
+      card.style.transform = `translate(${Math.round(distance * step - size / 2)}px, ${Math.round(Math.min(abs, 3) * 4 - size / 2)}px)`;
       card.style.opacity = String(Math.max(0, 1 - Math.pow(abs / 3, 1.5)));
       card.style.zIndex = String(10 - Math.round(abs));
       card.style.pointerEvents = abs < 2.8 ? "auto" : "none";

@@ -605,7 +605,7 @@ main:fullscreen .scene-tag {
   top: 24px;
 }
 main:fullscreen .guide {
-  bottom: 205px;
+  bottom: 219px;
 }
 main:fullscreen .immersive-dock {
   display: block;
@@ -638,7 +638,8 @@ main:fullscreen .immersive-dock {
 }
 .dock-body {
   position: relative;
-  height: 122px;
+  height: 136px;
+  overflow: hidden;
   border: 1px solid #afdddb38;
   border-radius: 30px;
   background: linear-gradient(135deg, #6d92934a, #152735b8);
@@ -649,7 +650,7 @@ main:fullscreen .immersive-dock {
 }
 .dock-track {
   position: absolute;
-  inset: -12px 48px 0;
+  inset: 0 48px;
   overflow: hidden;
   touch-action: none;
   mask-image: linear-gradient(
@@ -663,15 +664,15 @@ main:fullscreen .immersive-dock {
 .dock-card {
   position: absolute;
   left: 50%;
-  top: 12px;
-  width: 104px;
-  height: 106px;
+  top: 50%;
   padding: 0;
   background: transparent;
   border: 1px solid transparent;
   border-radius: 22px;
-  transform-origin: 50% 80%;
+
   transition:
+    width 220ms ease,
+    height 220ms ease,
     transform 220ms ease,
     opacity 220ms ease;
   cursor: grab;
@@ -681,7 +682,7 @@ main:fullscreen .immersive-dock {
   height: 100%;
   object-fit: contain;
   pointer-events: none;
-  filter: drop-shadow(0 6px 5px #0005);
+  display: block;
 }
 .dock-card:hover {
   background: #bddcdb12;
@@ -697,7 +698,8 @@ main:fullscreen .immersive-dock {
 .dock-prev,
 .dock-next {
   position: absolute;
-  top: 38px;
+  top: 50%;
+  translate: 0 -50%;
   width: 34px;
   height: 42px;
   border: 0;
@@ -720,7 +722,7 @@ main:fullscreen .immersive-dock {
 main:fullscreen .editor {
   position: absolute;
   z-index: 26;
-  bottom: 210px;
+  bottom: 224px;
   left: max(20px, calc((100vw - 960px) / 2));
   right: max(20px, calc((100vw - 960px) / 2));
   height: min(300px, 43vh);
@@ -768,9 +770,6 @@ main:fullscreen .editor textarea {
   }
   .dock-track {
     inset-inline: 32px;
-  }
-  .dock-card {
-    width: 82px;
   }
   main:fullscreen .scene-tag {
     max-width: 180px;
