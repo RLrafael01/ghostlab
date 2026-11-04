@@ -605,7 +605,6 @@ main:fullscreen {
   overflow: hidden;
 }
 main:fullscreen .toolbox,
-main:fullscreen .inspector,
 main:fullscreen #code-toggle {
   display: none !important;
 }
@@ -860,4 +859,57 @@ main:not(:fullscreen) #close-code {
 .catalog-item:focus-visible,
 .part.active {
   background: #15251f;
+}
+
+/* The same inspector and color controls remain available in both layouts. */
+#inspector-toggle,
+#close-inspector,
+.jumper-color {
+  flex-shrink: 0;
+}
+.jumper-color {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+input[type="color"] {
+  width: 36px;
+  height: 28px;
+  padding: 2px;
+  cursor: pointer;
+}
+main:fullscreen .toolbar > #inspector-toggle,
+main:fullscreen .toolbar > #new-wire-control {
+  display: flex;
+}
+main:fullscreen .toolbar {
+  gap: 12px;
+}
+main:fullscreen .inspector {
+  display: block;
+  position: absolute;
+  z-index: 125;
+  right: 16px;
+  top: 68px;
+  width: min(300px, calc(100vw - 32px));
+  max-height: min(440px, calc(100vh - 260px));
+  overflow: auto;
+  background: #151515f5;
+  border: 1px solid #444;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 12px 36px #0008;
+}
+main .inspector[hidden] {
+  display: none;
+}
+main:not(:fullscreen).inspector-hidden {
+  grid-template-columns: 230px minmax(0, 1fr);
+}
+#close-inspector {
+  float: right;
+}
+
+main:fullscreen .inspector .selected-icon {
+  display: none;
 }

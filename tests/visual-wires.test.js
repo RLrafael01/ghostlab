@@ -174,3 +174,28 @@ test("physically distinct GND contacts retain distinct endpoint references", () 
   assert.deepEqual(wires.snapshot()[0].ends[0].position, [0, 0, 0]);
   assert.deepEqual(terminalPosition(uno, "GND", 1).toArray(), [-1, 0, 0]);
 });
+
+test("attached jumper follows a moving component in the same frame with animations enabled", () => {
+  const wires = createVisualWires(new T.Scene());
+  const a = part(0, "A"),
+    b = part(3, "B");
+  const wire = wires.connect(a, "A", b, "B", "red");
+  wires.update(1 / 60, false);
+  a.group.position.x = 2;
+  wires.update(1 / 60, false);
+  assert.ok(
+    wire.handles[0].position.distanceTo(terminalPosition(a, "A")) < 1e-6,
+  );
+});
+
+test("recoloring a jumper updates the cable and both connectors without changing endpoints", () => {
+  const wires = createVisualWires(new T.Scene());
+  const wire = wires.addLoose(new T.Vector3());
+  const ends = wires.snapshot()[0].ends;
+  wires.setColor(wire.id, "#0066ff");
+  assert.equal(wires.snapshot()[0].color, "#0066ff");
+  assert.deepEqual(wires.snapshot()[0].ends, ends);
+  assert.equal(wire.mesh.material.color.getHexString(), "0066ff");
+  for (const handle of wire.handles)
+    assert.equal(handle.material.color.getHexString(), "0066ff");
+});

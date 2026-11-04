@@ -48,6 +48,24 @@ export function createVisualWires(scene) {
   }
   const api = {
     handles,
+    get meshes() {
+      return wires.map((wire) => wire.mesh);
+    },
+    setColor(id, color) {
+      const wire = wires.find((entry) => entry.id === id);
+      if (!wire) return;
+      wire.mesh.material.color.set(color);
+      for (const handle of wire.handles) {
+        handle.material.color.set(color);
+        handle.material.emissive.set(color);
+      }
+    },
+    select(id) {
+      for (const wire of wires) {
+        wire.mesh.material.emissive.set(wire.id === id ? "#86ffe0" : "#000000");
+        wire.mesh.material.emissiveIntensity = 0.25;
+      }
+    },
     addLoose(position, color = "#e9b640") {
       const wire = api.connect(null, null, null, null, color, 0.35);
       wire.ends[0].position.copy(position).add(new T.Vector3(-0.8, 0.12, 0));
@@ -66,6 +84,7 @@ export function createVisualWires(scene) {
     snapshot() {
       return wires.map((wire) => ({
         id: wire.id,
+        color: "#" + wire.mesh.material.color.getHexString(),
         ends: wire.ends.map((end) => ({
           componentId: end.item?.id ?? null,
           pin: end.item ? end.pin : null,
@@ -116,6 +135,7 @@ export function createVisualWires(scene) {
         ],
         handles: [],
       };
+      mesh.userData.wireId = wire.id;
       wire.ends.forEach((end, index) => {
         const handle = new T.Mesh(
           new T.BoxGeometry(0.09, 0.19, 0.09),
@@ -153,7 +173,7 @@ export function createVisualWires(scene) {
           const elevated = target.clone();
           if (gesture?.wire === wire && gesture.index === index)
             elevated.y += 0.25;
-          if (!handle.userData.placed || reducedMotion)
+          if (end.item || !handle.userData.placed || reducedMotion)
             handle.position.copy(elevated);
           else handle.position.lerp(elevated, 1 - Math.exp(-delta * 22));
           if (handle.position.distanceTo(elevated) < 0.0001)

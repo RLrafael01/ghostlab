@@ -1,21 +1,23 @@
 # Uso de skills no GhostLab
 
-**41 aplicações registradas** · Matt Pocock: 41 · pstack: 0
+**44 aplicações registradas** · Matt Pocock: 43 · pstack: 1
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
 | Matt Pocock | `code-review` | 9 | 1 | 10 |
+| Matt Pocock | `diagnosing-bugs` | 1 | 0 | 1 |
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
 | Matt Pocock | `implement` | 9 | 1 | 10 |
-| Matt Pocock | `pr` | 4 | 2 | 6 |
+| Matt Pocock | `pr` | 5 | 2 | 7 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
 | Matt Pocock | `tdd` | 1 | 1 | 2 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 1 | 0 | 1 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
-| **Total** | | **36** | **5** | **41** |
+| pstack | `principle-prove-it-works` | 1 | 0 | 1 |
+| **Total** | | **39** | **5** | **44** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -70,3 +72,7 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 039 | 03/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR da issue #2. | concluído | PR #4 aberto em rascunho antes da implementação e atualizado com código, testes, documentação e histórico: https://github.com/RLrafael01/ghostlab/pull/4. Sem merge na main. Retomada em 04/11/2026 concluída no PR #4: Fio jumper no catálogo/dock, criação com duas pontas livres, foco/remoção e encaixe em j20 verificados; teste red por addLoose() ausente, green após implementação; 10 testes e build aprovados; Standards 0 e Spec 0 na revisão da correção, sem duplicar aplicações. |
 | 040 | 03/11/2026 | Enzo | Matt Pocock | `code-review` | Revisar issue #2 nos eixos Standards e Spec desde 63a6404. | concluído | Standards: 2 achados corrigidos (concorrência de ponteiros e tabela do histórico). Spec: 1 corrigido (GND físicos distintos). Revisores revalidaram: 0 pendências em cada eixo; regressões cobertas em testes no PR #4. Retomada em 04/11/2026 concluída no PR #4: Fio jumper no catálogo/dock, criação com duas pontas livres, foco/remoção e encaixe em j20 verificados; teste red por addLoose() ausente, green após implementação; 10 testes e build aprovados; Standards 0 e Spec 0 na revisão da correção, sem duplicar aplicações. |
 | 041 | 03/11/2026 | Enzo | Matt Pocock | `pr` | Destacar o link público de teste no PR #4. | concluído | Link https://rlrafael01.github.io/ghostlab/pr-4/ destacado e confirmado na descrição do PR #4 via API; prévia HTTP 200 e revision.txt correspondente a eef9544 na verificação. |
+
+| 042 | 04/11/2026 | Rafael | Matt Pocock | `diagnosing-bugs` | Corrigir atraso dos jumpers e interação em tela cheia. | concluído | Teste de movimento com animações reproduziu o atraso e passou após sincronizar pontas conectadas. Chrome confirmou seleção pelo corpo do cabo e escala preservada na tela cheia. |
+| 043 | 04/11/2026 | Rafael | pstack | `principle-prove-it-works` | Validar inspetor, cores e remoção nos dois modos. | concluído | Sugestão aplicada: verificar o comportamento real. Chrome automatizado confirmou seleção, cores, recolher/reabrir, remoção de fio e peça, escala e retorno do editor, sem erros de página. Validação de layout realizada em 1440×900. |
+| 044 | 04/11/2026 | Rafael | Matt Pocock | `pr` | Preparar PR com prévia para Enzo. | em andamento | Build e testes aprovados; publicação da prévia pendente. |

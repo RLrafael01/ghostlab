@@ -75,7 +75,7 @@ A retirada e o encaixe têm transição curta; a preferência de movimento reduz
 
 ## Tela cheia e catálogo
 
-“Tela cheia” usa a API nativa do navegador: catálogo lateral, inspetor e barras somem. Escape ou “Sair da tela cheia” retorna ao layout normal. Se o navegador não permitir, o app informa a falha e permanece no modo normal; não há substituição por uma janela expandida.
+“Tela cheia” usa a API nativa do navegador: o catálogo vira dock e o inspetor fica em um painel recolhível no canto direito. Escape ou “Sair da tela cheia” retorna ao layout normal. Se o navegador não permitir, o app informa a falha e permanece no modo normal; não há substituição por uma janela expandida.
 
 Na tela cheia, um dock circular mantém componentes, Código e Visão inicial acessíveis. Arraste horizontalmente, use a roda/trackpad, as setas laterais ou as teclas esquerda/direita para percorrer. O item central aumenta; os laterais diminuem e desaparecem. Clique num item lateral para centralizá-lo e no centro para adicionar/ativar. Arraste uma peça para cima e solte na bancada para posicioná-la; soltar sobre o dock, editor ou fora da cena cancela.
 
@@ -105,3 +105,9 @@ Link fixo: https://rlrafael01.github.io/ghostlab/main/
 Após o merge do PR que adiciona esta configuração, cada push na main (incluindo merges) roda testes e build e publica automaticamente neste endereço. Aguarde **Build and tests** e **Publish site** ficarem verdes no GitHub Actions. Não é necessário pull para testar pelo navegador; pull continua necessário para atualizar o código local.
 
 Falha nos testes/build preserva o último site publicado. A main e os PRs compartilham uma fila de publicação, mas usam pastas independentes. Execuções ultrapassadas da main são rejeitadas antes de publicar. O arquivo `main/revision.txt` identifica o commit publicado. O site só muda após a publicação terminar; aprovar um PR sem fazer merge não atualiza a main.
+
+## Inspetor e cores dos jumpers
+
+Clique em uma peça ou no corpo de um jumper para selecioná-lo. O botão Inspetor mostra ou recolhe os detalhes nos dois modos. Em tela cheia, o painel ocupa o canto direito e permite remover a seleção. A cor do fio selecionado pode ser alterada ali; “Novo fio”, na barra superior, define a cor dos próximos jumpers adicionados pelo catálogo ou dock. As cores são visuais.
+
+Ao entrar e sair da tela cheia, a escala aparente das peças é preservada. Pontas conectadas acompanham as peças no mesmo quadro, incluindo peças apoiadas na protoboard.

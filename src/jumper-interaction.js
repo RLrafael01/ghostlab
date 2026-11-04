@@ -12,6 +12,7 @@ export function setupJumperInteraction({
   items,
   isComponentDragging = () => false,
   onChange = () => {},
+  onSelect = () => {},
 }) {
   const ray = new T.Raycaster();
   const pointer = new T.Vector2();
@@ -117,6 +118,7 @@ export function setupJumperInteraction({
       const hit = ray.intersectObjects(wires.handles.children, false)[0];
       if (!hit || !hit.object.visible) return;
       const { wire, index } = hit.object.userData.jumper;
+      onSelect(wire.id);
       if (!wires.begin(wire, index)) return;
       event.preventDefault();
       event.stopImmediatePropagation();

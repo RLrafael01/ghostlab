@@ -3,6 +3,19 @@ export function setupWorkspacePanels() {
   const fullscreen = document.querySelector("#fullscreen");
   const codeButton = document.querySelector("#code-toggle");
   const editor = document.querySelector("#code-panel");
+  const inspector = document.querySelector("#inspector");
+  const inspectorButton = document.querySelector("#inspector-toggle");
+  function setInspectorOpen(open) {
+    inspector.hidden = !open;
+    inspectorButton.setAttribute("aria-expanded", String(open));
+    shell.classList.toggle("inspector-hidden", !open);
+  }
+  inspectorButton?.addEventListener("click", () =>
+    setInspectorOpen(inspector.hidden),
+  );
+  document
+    .querySelector("#close-inspector")
+    ?.addEventListener("click", () => setInspectorOpen(false));
   setCodeOpen(true);
   function showExpanded(value) {
     shell.classList.toggle("expanded-workbench", value);
