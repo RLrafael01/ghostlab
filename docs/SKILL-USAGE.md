@@ -75,4 +75,4 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 
 | 042 | 04/11/2026 | Rafael | Matt Pocock | `diagnosing-bugs` | Corrigir atraso dos jumpers e interação em tela cheia. | concluído | Teste de movimento com animações reproduziu o atraso e passou após sincronizar pontas conectadas. Chrome confirmou seleção pelo corpo do cabo e escala preservada na tela cheia. |
 | 043 | 04/11/2026 | Rafael | pstack | `principle-prove-it-works` | Validar inspetor, cores e remoção nos dois modos. | concluído | Sugestão aplicada: verificar o comportamento real. Chrome automatizado confirmou seleção, cores, recolher/reabrir, remoção de fio e peça, escala e retorno do editor, sem erros de página. Validação de layout realizada em 1440×900. |
-| 044 | 04/11/2026 | Rafael | Matt Pocock | `pr` | Preparar PR com prévia para Enzo. | em andamento | Build e testes aprovados; publicação da prévia pendente. |
+| 044 | 04/11/2026 | Rafael | Matt Pocock | `pr` | Preparar PR com prévia para Enzo. | concluído | PR #5 aberto com LINK TESTE no início, evidências e impacto. Publicação acompanhada pelo workflow do PR. |
