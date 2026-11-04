@@ -491,7 +491,7 @@ function showCatalog(query = "") {
       const b = document.createElement("button");
       b.className = "catalog-item";
       b.setAttribute("aria-label", `Adicionar ${v.name}`);
-      b.innerHTML = `<span class="component-preview" aria-hidden="true"><span>Ilustração</span></span><span>${v.name}<small>${type === "board" ? "830 contatos" : v.pins.length + " pinos"} · arraste ou clique</small></span><strong>＋</strong>`;
+      b.innerHTML = `<span class="component-preview" aria-hidden="true"><span>Ilustração</span></span><span>${v.name}<small>${type === "board" ? "830 contatos" : type === "wire" ? "2 pontas livres" : v.pins.length + " pinos"} · arraste ou clique</small></span><strong>＋</strong>`;
       componentPreview(type)
         .then((url) => {
           const image = document.createElement("img");
