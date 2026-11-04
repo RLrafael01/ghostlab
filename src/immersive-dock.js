@@ -29,6 +29,7 @@ export function setupImmersiveDock(catalog, { add, preview, drop }) {
     ((value % entries.length) + entries.length) % entries.length;
   function render() {
     const selected = Math.round(normalize(center)) % entries.length;
+    shell.dataset.dockSelection = entries[selected].type;
     const step = spacing();
     const maxSize = Math.min(116, track.clientWidth * 0.42);
     cards.forEach((card, index) => {

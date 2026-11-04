@@ -42,6 +42,11 @@ export function createVisualWires(scene) {
       handle.geometry.dispose();
       handle.material.dispose();
     }
+    for (const outline of wire.outlines) {
+      scene.remove(outline);
+      outline.geometry.dispose();
+      outline.material.dispose();
+    }
     scene.remove(wire.mesh);
     wire.mesh.geometry.dispose();
     wire.mesh.material.dispose();
@@ -62,8 +67,11 @@ export function createVisualWires(scene) {
     },
     select(id) {
       for (const wire of wires) {
-        wire.mesh.material.emissive.set(wire.id === id ? "#86ffe0" : "#000000");
-        wire.mesh.material.emissiveIntensity = 0.25;
+        wire.selected = wire.id === id;
+        wire.outlines.forEach((outline, index) => {
+          outline.visible = wire.selected && wire.handles[index].visible;
+          outline.update();
+        });
       }
     },
     addLoose(position, color = "#e9b640") {
@@ -134,6 +142,8 @@ export function createVisualWires(scene) {
           { item: to, pin: toPin, position: new T.Vector3() },
         ],
         handles: [],
+        outlines: [],
+        selected: false,
       };
       mesh.userData.wireId = wire.id;
       wire.ends.forEach((end, index) => {
@@ -149,6 +159,10 @@ export function createVisualWires(scene) {
         handle.userData.jumper = { wire, index };
         handles.add(handle);
         wire.handles.push(handle);
+        const outline = new T.BoxHelper(handle, 0x65e0bd);
+        outline.visible = false;
+        scene.add(outline);
+        wire.outlines.push(outline);
       });
       wires.push(wire);
       return wire;
@@ -169,16 +183,23 @@ export function createVisualWires(scene) {
           const target = endPosition(end);
           const handle = wire.handles[index];
           handle.visible = !!target;
+          wire.outlines[index].visible = wire.selected && !!target;
           if (!target) return null;
           const elevated = target.clone();
           if (gesture?.wire === wire && gesture.index === index)
             elevated.y += 0.25;
-          if (end.item || !handle.userData.placed || reducedMotion)
+          if (
+            end.item ||
+            (gesture?.wire === wire && gesture.index === index) ||
+            !handle.userData.placed ||
+            reducedMotion
+          )
             handle.position.copy(elevated);
           else handle.position.lerp(elevated, 1 - Math.exp(-delta * 22));
           if (handle.position.distanceTo(elevated) < 0.0001)
             handle.position.copy(elevated);
           handle.userData.placed = true;
+          if (wire.selected) wire.outlines[index].update();
           return handle.position.clone();
         });
         const [a, b] = points;

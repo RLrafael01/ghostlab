@@ -1,19 +1,47 @@
 * {
   box-sizing: border-box;
 }
-.jumper-status {
+button.jumper-help {
   position: absolute;
-  top: 44px;
   left: 20px;
-  right: 20px;
-  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 10px 12px;
+  overflow: hidden;
   color: #a1ebd4;
-  background: #0b1b24df;
+  background: #0b1b24ed;
   border: 1px solid #345b60;
-  border-radius: 4px;
-  padding: 8px 12px;
+  border-radius: 8px;
   font: 11px/1.5 system-ui;
+  text-align: left;
   z-index: 6;
+  transition: width 240ms ease;
+}
+.jumper-help svg {
+  flex: 0 0 18px;
+}
+.jumper-status {
+  display: block;
+  width: max-content;
+  flex: 0 0 auto;
+  transition:
+    opacity 160ms ease,
+    transform 240ms ease;
+}
+button.jumper-help[aria-expanded="false"] {
+  height: 42px;
+}
+.jumper-help[aria-expanded="false"] .jumper-status {
+  opacity: 0;
+  transform: translateX(-12px);
+}
+@media (prefers-reduced-motion: reduce) {
+  button.jumper-help,
+  .jumper-status {
+    transition: none;
+  }
 }
 .wire-entry {
   display: flex;
@@ -911,5 +939,9 @@ main:not(:fullscreen).inspector-hidden {
 }
 
 main:fullscreen .inspector .selected-icon {
+  display: none;
+}
+
+main:fullscreen:not([data-dock-selection="wire"]) .toolbar > #new-wire-control {
   display: none;
 }

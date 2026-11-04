@@ -131,7 +131,7 @@ test("cancel restores the original terminal and removing a part cleans up a half
   assert.equal(wires.handles.children.length, 0);
 });
 
-test("reduced motion attaches immediately; normal motion settles at the new terminal", () => {
+test("drag follows the pointer immediately and a released loose end settles with animation", () => {
   const scene = new T.Scene();
   const a = part(-2, "5V"),
     b = part(2, "a1");
@@ -141,9 +141,13 @@ test("reduced motion attaches immediately; normal motion settles at the new term
   wires.begin(wire, 0);
   wires.move(new T.Vector3(1, 1, 1));
   wires.update(0.01, false);
+  assert.ok(Math.abs(wire.handles[0].position.y - 1.25) < 1e-6);
+  wires.finish();
+  wires.update(0.01, false);
   assert.ok(
-    wire.handles[0].position.y > 0.2 && wire.handles[0].position.y < 1.25,
+    wire.handles[0].position.y > 1 && wire.handles[0].position.y < 1.25,
   );
+  wires.begin(wire, 0);
   wires.finish({ item: b, pin: "a1" });
   wires.update(0.01, true);
   assert.ok(
@@ -198,4 +202,39 @@ test("recoloring a jumper updates the cable and both connectors without changing
   assert.equal(wire.mesh.material.color.getHexString(), "0066ff");
   for (const handle of wire.handles)
     assert.equal(handle.material.color.getHexString(), "0066ff");
+});
+
+test("jumper selection outlines only its connectors and preserves its material color", () => {
+  const scene = new T.Scene();
+  const wires = createVisualWires(scene);
+  const wire = wires.addLoose(new T.Vector3(), "#dd2266");
+  wires.update();
+  wires.select(wire.id);
+  assert.equal(wire.mesh.material.emissive.getHexString(), "000000");
+  assert.equal(wires.snapshot()[0].color, "#dd2266");
+  const outlines = scene.children.filter(
+    (object) => object.type === "BoxHelper",
+  );
+  assert.equal(outlines.filter((outline) => outline.visible).length, 2);
+  wires.begin(wire, 0);
+  wires.move(new T.Vector3(2, 1, 3));
+  wires.update(1 / 60, false);
+  assert.ok(
+    wire.handles[0].position.distanceTo(new T.Vector3(2, 1.25, 3)) < 1e-6,
+  );
+  const center = new T.Box3()
+    .setFromObject(outlines[0])
+    .getCenter(new T.Vector3());
+  assert.ok(center.distanceTo(wire.handles[0].position) < 1e-5);
+  wires.cancel();
+  wires.select(null);
+  assert.equal(
+    outlines.some((outline) => outline.visible),
+    false,
+  );
+  wires.remove(wire.id);
+  assert.equal(
+    scene.children.some((object) => object.type === "BoxHelper"),
+    false,
+  );
 });

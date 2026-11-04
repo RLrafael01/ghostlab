@@ -108,6 +108,8 @@ Falha nos testes/build preserva o último site publicado. A main e os PRs compar
 
 ## Inspetor e cores dos jumpers
 
-Clique em uma peça ou no corpo de um jumper para selecioná-lo. O botão Inspetor mostra ou recolhe os detalhes nos dois modos. Em tela cheia, o painel ocupa o canto direito e permite remover a seleção. A cor do fio selecionado pode ser alterada ali; “Novo fio”, na barra superior, define a cor dos próximos jumpers adicionados pelo catálogo ou dock. As cores são visuais.
+Clique em uma peça ou no corpo de um jumper para selecioná-lo. O botão Inspetor mostra ou recolhe os detalhes nos dois modos. Em tela cheia, o painel ocupa o canto direito e permite remover a seleção. A cor do fio selecionado pode ser alterada ali; “Novo fio”, na barra superior, define a cor dos próximos jumpers adicionados pelo catálogo ou dock. Em tela cheia, “Novo fio” aparece quando Fio jumper está no centro do dock. As cores são visuais.
 
-Ao entrar e sair da tela cheia, a escala aparente das peças é preservada. Pontas conectadas acompanham as peças no mesmo quadro, incluindo peças apoiadas na protoboard.
+Ao entrar e sair da tela cheia, a escala aparente das peças é preservada. Pontas conectadas acompanham as peças no mesmo quadro, incluindo peças apoiadas na protoboard. Durante o arraste, as pontas seguem a superfície sob o cursor e voltam à altura da bancada quando soltas fora dos componentes. A seleção de um jumper mostra contornos nas duas pontas e preserva a cor do cabo.
+
+Clique no card de instruções dos jumpers para recolhê-lo em uma lâmpada; clique novamente para expandir. A transição respeita a preferência de movimento reduzido.
