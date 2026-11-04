@@ -1,6 +1,6 @@
 # Uso de skills no GhostLab
 
-**44 aplicações registradas** · Matt Pocock: 43 · pstack: 1
+**45 aplicações registradas** · Matt Pocock: 43 · pstack: 2
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
@@ -16,8 +16,8 @@
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 1 | 0 | 1 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
-| pstack | `principle-prove-it-works` | 1 | 0 | 1 |
-| **Total** | | **39** | **5** | **44** |
+| pstack | `principle-prove-it-works` | 2 | 0 | 2 |
+| **Total** | | **40** | **5** | **45** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -76,3 +76,5 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 042 | 04/11/2026 | Rafael | Matt Pocock | `diagnosing-bugs` | Corrigir atraso dos jumpers e interação em tela cheia. | concluído | Teste de movimento com animações reproduziu o atraso e passou após sincronizar pontas conectadas. Chrome confirmou seleção pelo corpo do cabo e escala preservada na tela cheia. Retomada no PR #5: teste reproduziu ponta abaixo da superfície durante arraste; corrigidos plano fixo e atraso visual da ponta ativa. Contornos das pontas preservam a cor do cabo. Nova verificação reproduziu drop no plano da bancada e gesto diagonal preso em swipe; altura da superfície preservada na adição e gesto promovido a colocação quando sai do dock para cima. |
 | 043 | 04/11/2026 | Rafael | pstack | `principle-prove-it-works` | Validar inspetor, cores e remoção nos dois modos. | concluído | Sugestão aplicada: verificar o comportamento real. Chrome automatizado confirmou seleção, cores, recolher/reabrir, remoção de fio e peça, escala e retorno do editor, sem erros de página. Validação de layout realizada em 1440×900. Retomada: Chrome com modelos CAD confirmou bancada → a40 → bancada, dois contornos e cor preservada; card recolhível e seletor condicionado ao dock verificados em 1440×900 e 1024×768. Retomada: arraste real do dock (inclusive diagonal inicial) e catálogo para protoboard verificado, com pontas acima da superfície; contornos em 2,5 px e testes de regressão do gesto. |
 | 044 | 04/11/2026 | Rafael | Matt Pocock | `pr` | Preparar PR com prévia para Enzo. | concluído | PR #5 aberto com LINK TESTE no início, evidências e impacto. Publicação acompanhada pelo workflow do PR. Descrição atualizada com ajuda recolhível, seletor contextual e correção da altura das pontas. |
+
+| 045 | 04/11/2026 | Rafael | pstack | `principle-prove-it-works` | Verificar redimensionamento da protoboard pelas extremidades. | concluído | Sugestão aplicada: validar interações reais. Chrome confirmou aumentar/reduzir em modo normal e fullscreen, canto oposto fixo, Escape/pointercancel/fullscreen restaurando, seleção, contatos e peças apoiadas; novo LED encaixa na placa redimensionada. 21 testes e build aprovados. Decisão: escala visual proporcional de 50% a 200%, contatos preservados. |

@@ -1,3 +1,4 @@
+import { setupBoardResize } from "./board-resize.js";
 import { createSelectionOutline } from "./selection-outline.js";
 import { jumperPlacementPoint } from "./jumper-placement.js";
 import { setupImmersiveDock } from "./immersive-dock.js";
@@ -142,6 +143,7 @@ async function add(type, x, z, animate = false, surfaceY = 0) {
     console.error(error);
     return;
   }
+  boardResize.cancel();
   status.textContent = "Bancada pronta · modelos CAD";
   const item = { id: ++serial, type, group: g };
   g.position.set(
@@ -157,11 +159,12 @@ async function add(type, x, z, animate = false, surfaceY = 0) {
     if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
       placements.set(item, performance.now());
   }
-  if (!drag) select(item);
+  if (!drag && !boardResize.active) select(item);
   else renderPanel();
   return item;
 }
 function select(item) {
+  boardResize.cancel();
   selectedWire = null;
   visualWires.select(null);
   selected = item;
@@ -176,6 +179,7 @@ function select(item) {
     scene.add(outline);
   }
   renderPanel();
+  boardResize.update();
 }
 function selectWire(id) {
   select(null);
@@ -185,6 +189,7 @@ function selectWire(id) {
 }
 function remove() {
   if (drag) return;
+  boardResize.cancel();
   if (selectedWire !== null) {
     jumperInteraction.cancel();
     visualWires.remove(selectedWire);
@@ -217,7 +222,7 @@ function renderPanel() {
   document.querySelector("#count").textContent =
     `${items.length} componentes · ${visualWires.snapshot().length} fios`;
   document.querySelector("#details").innerHTML = selected
-    ? `<div class="selected-icon">◈</div><h3>${catalog[selected.type].name} <small>#${selected.id}</small></h3><div class="eyebrow">POSIÇÃO NA BANCADA</div><div class="coords"><label>X <input id="x" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.x}"></label><label>Z <input id="z" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.z}"></label></div><p class="hint">Arraste a peça na cena ou ajuste X/Z. WASD e setas navegam pela bancada.</p><div class="eyebrow">PINOS</div><div class="pins">${catalog[selected.type].pins.map((p) => `<span>${p}</span>`).join("")}</div><button id="focus-part" class="focus-part">⌕ Focar peça</button><button id="delete" class="danger">Remover componente</button>`
+    ? `<div class="selected-icon">◈</div><h3>${catalog[selected.type].name} <small>#${selected.id}</small></h3><div class="eyebrow">POSIÇÃO NA BANCADA</div><div class="coords"><label>X <input id="x" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.x}"></label><label>Z <input id="z" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.z}"></label></div><p class="hint">${selected.type === "board" ? `Arraste os cantos para redimensionar · ${Math.round(selected.group.scale.x * 100)}% do tamanho original. Escape cancela o ajuste.` : "Arraste a peça na cena ou ajuste X/Z. WASD e setas navegam pela bancada."}</p><div class="eyebrow">PINOS</div><div class="pins">${catalog[selected.type].pins.map((p) => `<span>${p}</span>`).join("")}</div><button id="focus-part" class="focus-part">⌕ Focar peça</button><button id="delete" class="danger">Remover componente</button>`
     : '<div class="empty">Selecione um componente na cena ou na lista para inspecionar seus pinos e ajustar a posição.</div>';
   const wire = visualWires
     .snapshot()
@@ -323,52 +328,49 @@ function moveItem(item, position) {
   for (const child of items)
     if (child.mountedTo === item) child.group.position.add(delta);
 }
+function mountPoint(item) {
+  return item.type === "led"
+    ? leadTip(item, "Ânodo +")
+    : item.type === "button"
+      ? leadTip(item, "1")
+      : terminalPosition(item, "1");
+}
 function snapToBoard(item) {
   if (!["led", "resistor", "button"].includes(item.type)) return;
   item.mountedTo = null;
   item.group.position.y = 0;
   if (!document.querySelector("#snap").checked) return;
-  const board = items.find(
-    (candidate) =>
-      candidate.type === "board" &&
-      Math.abs(item.group.position.x - candidate.group.position.x) < 3.5 &&
-      Math.abs(item.group.position.z - candidate.group.position.z) < 0.7,
-  );
+  const board = items.find((candidate) => {
+    if (candidate.type !== "board") return false;
+    candidate.group.updateWorldMatrix(true, true);
+    const local = candidate.group.worldToLocal(item.group.position.clone());
+    return Math.abs(local.x) < 3.5 && Math.abs(local.z) < 0.7;
+  });
   if (!board) return;
-  const anchor = terminalPosition(board, "a1");
-  const tip =
-    item.type === "led"
-      ? leadTip(item, "Ânodo +")
-      : item.type === "button"
-        ? leadTip(item, "1")
-        : terminalPosition(item, "1");
-  const reference = tip ?? item.group.position.clone();
+  const anchor = board.group.worldToLocal(terminalPosition(board, "a1"));
+  const reference = mountPoint(item) ?? item.group.position.clone();
+  const local = board.group.worldToLocal(reference.clone());
   const pitch = BREADBOARD.pitch * BREADBOARD.sceneScale;
   const column = T.MathUtils.clamp(
-    Math.round((reference.x - anchor.x) / pitch),
+    Math.round((local.x - anchor.x) / pitch),
     0,
     BREADBOARD.columns - 1,
   );
   const x = anchor.x + column * pitch;
-  const side = reference.z < board.group.position.z ? -1 : 1;
+  const side = local.z < 0 ? -1 : 1;
   const rows = Array.from(
     { length: BREADBOARD.rowsPerSide },
     (_, row) =>
-      board.group.position.z +
       side *
-        (BREADBOARD.outerRowZ - row * BREADBOARD.pitch) *
-        BREADBOARD.sceneScale,
+      (BREADBOARD.outerRowZ - row * BREADBOARD.pitch) *
+      BREADBOARD.sceneScale,
   );
   const z = rows.reduce((a, b) =>
-    Math.abs(a - reference.z) < Math.abs(b - reference.z) ? a : b,
+    Math.abs(a - local.z) < Math.abs(b - local.z) ? a : b,
   );
-  item.group.position.add(
-    new T.Vector3(
-      x - reference.x,
-      anchor.y - 0.055 - reference.y,
-      z - reference.z,
-    ),
-  );
+  const target = board.group.localToWorld(new T.Vector3(x, anchor.y, z));
+  target.y -= 0.055;
+  item.group.position.add(target.sub(reference));
   item.mountedTo = board;
   outline?.update();
 }
@@ -391,14 +393,32 @@ const jumperInteraction = setupJumperInteraction({
   navigation,
   wires: visualWires,
   items,
-  isComponentDragging: () => !!drag,
+  isComponentDragging: () => !!drag || boardResize.active,
   onChange: renderPanel,
   onSelect: selectWire,
+});
+const boardResize = setupBoardResize({
+  host,
+  canvas: renderer.domElement,
+  camera,
+  controls,
+  navigation,
+  items,
+  getSelected: () => selected,
+  getMountPoint: mountPoint,
+  isBusy: () => !!drag || visualWires.active || placements.has(selected),
+  onStart: () => {
+    host.querySelector(".pin-tip").hidden = true;
+  },
+  onChange: () => {
+    outline?.update();
+    renderPanel();
+  },
 });
 renderer.domElement.addEventListener(
   "pointerdown",
   (event) => {
-    if (event.button !== 0 || drag) return;
+    if (event.button !== 0 || drag || boardResize.active) return;
     host.focus({ preventScroll: true });
     navigation.reset();
     updateRay(event);
@@ -456,7 +476,7 @@ renderer.domElement.addEventListener("pointermove", (event) => {
     drag.item,
     new T.Vector3(
       T.MathUtils.clamp(point.x, -15, 15),
-      0,
+      drag.item.group.position.y,
       T.MathUtils.clamp(point.z, -15, 15),
     ),
   );
@@ -604,7 +624,7 @@ let lastFrame = performance.now();
 renderer.setAnimationLoop((now) => {
   const deltaSeconds = Math.max(0, (now - lastFrame) / 1000);
   lastFrame = now;
-  if (!drag && !visualWires.active) {
+  if (!drag && !visualWires.active && !boardResize.active) {
     navigation.update(deltaSeconds);
     controls.update();
   }
@@ -617,6 +637,7 @@ renderer.setAnimationLoop((now) => {
     if (t === 1) placements.delete(item);
     if (selected === item) outline?.update();
   }
+  boardResize.update();
   visualWires.update(
     deltaSeconds,
     matchMedia("(prefers-reduced-motion: reduce)").matches,

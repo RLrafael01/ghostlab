@@ -945,3 +945,53 @@ main:fullscreen .inspector .selected-icon {
 main:fullscreen:not([data-dock-selection="wire"]) .toolbar > #new-wire-control {
   display: none;
 }
+
+.board-resize {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+}
+.board-resize[hidden],
+.board-resize-handle[hidden] {
+  display: none;
+}
+button.board-resize-handle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  min-width: 0;
+  padding: 0;
+  border: 2px solid #eafff8;
+  border-radius: 3px;
+  background: #28be91;
+  box-shadow:
+    0 0 0 2px #10281e,
+    0 0 10px #79ffd566;
+  transform: translate(-50%, -50%);
+  cursor: nwse-resize;
+  pointer-events: auto;
+  touch-action: none;
+}
+button.board-resize-handle:hover,
+button.board-resize-handle:focus-visible {
+  background: #79ffd5;
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+.board-resize-hint {
+  position: absolute;
+  width: 310px;
+  max-width: 100%;
+  padding: 5px 8px;
+  border-radius: 5px;
+  background: #10231de8;
+  color: #cfffee;
+  font-size: 10px;
+  text-align: center;
+}
+.resizing-board canvas,
+.resizing-board .board-resize-handle {
+  cursor: nwse-resize;
+}

@@ -113,3 +113,9 @@ Clique em uma peça ou no corpo de um jumper para selecioná-lo. O botão Inspet
 Ao entrar e sair da tela cheia, a escala aparente das peças é preservada. Pontas conectadas acompanham as peças no mesmo quadro, incluindo peças apoiadas na protoboard. Durante o arraste, as pontas seguem a superfície sob o cursor e voltam à altura da bancada quando soltas fora dos componentes. A seleção usa contornos espessos com margem, inclusive nas duas pontas do jumper, preservando a cor do cabo. Ao arrastar um jumper do catálogo ou dock sobre a protoboard, ele é colocado acima da superfície. Um gesto iniciado para o lado no dock pode continuar para cima para colocar a peça.
 
 Clique no card de instruções dos jumpers para recolhê-lo em uma lâmpada; clique novamente para expandir. A transição respeita a preferência de movimento reduzido.
+
+## Redimensionar a protoboard
+
+Selecione a protoboard e arraste uma das quatro alças verdes nos cantos. A escala visual varia proporcionalmente entre 50% e 200%, mantendo o canto oposto e a base fixos. Funciona no layout normal e em tela cheia. Escape durante o arraste restaura o tamanho anterior.
+
+Os contatos mantêm seus identificadores, os fios conectados acompanham o ajuste e as peças apoiadas preservam seu ponto de encaixe. O redimensionamento é visual e mantém a quantidade de contatos do modelo. O inspetor mostra a escala atual.
