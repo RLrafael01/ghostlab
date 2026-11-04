@@ -8,6 +8,7 @@ export function setupBoardResize({
   controls,
   navigation,
   items,
+  wires,
   getSelected,
   isBusy = () => false,
   onChange = () => {},
@@ -19,7 +20,8 @@ export function setupBoardResize({
   overlay.hidden = true;
   const hint = document.createElement("span");
   hint.className = "board-resize-hint";
-  hint.textContent = "Arraste os cantos para redimensionar · Esc cancela";
+  hint.textContent =
+    "Arraste as extremidades para mudar os furos · Esc cancela";
   overlay.append(hint);
   host.append(overlay);
   const bounds = new Box3();
@@ -64,10 +66,8 @@ export function setupBoardResize({
   }
 
   const corners = [
-    { x: -1, z: -1, name: "esquerdo traseiro" },
-    { x: 1, z: -1, name: "direito traseiro" },
-    { x: 1, z: 1, name: "direito dianteiro" },
-    { x: -1, z: 1, name: "esquerdo dianteiro" },
+    { x: -1, z: 0, name: "esquerda" },
+    { x: 1, z: 0, name: "direita" },
   ].map((corner) => {
     const handle = document.createElement("button");
     handle.type = "button";
@@ -75,9 +75,9 @@ export function setupBoardResize({
     handle.dataset.corner = `${corner.x},${corner.z}`;
     handle.setAttribute(
       "aria-label",
-      `Redimensionar protoboard pelo canto ${corner.name}`,
+      `Redimensionar protoboard pela extremidade ${corner.name}`,
     );
-    handle.title = "Arraste para aumentar ou reduzir a protoboard";
+    handle.title = "Arraste para adicionar ou retirar colunas de furos";
     overlay.append(handle);
     handle.addEventListener("pointerdown", (event) => {
       event.stopPropagation();
@@ -87,7 +87,13 @@ export function setupBoardResize({
       event.preventDefault();
       onStart();
       bounds.setFromObject(board.group);
-      const resize = createBoardResize(board, corner, items, getMountPoint);
+      const resize = createBoardResize(
+        board,
+        corner,
+        items,
+        getMountPoint,
+        wires,
+      );
       if (!resize) return;
       gesture = {
         id: event.pointerId,
@@ -155,7 +161,7 @@ export function setupBoardResize({
       const projected = new Vector3(
         corner.x < 0 ? bounds.min.x : bounds.max.x,
         bounds.max.y,
-        corner.z < 0 ? bounds.min.z : bounds.max.z,
+        (bounds.min.z + bounds.max.z) / 2,
       ).project(camera);
       const x =
         rect.left - hostRect.left + ((projected.x + 1) * rect.width) / 2;
@@ -167,6 +173,14 @@ export function setupBoardResize({
       left = Math.min(left, x);
       right = Math.max(right, x);
     }
+    for (const x of [bounds.min.x, bounds.max.x])
+      for (const z of [bounds.min.z, bounds.max.z]) {
+        const projected = new Vector3(x, bounds.max.y, z).project(camera);
+        bottom = Math.max(
+          bottom,
+          rect.top - hostRect.top + ((1 - projected.y) * rect.height) / 2,
+        );
+      }
     hint.style.left = `${Math.max(0, Math.min(hostRect.width - 310, (left + right) / 2 - 155))}px`;
     hint.style.top = `${Math.min(hostRect.height - 28, bottom + 15)}px`;
   }

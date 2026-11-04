@@ -1,86 +1,126 @@
 import { Box3, MathUtils, Vector3 } from "three";
+import {
+  BREADBOARD,
+  BOARD_COLUMN_LIMITS,
+  breadboardLayout,
+} from "./breadboard-layout.js";
+import { replaceBreadboard } from "./parametric-board.js";
 
-export const BOARD_SCALE_LIMITS = Object.freeze({ min: 0.5, max: 2 });
+export { BOARD_COLUMN_LIMITS } from "./breadboard-layout.js";
 
-export function createBoardResize(board, cornerSigns, items, mountPoint) {
+export function createBoardResize(
+  board,
+  cornerSigns,
+  items,
+  mountPoint,
+  wires,
+) {
   const group = board.group;
   const bounds = new Box3().setFromObject(group);
   if (bounds.isEmpty()) return null;
+  const direction = cornerSigns.x > 0 ? 1 : -1;
   const corner = new Vector3(
-    cornerSigns.x > 0 ? bounds.max.x : bounds.min.x,
+    direction > 0 ? bounds.max.x : bounds.min.x,
     bounds.min.y,
-    cornerSigns.z > 0 ? bounds.max.z : bounds.min.z,
+    (bounds.min.z + bounds.max.z) / 2,
   );
   const anchor = new Vector3(
-    cornerSigns.x > 0 ? bounds.min.x : bounds.max.x,
+    direction > 0 ? bounds.min.x : bounds.max.x,
     bounds.min.y,
-    cornerSigns.z > 0 ? bounds.min.z : bounds.max.z,
+    corner.z,
   );
-  const diagonal = corner.clone().sub(anchor);
-  if (diagonal.lengthSq() < 1e-10) return null;
+  const originalColumns =
+    board.columns ?? group.children[0]?.userData.columns ?? BREADBOARD.columns;
+  const originalLayout = breadboardLayout(originalColumns);
   const originalPosition = group.position.clone();
-  const originalScale = group.scale.clone();
   const originalWorldPosition = group.getWorldPosition(new Vector3());
+  const originalFirstColumn = group.localToWorld(
+    new Vector3(originalLayout.firstColumnX, 0, 0),
+  );
+  const connections = wires?.captureFor(board);
   const attachments = items
     .filter((item) => item.mountedTo === board)
     .map((item) => {
       const worldMount =
         mountPoint(item)?.clone() ?? item.group.getWorldPosition(new Vector3());
+      const localMount = group.worldToLocal(worldMount.clone());
       return {
         item,
         position: item.group.position.clone(),
         worldPosition: item.group.getWorldPosition(new Vector3()),
         worldMount,
-        localMount: group.worldToLocal(worldMount.clone()),
+        localMount,
+        column:
+          Math.round(
+            (localMount.x - originalLayout.firstColumnX) / originalLayout.pitch,
+          ) + 1,
       };
     });
+  let currentColumns = originalColumns;
 
   return {
     corner,
     anchor,
     planeY: bounds.min.y,
     move(worldPoint) {
-      const offset = worldPoint.clone().sub(anchor);
-      offset.y = 0;
-      const requestedScale =
-        (originalScale.x * offset.dot(diagonal)) / diagonal.lengthSq();
-      const scale = MathUtils.clamp(
-        requestedScale,
-        BOARD_SCALE_LIMITS.min,
-        BOARD_SCALE_LIMITS.max,
+      const columns = MathUtils.clamp(
+        Math.round(
+          originalColumns +
+            ((worldPoint.x - corner.x) * direction) / originalLayout.pitch,
+        ),
+        BOARD_COLUMN_LIMITS.min,
+        BOARD_COLUMN_LIMITS.max,
       );
-      const factor = scale / originalScale.x;
-      const worldPosition = originalWorldPosition
-        .clone()
-        .sub(anchor)
-        .multiplyScalar(factor)
-        .add(anchor);
-      group.scale.copy(originalScale).multiplyScalar(factor);
+      if (columns === currentColumns) return columns;
+      const layout = breadboardLayout(columns);
+      replaceBreadboard(board, columns);
+      currentColumns = columns;
+      const worldPosition = originalWorldPosition.clone();
+      worldPosition.x +=
+        (direction * (layout.width - originalLayout.width)) / 2;
       group.position.copy(
         group.parent ? group.parent.worldToLocal(worldPosition) : worldPosition,
       );
       group.updateWorldMatrix(true, true);
+      const firstColumnShift = group
+        .localToWorld(new Vector3(layout.firstColumnX, 0, 0))
+        .sub(originalFirstColumn);
       for (const attachment of attachments) {
-        const target = group.localToWorld(attachment.localMount.clone());
-        const position = attachment.worldPosition
-          .clone()
-          .add(target.sub(attachment.worldMount));
         const child = attachment.item.group;
+        let position;
+        if (attachment.column < 1 || attachment.column > columns) {
+          attachment.item.mountedTo = null;
+          position = attachment.worldPosition.clone().add(firstColumnShift);
+          position.y = 0;
+        } else {
+          attachment.item.mountedTo = board;
+          const localMount = attachment.localMount.clone();
+          localMount.x += layout.firstColumnX - originalLayout.firstColumnX;
+          const target = group.localToWorld(localMount);
+          position = attachment.worldPosition
+            .clone()
+            .add(target.sub(attachment.worldMount));
+        }
         child.position.copy(
           child.parent ? child.parent.worldToLocal(position) : position,
         );
         child.updateWorldMatrix(true, true);
       }
-      return scale;
+      connections?.sync();
+      return columns;
     },
     cancel() {
+      if (currentColumns !== originalColumns)
+        replaceBreadboard(board, originalColumns);
+      currentColumns = originalColumns;
       group.position.copy(originalPosition);
-      group.scale.copy(originalScale);
       group.updateWorldMatrix(true, true);
       for (const attachment of attachments) {
+        attachment.item.mountedTo = board;
         attachment.item.group.position.copy(attachment.position);
         attachment.item.group.updateWorldMatrix(true, true);
       }
+      connections?.restore();
     },
   };
 }

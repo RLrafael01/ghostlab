@@ -54,6 +54,44 @@ export function createVisualWires(scene) {
   }
   const api = {
     handles,
+    captureFor(board) {
+      const first = terminalPosition(board, "a1");
+      const attached = wires.flatMap((wire) =>
+        wire.ends.flatMap((end, index) =>
+          end.item === board
+            ? [
+                {
+                  wire,
+                  index,
+                  original: cloneEnd(end),
+                  position: endPosition(end) ?? end.position.clone(),
+                },
+              ]
+            : [],
+        ),
+      );
+      return {
+        sync() {
+          const shift = terminalPosition(board, "a1").sub(first);
+          for (const { wire, index, original, position } of attached) {
+            if (!wires.includes(wire)) continue;
+            if (
+              terminalPosition(board, original.pin, original.occurrence ?? 0)
+            ) {
+              wire.ends[index] = cloneEnd(original);
+            } else {
+              const dropped = position.clone().add(shift);
+              dropped.y = 0.12;
+              wire.ends[index] = { item: null, pin: null, position: dropped };
+            }
+          }
+        },
+        restore() {
+          for (const { wire, index, original } of attached)
+            if (wires.includes(wire)) wire.ends[index] = cloneEnd(original);
+        },
+      };
+    },
     get meshes() {
       return wires.map((wire) => wire.mesh);
     },

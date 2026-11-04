@@ -1,4 +1,4 @@
-import { BREADBOARD } from "./breadboard-layout.js";
+import { createBreadboard } from "./parametric-board.js";
 import * as T from "three";
 import { finishSurface } from "./surface-finish.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -35,7 +35,6 @@ const loader = new GLTFLoader();
 const templates = new Map();
 const rotations = {
   uno: [0, Math.PI / 2, 0],
-  board: [0, 0, 0],
   servo: [-Math.PI / 2, 0, 0],
   button: [0, 0, 0],
   pot: [-Math.PI / 2, 0, 0],
@@ -44,10 +43,13 @@ const rotations = {
   sensor: [-Math.PI / 2, 0, 0],
 };
 export async function loadCAD(type) {
+  if (type === "board") return createBreadboard();
   if (!templates.has(type)) {
     const pending = loader
       .loadAsync(
-        type === "uno" ? `${import.meta.env.BASE_URL}models/uno/source.gltf` : `${import.meta.env.BASE_URL}models/${type}.glb`,
+        type === "uno"
+          ? `${import.meta.env.BASE_URL}models/uno/source.gltf`
+          : `${import.meta.env.BASE_URL}models/${type}.glb`,
       )
       .then(({ scene }) => {
         // The Uno viewer file includes a Z-up transform; its vertex data is already Y-up.
@@ -105,7 +107,7 @@ export async function loadCAD(type) {
         scene.rotation.set(...rotations[type]);
         scene.updateMatrixWorld(true);
         const bounds = new T.Box3().setFromObject(oriented);
-        const scale = type === "board" ? 44.5 : 0.0445;
+        const scale = 0.0445;
         scene.scale.setScalar(scale);
         const center = bounds.getCenter(new T.Vector3()).multiplyScalar(scale);
         scene.position.set(-center.x, -bounds.min.y * scale + 0.02, -center.z);
@@ -143,27 +145,6 @@ function attachTerminals(scene, type) {
         pin(name, header.x, 10.1, header.start + i * 2.5),
       );
     }
-  } else if (type === "board") {
-    for (let side = 0; side < 2; side++) {
-      for (let row = 0; row < BREADBOARD.rowsPerSide; row++)
-        for (let col = 0; col < BREADBOARD.columns; col++) {
-          pin(
-            `${"abcdefghij"[side * 5 + row]}${col + 1}`,
-            BREADBOARD.firstColumnX + col * BREADBOARD.pitch,
-            0.0091,
-            (side ? 1 : -1) * (BREADBOARD.outerRowZ - row * BREADBOARD.pitch),
-          );
-        }
-      for (let rail = 0; rail < 2; rail++)
-        for (let col = 0; col < 50; col++) {
-          pin(
-            `${side ? "Inferior" : "Superior"} ${rail ? "−" : "+"} ${col + 1}`,
-            -0.074935 + (col + Math.floor(col / 5)) * 0.00254,
-            0.0091,
-            (side ? 1 : -1) * (0.020995 + rail * 0.00254),
-          );
-        }
-    }
   } else if (type === "sensor") {
     ["VCC", "Trig", "Echo", "GND"].forEach((name, i) =>
       pin(name, -3.81 + i * 2.54, -15.5, -2.5),
@@ -186,7 +167,7 @@ function attachTerminals(scene, type) {
   });
   if (!pins.length) return;
   const targets = new T.InstancedMesh(
-    new T.SphereGeometry(type === "board" ? 0.00055 : 0.7, 8, 6),
+    new T.SphereGeometry(0.7, 8, 6),
     new T.MeshBasicMaterial({
       transparent: true,
       opacity: 0,
@@ -199,25 +180,6 @@ function attachTerminals(scene, type) {
     targets.setMatrixAt(i, new T.Matrix4().makeTranslation(...p.position)),
   );
   scene.add(targets);
-  if (type === "board") {
-    const sockets = new T.InstancedMesh(
-      new T.BoxGeometry(0.00085, 0.00015, 0.00085),
-      new T.MeshStandardMaterial({
-        color: "#35414a",
-        metalness: 0.35,
-        roughness: 0.7,
-      }),
-      pins.length,
-    );
-    pins.forEach((p, i) =>
-      sockets.setMatrixAt(
-        i,
-        new T.Matrix4().makeTranslation(p.position[0], 0.0088, p.position[2]),
-      ),
-    );
-    sockets.userData.pinNames = pins.map((p) => p.name);
-    scene.add(sockets);
-  }
 }
 
 export function pinNameForHit(hit) {

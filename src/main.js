@@ -7,7 +7,7 @@ import {
   setupWorkspacePanels,
   makeCatalogDraggable,
 } from "./workspace-panels.js";
-import { BREADBOARD } from "./breadboard-layout.js";
+import { BREADBOARD, breadboardLayout } from "./breadboard-layout.js";
 import { setupJumperInteraction } from "./jumper-interaction.js";
 import * as T from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -146,6 +146,7 @@ async function add(type, x, z, animate = false, surfaceY = 0) {
   boardResize.cancel();
   status.textContent = "Bancada pronta · modelos CAD";
   const item = { id: ++serial, type, group: g };
+  if (type === "board") item.columns = g.children[0].userData.columns;
   g.position.set(
     x ?? ((items.length % 4) - 1.5) * 2.4,
     0,
@@ -222,7 +223,7 @@ function renderPanel() {
   document.querySelector("#count").textContent =
     `${items.length} componentes · ${visualWires.snapshot().length} fios`;
   document.querySelector("#details").innerHTML = selected
-    ? `<div class="selected-icon">◈</div><h3>${catalog[selected.type].name} <small>#${selected.id}</small></h3><div class="eyebrow">POSIÇÃO NA BANCADA</div><div class="coords"><label>X <input id="x" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.x}"></label><label>Z <input id="z" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.z}"></label></div><p class="hint">${selected.type === "board" ? `Arraste os cantos para redimensionar · ${Math.round(selected.group.scale.x * 100)}% do tamanho original. Escape cancela o ajuste.` : "Arraste a peça na cena ou ajuste X/Z. WASD e setas navegam pela bancada."}</p><div class="eyebrow">PINOS</div><div class="pins">${catalog[selected.type].pins.map((p) => `<span>${p}</span>`).join("")}</div><button id="focus-part" class="focus-part">⌕ Focar peça</button><button id="delete" class="danger">Remover componente</button>`
+    ? `<div class="selected-icon">◈</div><h3>${catalog[selected.type].name} <small>#${selected.id}</small></h3><div class="eyebrow">POSIÇÃO NA BANCADA</div><div class="coords"><label>X <input id="x" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.x}"></label><label>Z <input id="z" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.z}"></label></div><p class="hint">${selected.type === "board" ? `Arraste as extremidades · ${selected.columns} colunas · ${breadboardLayout(selected.columns).contactCount} furos · passo de 2,54 mm. Escape cancela o ajuste.` : "Arraste a peça na cena ou ajuste X/Z. WASD e setas navegam pela bancada."}</p><div class="eyebrow">PINOS</div><div class="pins">${catalog[selected.type].pins.map((p) => `<span>${p}</span>`).join("")}</div><button id="focus-part" class="focus-part">⌕ Focar peça</button><button id="delete" class="danger">Remover componente</button>`
     : '<div class="empty">Selecione um componente na cena ou na lista para inspecionar seus pinos e ajustar a posição.</div>';
   const wire = visualWires
     .snapshot()
@@ -344,7 +345,8 @@ function snapToBoard(item) {
     if (candidate.type !== "board") return false;
     candidate.group.updateWorldMatrix(true, true);
     const local = candidate.group.worldToLocal(item.group.position.clone());
-    return Math.abs(local.x) < 3.5 && Math.abs(local.z) < 0.7;
+    const layout = breadboardLayout(candidate.columns);
+    return Math.abs(local.x) < layout.width / 2 && Math.abs(local.z) < 0.7;
   });
   if (!board) return;
   const anchor = board.group.worldToLocal(terminalPosition(board, "a1"));
@@ -354,7 +356,7 @@ function snapToBoard(item) {
   const column = T.MathUtils.clamp(
     Math.round((local.x - anchor.x) / pitch),
     0,
-    BREADBOARD.columns - 1,
+    board.columns - 1,
   );
   const x = anchor.x + column * pitch;
   const side = local.z < 0 ? -1 : 1;
@@ -405,6 +407,7 @@ const boardResize = setupBoardResize({
   navigation,
   items,
   getSelected: () => selected,
+  wires: visualWires,
   getMountPoint: mountPoint,
   isBusy: () => !!drag || visualWires.active || placements.has(selected),
   onStart: () => {
@@ -413,6 +416,9 @@ const boardResize = setupBoardResize({
   onChange: () => {
     outline?.update();
     renderPanel();
+    if (selected?.type === "board")
+      host.querySelector(".jumper-status").textContent =
+        `Protoboard com ${selected.columns} colunas · pontas de contatos removidos ficam soltas`;
   },
 });
 renderer.domElement.addEventListener(
@@ -532,10 +538,9 @@ function dropPosition(event, type) {
   )
     return null;
   updateRay(event);
-  const point =
-    type === "wire"
-      ? jumperPlacementPoint(ray, items)
-      : ray.ray.intersectPlane(dragPlane, new T.Vector3());
+  const point = ["wire", "led", "resistor", "button"].includes(type)
+    ? jumperPlacementPoint(ray, items)
+    : ray.ray.intersectPlane(dragPlane, new T.Vector3());
   if (!point || Math.abs(point.x) > 15 || Math.abs(point.z) > 15) return null;
   return point;
 }

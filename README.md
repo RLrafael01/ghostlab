@@ -53,7 +53,7 @@ Abra o endereço mostrado no terminal (normalmente http://127.0.0.1:5173). Para 
 
 Clique no catálogo para adicionar; arraste diretamente as peças sobre a bancada para mover. Selecione na cena ou lista; ajuste X/Z no inspetor para posicionar a peça. Clique na bancada e mantenha WASD ou as setas pressionadas para navegar com a câmera sobre sua superfície; essas teclas não movem as peças. Delete remove a seleção. Arraste o fundo para orbitar e use o scroll para zoom; “Visão inicial” restaura a câmera. Código ainda não é executado; conexões são a tarefa 03.
 
-Os oito componentes usam modelos 3D importados, incluindo geometrias CAD convertidas de STEP. Escala comum: 1 mm = 0,0445 unidade da cena. Materiais e alvos de interação são adaptações visuais; não há validação de tolerâncias para fabricação. Fontes, autores e licenças: [atribuições dos modelos](public/models/ATTRIBUTION.md). Para reproduzir as conversões: `node scripts/convert-cad.mjs`.
+Sete componentes usam modelos 3D importados, incluindo geometrias CAD convertidas de STEP. A protoboard usa geometria paramétrica com furos reais para permitir alterar a quantidade de colunas. Escala comum: 1 mm = 0,0445 unidade da cena. Materiais e alvos de interação são adaptações visuais; não há validação de tolerâncias para fabricação. Fontes, autores e licenças: [atribuições dos modelos](public/models/ATTRIBUTION.md). Para reproduzir as conversões: `node scripts/convert-cad.mjs`.
 
 
 ## Acabamento e montagem de apresentação
@@ -116,6 +116,6 @@ Clique no card de instruções dos jumpers para recolhê-lo em uma lâmpada; cli
 
 ## Redimensionar a protoboard
 
-Selecione a protoboard e arraste uma das quatro alças verdes nos cantos. A escala visual varia proporcionalmente entre 50% e 200%, mantendo o canto oposto e a base fixos. Funciona no layout normal e em tela cheia. Escape durante o arraste restaura o tamanho anterior.
+Selecione a protoboard e arraste uma das duas alças verdes nas extremidades. O comprimento muda em passos de uma coluna, entre 10 e 126 colunas, mantendo o tamanho dos furos, o passo de 2,54 mm, a largura e a altura. O inspetor mostra a quantidade atual de colunas e furos. O padrão de 63 colunas tem 830 contatos.
 
-Os contatos mantêm seus identificadores, os fios conectados acompanham o ajuste e as peças apoiadas preservam seu ponto de encaixe. O redimensionamento é visual e mantém a quantidade de contatos do modelo. O inspetor mostra a escala atual.
+Os terminais que continuam presentes conservam seus identificadores. Pontas ligadas a contatos removidos ficam soltas e peças apoiadas nessas colunas voltam para a bancada. Escape durante o arraste restaura o tamanho, as peças e as ligações do início do gesto. Aumentar depois de concluir uma redução deixa os fios retirados soltos para reconexão manual.
