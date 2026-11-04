@@ -21,5 +21,9 @@ Conectar e remover fios entre pinos, explorando a montagem e os grupos de contat
 
 ## Comments
 
+- 04/11/2026 (Enzo): correção no mesmo PR #4 após feedback: Fio jumper disponível no catálogo e no dock, com duas pontas livres; foco e remoção na lista; criação e encaixe em j20 verificados no navegador. Grupos elétricos e formato completo de projeto continuam pendentes.
+
+- 03/11/2026 (Enzo): issue GitHub #2 implementada no PR #4: reconectar pontas de jumpers existentes, deixar soltas e cancelar com Escape. Esta é uma entrega parcial desta tarefa local: criar novos fios livremente, seleção/remoção de fios e grupos elétricos da protoboard continuam pendentes. A issue GitHub #3 trata o sistema elétrico separadamente.
+
 - 28/10/2026: divisão revisada com `to-tickets` para apresentações em 30/10 e 06/11.
 - 28/10/2026: divisão e dependências aprovadas pelo usuário; ticket publicado com estado open.
