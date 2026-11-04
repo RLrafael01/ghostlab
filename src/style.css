@@ -1,19 +1,47 @@
 * {
   box-sizing: border-box;
 }
-.jumper-status {
+button.jumper-help {
   position: absolute;
-  top: 44px;
   left: 20px;
-  right: 20px;
-  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 10px 12px;
+  overflow: hidden;
   color: #a1ebd4;
-  background: #0b1b24df;
+  background: #0b1b24ed;
   border: 1px solid #345b60;
-  border-radius: 4px;
-  padding: 8px 12px;
+  border-radius: 8px;
   font: 11px/1.5 system-ui;
+  text-align: left;
   z-index: 6;
+  transition: width 240ms ease;
+}
+.jumper-help svg {
+  flex: 0 0 18px;
+}
+.jumper-status {
+  display: block;
+  width: max-content;
+  flex: 0 0 auto;
+  transition:
+    opacity 160ms ease,
+    transform 240ms ease;
+}
+button.jumper-help[aria-expanded="false"] {
+  height: 42px;
+}
+.jumper-help[aria-expanded="false"] .jumper-status {
+  opacity: 0;
+  transform: translateX(-12px);
+}
+@media (prefers-reduced-motion: reduce) {
+  button.jumper-help,
+  .jumper-status {
+    transition: none;
+  }
 }
 .wire-entry {
   display: flex;
@@ -605,7 +633,6 @@ main:fullscreen {
   overflow: hidden;
 }
 main:fullscreen .toolbox,
-main:fullscreen .inspector,
 main:fullscreen #code-toggle {
   display: none !important;
 }
@@ -860,4 +887,111 @@ main:not(:fullscreen) #close-code {
 .catalog-item:focus-visible,
 .part.active {
   background: #15251f;
+}
+
+/* The same inspector and color controls remain available in both layouts. */
+#inspector-toggle,
+#close-inspector,
+.jumper-color {
+  flex-shrink: 0;
+}
+.jumper-color {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+input[type="color"] {
+  width: 36px;
+  height: 28px;
+  padding: 2px;
+  cursor: pointer;
+}
+main:fullscreen .toolbar > #inspector-toggle,
+main:fullscreen .toolbar > #new-wire-control {
+  display: flex;
+}
+main:fullscreen .toolbar {
+  gap: 12px;
+}
+main:fullscreen .inspector {
+  display: block;
+  position: absolute;
+  z-index: 125;
+  right: 16px;
+  top: 68px;
+  width: min(300px, calc(100vw - 32px));
+  max-height: min(440px, calc(100vh - 260px));
+  overflow: auto;
+  background: #151515f5;
+  border: 1px solid #444;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 12px 36px #0008;
+}
+main .inspector[hidden] {
+  display: none;
+}
+main:not(:fullscreen).inspector-hidden {
+  grid-template-columns: 230px minmax(0, 1fr);
+}
+#close-inspector {
+  float: right;
+}
+
+main:fullscreen .inspector .selected-icon {
+  display: none;
+}
+
+main:fullscreen:not([data-dock-selection="wire"]) .toolbar > #new-wire-control {
+  display: none;
+}
+
+.board-resize {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+}
+.board-resize[hidden],
+.board-resize-handle[hidden] {
+  display: none;
+}
+button.board-resize-handle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  min-width: 0;
+  padding: 0;
+  border: 2px solid #eafff8;
+  border-radius: 3px;
+  background: #28be91;
+  box-shadow:
+    0 0 0 2px #10281e,
+    0 0 10px #79ffd566;
+  transform: translate(-50%, -50%);
+  cursor: ew-resize;
+  pointer-events: auto;
+  touch-action: none;
+}
+button.board-resize-handle:hover,
+button.board-resize-handle:focus-visible {
+  background: #79ffd5;
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+.board-resize-hint {
+  position: absolute;
+  width: 310px;
+  max-width: 100%;
+  padding: 5px 8px;
+  border-radius: 5px;
+  background: #10231de8;
+  color: #cfffee;
+  font-size: 10px;
+  text-align: center;
+}
+.resizing-board canvas,
+.resizing-board .board-resize-handle {
+  cursor: ew-resize;
 }

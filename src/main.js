@@ -1,10 +1,13 @@
+import { setupBoardResize } from "./board-resize.js";
+import { createSelectionOutline } from "./selection-outline.js";
+import { jumperPlacementPoint } from "./jumper-placement.js";
 import { setupImmersiveDock } from "./immersive-dock.js";
 import { componentPreview } from "./catalog-previews.js";
 import {
   setupWorkspacePanels,
   makeCatalogDraggable,
 } from "./workspace-panels.js";
-import { BREADBOARD } from "./breadboard-layout.js";
+import { BREADBOARD, breadboardLayout } from "./breadboard-layout.js";
 import { setupJumperInteraction } from "./jumper-interaction.js";
 import * as T from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -73,7 +76,7 @@ const catalog = {
   },
 };
 document.querySelector("#app").innerHTML =
-  `<header><div class="brand"><img src="${import.meta.env.BASE_URL}tesseract.svg" width="40" height="40" alt=""> <b>ghostlab</b><span>LABORATÓRIO VIRTUAL</span></div><div class="project">Minha primeira bancada <span> / rascunho</span></div><span class="badge">● PRÉVIA INTERATIVA</span></header><main><aside class="toolbox"><div class="eyebrow">SUA CAIXA DE FERRAMENTAS</div><h2>Componentes</h2><input id="search" placeholder="Buscar componente…" aria-label="Buscar componente"><div id="catalog"></div><div class="note">Construa uma ideia.<br>Comece adicionando uma peça à bancada.</div></aside><section class="workspace"><div class="toolbar"><div><b>Bancada 3D</b><span id="count"></span></div><label class="snap-control"><input type="checkbox" id="snap" checked title="Aproxima LED, resistor e botão aos contatos; não valida ligações elétricas"> Encaixe visual</label><button id="fullscreen" aria-pressed="false">⤢ Tela cheia</button><button id="home">⌂ Visão inicial</button></div><div id="scene" tabindex="0" aria-label="Bancada 3D interativa"><div class="scene-tag">MONTAGEM VISUAL · SEM SIMULAÇÃO ELÉTRICA</div><div class="guide">WASD / setas: navegar · Arraste o fundo: orbitar · Scroll: zoom · Arraste peças: mover</div></div><button id="code-toggle" aria-expanded="false" aria-controls="code-panel">〈/〉 Código</button><div class="editor" id="code-panel"><div class="editor-head"><b>〈/〉 sketch.ino</b><span>Prévia — código ainda não executado</span><button id="close-code" aria-label="Recolher código">⌄</button></div><textarea spellcheck="false" aria-label="Código Arduino">// Seu próximo projeto começa aqui.
+  `<header><div class="brand"><img src="${import.meta.env.BASE_URL}tesseract.svg" width="40" height="40" alt=""> <b>ghostlab</b><span>LABORATÓRIO VIRTUAL</span></div><div class="project">Minha primeira bancada <span> / rascunho</span></div><span class="badge">● PRÉVIA INTERATIVA</span></header><main><aside class="toolbox"><div class="eyebrow">SUA CAIXA DE FERRAMENTAS</div><h2>Componentes</h2><input id="search" placeholder="Buscar componente…" aria-label="Buscar componente"><div id="catalog"></div><div class="note">Construa uma ideia.<br>Comece adicionando uma peça à bancada.</div></aside><section class="workspace"><div class="toolbar"><div><b>Bancada 3D</b><span id="count"></span></div><label class="snap-control"><input type="checkbox" id="snap" checked title="Aproxima LED, resistor e botão aos contatos; não valida ligações elétricas"> Encaixe visual</label><button id="fullscreen" aria-pressed="false">⤢ Tela cheia</button><label class="jumper-color" id="new-wire-control">Novo fio <input id="new-wire-color" type="color" value="#e9b640" aria-label="Cor dos novos jumpers"></label><button id="inspector-toggle" aria-controls="inspector" aria-expanded="true">Inspetor</button><button id="home">⌂ Visão inicial</button></div><div id="scene" tabindex="0" aria-label="Bancada 3D interativa"><div class="scene-tag">MONTAGEM VISUAL · SEM SIMULAÇÃO ELÉTRICA</div><div class="guide">WASD / setas: navegar · Arraste o fundo: orbitar · Scroll: zoom · Arraste peças: mover</div></div><button id="code-toggle" aria-expanded="false" aria-controls="code-panel">〈/〉 Código</button><div class="editor" id="code-panel"><div class="editor-head"><b>〈/〉 sketch.ino</b><span>Prévia — código ainda não executado</span><button id="close-code" aria-label="Recolher código">⌄</button></div><textarea spellcheck="false" aria-label="Código Arduino">// Seu próximo projeto começa aqui.
 // Nesta prévia, o código não é executado.
 void setup() {
   pinMode(13, OUTPUT);
@@ -81,7 +84,7 @@ void setup() {
 
 void loop() {
   digitalWrite(13, HIGH);
-}</textarea></div></section><aside class="inspector"><div class="eyebrow">DETALHES DA MONTAGEM</div><h2>Inspetor</h2><div id="details"></div><h3>Na bancada</h3><div id="parts"></div><div class="note">Montagem visual disponível.<br>Execução de firmware e conexões elétricas serão integradas nas próximas etapas.</div></aside></main><footer><span><i></i> Bancada pronta</span><span>UNO · PRÉVIA VISUAL</span><span>GhostLab / 2026</span></footer>`;
+}</textarea></div></section><aside class="inspector" id="inspector"><button id="close-inspector" aria-label="Recolher inspetor">Recolher</button><div class="eyebrow">DETALHES DA MONTAGEM</div><h2>Inspetor</h2><div id="details"></div><h3>Na bancada</h3><div id="parts"></div><div class="note">Montagem visual disponível.<br>Execução de firmware e conexões elétricas serão integradas nas próximas etapas.</div></aside></main><footer><span><i></i> Bancada pronta</span><span>UNO · PRÉVIA VISUAL</span><span>GhostLab / 2026</span></footer>`;
 setupWorkspacePanels();
 const host = document.querySelector("#scene"),
   scene = new T.Scene();
@@ -108,21 +111,23 @@ home();
 const ray = new T.Raycaster(),
   pointer = new T.Vector2();
 const items = [];
+let selectedWire = null;
 let selected = null,
   serial = 0,
   outline = null;
 const placements = new Map();
-async function add(type, x, z, animate = false) {
+async function add(type, x, z, animate = false, surfaceY = 0) {
   if (type === "wire") {
     const count = visualWires.snapshot().length;
     const wire = visualWires.addLoose(
       new T.Vector3(
         x ?? -1 + (count % 3) * 2,
-        0,
+        surfaceY,
         z ?? 2 + Math.floor(count / 3) * 0.6,
       ),
+      document.querySelector("#new-wire-color").value,
     );
-    renderPanel();
+    selectWire(wire.id);
     document.querySelector("footer span").textContent =
       `Fio jumper #${wire.id} adicionado · arraste as pontas para conectar`;
     return wire;
@@ -138,8 +143,10 @@ async function add(type, x, z, animate = false) {
     console.error(error);
     return;
   }
+  boardResize.cancel();
   status.textContent = "Bancada pronta · modelos CAD";
   const item = { id: ++serial, type, group: g };
+  if (type === "board") item.columns = g.children[0].userData.columns;
   g.position.set(
     x ?? ((items.length % 4) - 1.5) * 2.4,
     0,
@@ -153,11 +160,14 @@ async function add(type, x, z, animate = false) {
     if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
       placements.set(item, performance.now());
   }
-  if (!drag) select(item);
+  if (!drag && !boardResize.active) select(item);
   else renderPanel();
   return item;
 }
 function select(item) {
+  boardResize.cancel();
+  selectedWire = null;
+  visualWires.select(null);
   selected = item;
   if (outline) {
     scene.remove(outline);
@@ -166,13 +176,28 @@ function select(item) {
     outline = null;
   }
   if (item) {
-    outline = new T.BoxHelper(item.group, 0x65e0bd);
+    outline = createSelectionOutline(item.group);
     scene.add(outline);
   }
   renderPanel();
+  boardResize.update();
+}
+function selectWire(id) {
+  select(null);
+  selectedWire = id;
+  visualWires.select(id);
+  renderPanel();
 }
 function remove() {
-  if (!selected || drag) return;
+  if (drag) return;
+  boardResize.cancel();
+  if (selectedWire !== null) {
+    jumperInteraction.cancel();
+    visualWires.remove(selectedWire);
+    select(null);
+    return;
+  }
+  if (!selected) return;
   jumperInteraction.cancel();
   const item = selected;
   placements.delete(item);
@@ -198,8 +223,18 @@ function renderPanel() {
   document.querySelector("#count").textContent =
     `${items.length} componentes · ${visualWires.snapshot().length} fios`;
   document.querySelector("#details").innerHTML = selected
-    ? `<div class="selected-icon">◈</div><h3>${catalog[selected.type].name} <small>#${selected.id}</small></h3><div class="eyebrow">POSIÇÃO NA BANCADA</div><div class="coords"><label>X <input id="x" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.x}"></label><label>Z <input id="z" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.z}"></label></div><p class="hint">Arraste a peça na cena ou ajuste X/Z. WASD e setas navegam pela bancada.</p><div class="eyebrow">PINOS</div><div class="pins">${catalog[selected.type].pins.map((p) => `<span>${p}</span>`).join("")}</div><button id="focus-part" class="focus-part">⌕ Focar peça</button><button id="delete" class="danger">Remover componente</button>`
+    ? `<div class="selected-icon">◈</div><h3>${catalog[selected.type].name} <small>#${selected.id}</small></h3><div class="eyebrow">POSIÇÃO NA BANCADA</div><div class="coords"><label>X <input id="x" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.x}"></label><label>Z <input id="z" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.z}"></label></div><p class="hint">${selected.type === "board" ? `Arraste as extremidades · ${selected.columns} colunas · ${breadboardLayout(selected.columns).contactCount} furos · passo de 2,54 mm. Escape cancela o ajuste.` : "Arraste a peça na cena ou ajuste X/Z. WASD e setas navegam pela bancada."}</p><div class="eyebrow">PINOS</div><div class="pins">${catalog[selected.type].pins.map((p) => `<span>${p}</span>`).join("")}</div><button id="focus-part" class="focus-part">⌕ Focar peça</button><button id="delete" class="danger">Remover componente</button>`
     : '<div class="empty">Selecione um componente na cena ou na lista para inspecionar seus pinos e ajustar a posição.</div>';
+  const wire = visualWires
+    .snapshot()
+    .find((entry) => entry.id === selectedWire);
+  if (wire) {
+    document.querySelector("#details").innerHTML =
+      `<h3>Fio jumper #${wire.id}</h3><label>Cor do jumper <input id="wire-color" type="color" value="${wire.color}" aria-label="Cor do jumper selecionado"></label><p class="hint">Arraste as pontas para conectar ou desconectar.</p><button id="delete" class="danger">Remover jumper</button>`;
+    document.querySelector("#wire-color").addEventListener("input", (event) => {
+      visualWires.setColor(wire.id, event.target.value);
+    });
+  }
   for (const axis of ["x", "z"])
     document.querySelector("#" + axis)?.addEventListener("change", (e) => {
       const n = Number(e.target.value);
@@ -249,7 +284,8 @@ function renderWires() {
   for (const wire of visualWires.snapshot()) {
     const row = document.createElement("div");
     row.className = "wire-entry";
-    const label = document.createElement("span");
+    const label = document.createElement("button");
+    label.onclick = () => selectWire(wire.id);
     label.textContent = `Fio #${wire.id} · ${wire.ends.map((end) => (end.componentId === null ? "livre" : `${end.pin} (#${end.componentId})`)).join(" ↔ ")}`;
     const focus = document.createElement("button");
     focus.textContent = "Focar";
@@ -280,7 +316,8 @@ function renderWires() {
     remove.onclick = () => {
       jumperInteraction.cancel();
       visualWires.remove(wire.id);
-      renderPanel();
+      if (selectedWire === wire.id) select(null);
+      else renderPanel();
     };
     row.append(label, focus, remove);
     section.append(row);
@@ -292,52 +329,50 @@ function moveItem(item, position) {
   for (const child of items)
     if (child.mountedTo === item) child.group.position.add(delta);
 }
+function mountPoint(item) {
+  return item.type === "led"
+    ? leadTip(item, "Ânodo +")
+    : item.type === "button"
+      ? leadTip(item, "1")
+      : terminalPosition(item, "1");
+}
 function snapToBoard(item) {
   if (!["led", "resistor", "button"].includes(item.type)) return;
   item.mountedTo = null;
   item.group.position.y = 0;
   if (!document.querySelector("#snap").checked) return;
-  const board = items.find(
-    (candidate) =>
-      candidate.type === "board" &&
-      Math.abs(item.group.position.x - candidate.group.position.x) < 3.5 &&
-      Math.abs(item.group.position.z - candidate.group.position.z) < 0.7,
-  );
+  const board = items.find((candidate) => {
+    if (candidate.type !== "board") return false;
+    candidate.group.updateWorldMatrix(true, true);
+    const local = candidate.group.worldToLocal(item.group.position.clone());
+    const layout = breadboardLayout(candidate.columns);
+    return Math.abs(local.x) < layout.width / 2 && Math.abs(local.z) < 0.7;
+  });
   if (!board) return;
-  const anchor = terminalPosition(board, "a1");
-  const tip =
-    item.type === "led"
-      ? leadTip(item, "Ânodo +")
-      : item.type === "button"
-        ? leadTip(item, "1")
-        : terminalPosition(item, "1");
-  const reference = tip ?? item.group.position.clone();
+  const anchor = board.group.worldToLocal(terminalPosition(board, "a1"));
+  const reference = mountPoint(item) ?? item.group.position.clone();
+  const local = board.group.worldToLocal(reference.clone());
   const pitch = BREADBOARD.pitch * BREADBOARD.sceneScale;
   const column = T.MathUtils.clamp(
-    Math.round((reference.x - anchor.x) / pitch),
+    Math.round((local.x - anchor.x) / pitch),
     0,
-    BREADBOARD.columns - 1,
+    board.columns - 1,
   );
   const x = anchor.x + column * pitch;
-  const side = reference.z < board.group.position.z ? -1 : 1;
+  const side = local.z < 0 ? -1 : 1;
   const rows = Array.from(
     { length: BREADBOARD.rowsPerSide },
     (_, row) =>
-      board.group.position.z +
       side *
-        (BREADBOARD.outerRowZ - row * BREADBOARD.pitch) *
-        BREADBOARD.sceneScale,
+      (BREADBOARD.outerRowZ - row * BREADBOARD.pitch) *
+      BREADBOARD.sceneScale,
   );
   const z = rows.reduce((a, b) =>
-    Math.abs(a - reference.z) < Math.abs(b - reference.z) ? a : b,
+    Math.abs(a - local.z) < Math.abs(b - local.z) ? a : b,
   );
-  item.group.position.add(
-    new T.Vector3(
-      x - reference.x,
-      anchor.y - 0.055 - reference.y,
-      z - reference.z,
-    ),
-  );
+  const target = board.group.localToWorld(new T.Vector3(x, anchor.y, z));
+  target.y -= 0.055;
+  item.group.position.add(target.sub(reference));
   item.mountedTo = board;
   outline?.update();
 }
@@ -360,16 +395,52 @@ const jumperInteraction = setupJumperInteraction({
   navigation,
   wires: visualWires,
   items,
-  isComponentDragging: () => !!drag,
+  isComponentDragging: () => !!drag || boardResize.active,
   onChange: renderPanel,
+  onSelect: selectWire,
+});
+const boardResize = setupBoardResize({
+  host,
+  canvas: renderer.domElement,
+  camera,
+  controls,
+  navigation,
+  items,
+  getSelected: () => selected,
+  wires: visualWires,
+  getMountPoint: mountPoint,
+  isBusy: () => !!drag || visualWires.active || placements.has(selected),
+  onStart: () => {
+    host.querySelector(".pin-tip").hidden = true;
+  },
+  onChange: () => {
+    outline?.update();
+    renderPanel();
+    if (selected?.type === "board")
+      host.querySelector(".jumper-status").textContent =
+        `Protoboard com ${selected.columns} colunas · pontas de contatos removidos ficam soltas`;
+  },
 });
 renderer.domElement.addEventListener(
   "pointerdown",
   (event) => {
-    if (event.button !== 0 || drag) return;
+    if (event.button !== 0 || drag || boardResize.active) return;
     host.focus({ preventScroll: true });
     navigation.reset();
     updateRay(event);
+    const cableHit = ray.intersectObjects(visualWires.meshes, false)[0];
+    const componentHit = ray.intersectObjects(
+      items.map((item) => item.group),
+      true,
+    )[0];
+    if (
+      cableHit &&
+      (!componentHit || cableHit.distance < componentHit.distance)
+    ) {
+      event.stopImmediatePropagation();
+      selectWire(cableHit.object.userData.wireId);
+      return;
+    }
     let object = ray.intersectObjects(
       items.map((item) => item.group),
       true,
@@ -411,7 +482,7 @@ renderer.domElement.addEventListener("pointermove", (event) => {
     drag.item,
     new T.Vector3(
       T.MathUtils.clamp(point.x, -15, 15),
-      0,
+      drag.item.group.position.y,
       T.MathUtils.clamp(point.z, -15, 15),
     ),
   );
@@ -454,7 +525,7 @@ dropMarker.rotation.x = -Math.PI / 2;
 dropMarker.visible = false;
 dropMarker.renderOrder = 10;
 scene.add(dropMarker);
-function dropPosition(event) {
+function dropPosition(event, type) {
   if (!event) return null;
   const rect = renderer.domElement.getBoundingClientRect();
   const surface = document.elementFromPoint(event.clientX, event.clientY);
@@ -467,20 +538,22 @@ function dropPosition(event) {
   )
     return null;
   updateRay(event);
-  const point = ray.ray.intersectPlane(dragPlane, new T.Vector3());
+  const point = ["wire", "led", "resistor", "button"].includes(type)
+    ? jumperPlacementPoint(ray, items)
+    : ray.ray.intersectPlane(dragPlane, new T.Vector3());
   if (!point || Math.abs(point.x) > 15 || Math.abs(point.z) > 15) return null;
   return point;
 }
-function previewDrop(event) {
-  const point = dropPosition(event);
+function previewDrop(event, type) {
+  const point = dropPosition(event, type);
   dropMarker.visible = !!point;
   host.classList.toggle("drop-ready", !!point);
-  if (point) dropMarker.position.set(point.x, 0.03, point.z);
+  if (point) dropMarker.position.set(point.x, point.y + 0.03, point.z);
   return !!point;
 }
 function dropComponent(type, event) {
-  const point = dropPosition(event);
-  if (point) add(type, point.x, point.z, true);
+  const point = dropPosition(event, type);
+  if (point) add(type, point.x, point.z, true, point.y);
 }
 function showCatalog(query = "") {
   const list = document.querySelector("#catalog");
@@ -514,9 +587,16 @@ function showCatalog(query = "") {
 }
 document.querySelector("#search").oninput = (e) => showCatalog(e.target.value);
 document.querySelector("#home").onclick = home;
+let referenceHeight = null;
 new ResizeObserver(() => {
   const w = host.clientWidth,
     h = host.clientHeight;
+  if (!w || !h) return;
+  referenceHeight ??= h;
+  camera.fov = T.MathUtils.radToDeg(
+    2 *
+      Math.atan((Math.tan(T.MathUtils.degToRad(40) / 2) * h) / referenceHeight),
+  );
   renderer.setSize(w, h);
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
@@ -549,7 +629,7 @@ let lastFrame = performance.now();
 renderer.setAnimationLoop((now) => {
   const deltaSeconds = Math.max(0, (now - lastFrame) / 1000);
   lastFrame = now;
-  if (!drag && !visualWires.active) {
+  if (!drag && !visualWires.active && !boardResize.active) {
     navigation.update(deltaSeconds);
     controls.update();
   }
@@ -562,6 +642,7 @@ renderer.setAnimationLoop((now) => {
     if (t === 1) placements.delete(item);
     if (selected === item) outline?.update();
   }
+  boardResize.update();
   visualWires.update(
     deltaSeconds,
     matchMedia("(prefers-reduced-motion: reduce)").matches,

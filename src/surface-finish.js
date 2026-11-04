@@ -1,4 +1,3 @@
-import { BREADBOARD } from "./breadboard-layout.js";
 import * as T from "three";
 
 // Authored silkscreen overlays, not a reproduction of the manufacturer's PCB artwork.
@@ -74,37 +73,10 @@ export function finishSurface(scene, type, headers) {
       ctx.fillText("ANALOG IN", -14, 32);
     });
   }
-  if (type === "board") {
-    decal(scene, 0.165, 0.055, 0, 0.00913, 0, (ctx) => {
-      ctx.fillStyle = "#4e6269";
-      ctx.textAlign = "center";
-      ctx.font = ".00145px monospace";
-      for (let col = 0; col < BREADBOARD.columns; col++) {
-        if (col !== 0 && (col + 1) % 5 !== 0 && col !== 62) continue;
-        for (const z of [-0.0165, 0.0175])
-          ctx.fillText(
-            String(col + 1),
-            BREADBOARD.firstColumnX + col * BREADBOARD.pitch,
-            z,
-          );
-      }
-      for (let side = 0; side < 2; side++)
-        for (let row = 0; row < BREADBOARD.rowsPerSide; row++) {
-          const z =
-            (side ? 1 : -1) * (BREADBOARD.outerRowZ - row * BREADBOARD.pitch);
-          for (const x of [-0.0804, 0.0804])
-            ctx.fillText("abcdefghij"[side * 5 + row], x, z + 0.0005);
-        }
-    });
-  }
   scene.traverse((mesh) => {
     if (!mesh.isMesh || mesh.isInstancedMesh || mesh.userData.surfaceDecal)
       return;
     const material = mesh.material;
-    if (type === "board") {
-      material.roughness = 0.68;
-      material.metalness = 0;
-    }
     if (type === "sensor") {
       const geometry = mesh.geometry.toNonIndexed();
       const position = geometry.attributes.position;

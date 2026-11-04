@@ -1,4 +1,6 @@
 import * as T from "three";
+import { jumperPlacementPoint } from "./jumper-placement.js";
+import { createJumperHelp } from "./jumper-help.js";
 import { terminalPosition } from "./visual-wires.js";
 
 export function setupJumperInteraction({
@@ -12,10 +14,10 @@ export function setupJumperInteraction({
   items,
   isComponentDragging = () => false,
   onChange = () => {},
+  onSelect = () => {},
 }) {
   const ray = new T.Raycaster();
   const pointer = new T.Vector2();
-  const plane = new T.Plane(new T.Vector3(0, 1, 0), 0);
   const marker = new T.Mesh(
     new T.SphereGeometry(0.075, 12, 8),
     new T.MeshBasicMaterial({ color: "#86ffe0", depthTest: false }),
@@ -23,11 +25,7 @@ export function setupJumperInteraction({
   marker.visible = false;
   marker.renderOrder = 20;
   scene.add(marker);
-  const status = document.createElement("div");
-  status.className = "jumper-status";
-  status.setAttribute("role", "status");
-  status.textContent = "Cabos: arraste uma ponta colorida para outro contato";
-  host.append(status);
+  const status = createJumperHelp(host);
   let gesture = null;
   function updateRay(event) {
     const rect = canvas.getBoundingClientRect();
@@ -91,12 +89,15 @@ export function setupJumperInteraction({
   }
   function move(event) {
     const rect = updateRay(event);
-    const point = ray.ray.intersectPlane(plane, new T.Vector3());
+    gesture.target = targetAt(event, rect);
+    const support = gesture.target ? null : jumperPlacementPoint(ray, items);
+    const point = gesture.target
+      ? gesture.target.position.clone()
+      : support?.add(new T.Vector3(0, 0.12, 0));
     if (point)
       wires.move(
         point.clamp(new T.Vector3(-15, 0, -15), new T.Vector3(15, 4, 15)),
       );
-    gesture.target = targetAt(event, rect);
     marker.visible = !!gesture.target;
     if (gesture.target) marker.position.copy(gesture.target.position);
     status.textContent = gesture.target
@@ -117,6 +118,7 @@ export function setupJumperInteraction({
       const hit = ray.intersectObjects(wires.handles.children, false)[0];
       if (!hit || !hit.object.visible) return;
       const { wire, index } = hit.object.userData.jumper;
+      onSelect(wire.id);
       if (!wires.begin(wire, index)) return;
       event.preventDefault();
       event.stopImmediatePropagation();
@@ -125,7 +127,6 @@ export function setupJumperInteraction({
       const pinTip = host.querySelector(".pin-tip");
       if (pinTip) pinTip.hidden = true;
       host.focus({ preventScroll: true });
-      plane.constant = -hit.object.position.y;
       gesture = {
         pointerId: event.pointerId,
         terminals: terminals(),
