@@ -1,3 +1,5 @@
+import { createSelectionOutline } from "./selection-outline.js";
+import { jumperPlacementPoint } from "./jumper-placement.js";
 import { setupImmersiveDock } from "./immersive-dock.js";
 import { componentPreview } from "./catalog-previews.js";
 import {
@@ -113,13 +115,13 @@ let selected = null,
   serial = 0,
   outline = null;
 const placements = new Map();
-async function add(type, x, z, animate = false) {
+async function add(type, x, z, animate = false, surfaceY = 0) {
   if (type === "wire") {
     const count = visualWires.snapshot().length;
     const wire = visualWires.addLoose(
       new T.Vector3(
         x ?? -1 + (count % 3) * 2,
-        0,
+        surfaceY,
         z ?? 2 + Math.floor(count / 3) * 0.6,
       ),
       document.querySelector("#new-wire-color").value,
@@ -170,7 +172,7 @@ function select(item) {
     outline = null;
   }
   if (item) {
-    outline = new T.BoxHelper(item.group, 0x65e0bd);
+    outline = createSelectionOutline(item.group);
     scene.add(outline);
   }
   renderPanel();
@@ -497,7 +499,7 @@ dropMarker.rotation.x = -Math.PI / 2;
 dropMarker.visible = false;
 dropMarker.renderOrder = 10;
 scene.add(dropMarker);
-function dropPosition(event) {
+function dropPosition(event, type) {
   if (!event) return null;
   const rect = renderer.domElement.getBoundingClientRect();
   const surface = document.elementFromPoint(event.clientX, event.clientY);
@@ -510,20 +512,23 @@ function dropPosition(event) {
   )
     return null;
   updateRay(event);
-  const point = ray.ray.intersectPlane(dragPlane, new T.Vector3());
+  const point =
+    type === "wire"
+      ? jumperPlacementPoint(ray, items)
+      : ray.ray.intersectPlane(dragPlane, new T.Vector3());
   if (!point || Math.abs(point.x) > 15 || Math.abs(point.z) > 15) return null;
   return point;
 }
-function previewDrop(event) {
-  const point = dropPosition(event);
+function previewDrop(event, type) {
+  const point = dropPosition(event, type);
   dropMarker.visible = !!point;
   host.classList.toggle("drop-ready", !!point);
-  if (point) dropMarker.position.set(point.x, 0.03, point.z);
+  if (point) dropMarker.position.set(point.x, point.y + 0.03, point.z);
   return !!point;
 }
 function dropComponent(type, event) {
-  const point = dropPosition(event);
-  if (point) add(type, point.x, point.z, true);
+  const point = dropPosition(event, type);
+  if (point) add(type, point.x, point.z, true, point.y);
 }
 function showCatalog(query = "") {
   const list = document.querySelector("#catalog");

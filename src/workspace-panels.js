@@ -118,6 +118,20 @@ export function makeCatalogDraggable(card, type, { preview, drop, swipe }) {
           : "place";
     }
     if (drag.mode === "swipe") {
+      const upward = drag.y - event.clientY;
+      const dockTop = card
+        .closest(".immersive-dock")
+        ?.getBoundingClientRect().top;
+      if (
+        upward > 40 &&
+        upward > Math.abs(event.clientX - drag.x) &&
+        event.clientY < dockTop
+      ) {
+        swipe(0, true);
+        drag.mode = "place";
+      }
+    }
+    if (drag.mode === "swipe") {
       suppressClick = true;
       event.preventDefault();
       swipe(event.clientX - drag.x, false);
@@ -138,7 +152,7 @@ export function makeCatalogDraggable(card, type, { preview, drop, swipe }) {
     event.preventDefault();
     drag.ghost.style.left = `${event.clientX + 14}px`;
     drag.ghost.style.top = `${event.clientY + 14}px`;
-    const valid = preview(event);
+    const valid = preview(event, type);
     drag.ghost.classList.toggle("valid-drop", valid);
   });
   function finish(event, commit) {
@@ -151,7 +165,7 @@ export function makeCatalogDraggable(card, type, { preview, drop, swipe }) {
     if (card.hasPointerCapture(event.pointerId))
       card.releasePointerCapture(event.pointerId);
     if (commit && wasDragging) drop(type, event);
-    preview(null);
+    preview(null, type);
   }
   card.addEventListener("pointerup", (event) => finish(event, true));
   card.addEventListener("pointercancel", (event) => finish(event, false));

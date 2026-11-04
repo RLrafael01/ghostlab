@@ -1,4 +1,5 @@
 import * as T from "three";
+import { jumperPlacementPoint } from "./jumper-placement.js";
 import { createJumperHelp } from "./jumper-help.js";
 import { terminalPosition } from "./visual-wires.js";
 
@@ -17,7 +18,6 @@ export function setupJumperInteraction({
 }) {
   const ray = new T.Raycaster();
   const pointer = new T.Vector2();
-  const plane = new T.Plane(new T.Vector3(0, 1, 0), -0.12);
   const marker = new T.Mesh(
     new T.SphereGeometry(0.075, 12, 8),
     new T.MeshBasicMaterial({ color: "#86ffe0", depthTest: false }),
@@ -90,16 +90,10 @@ export function setupJumperInteraction({
   function move(event) {
     const rect = updateRay(event);
     gesture.target = targetAt(event, rect);
-    for (const item of items) item.group.updateWorldMatrix(true, true);
-    const surface = ray.intersectObjects(
-      items.map((item) => item.group),
-      true,
-    )[0];
+    const support = gesture.target ? null : jumperPlacementPoint(ray, items);
     const point = gesture.target
       ? gesture.target.position.clone()
-      : surface
-        ? surface.point.clone().add(new T.Vector3(0, 0.12, 0))
-        : ray.ray.intersectPlane(plane, new T.Vector3());
+      : support?.add(new T.Vector3(0, 0.12, 0));
     if (point)
       wires.move(
         point.clamp(new T.Vector3(-15, 0, -15), new T.Vector3(15, 4, 15)),

@@ -213,7 +213,7 @@ test("jumper selection outlines only its connectors and preserves its material c
   assert.equal(wire.mesh.material.emissive.getHexString(), "000000");
   assert.equal(wires.snapshot()[0].color, "#dd2266");
   const outlines = scene.children.filter(
-    (object) => object.type === "BoxHelper",
+    (object) => object.name === "selection-outline",
   );
   assert.equal(outlines.filter((outline) => outline.visible).length, 2);
   wires.begin(wire, 0);
@@ -234,7 +234,7 @@ test("jumper selection outlines only its connectors and preserves its material c
   );
   wires.remove(wire.id);
   assert.equal(
-    scene.children.some((object) => object.type === "BoxHelper"),
+    scene.children.some((object) => object.name === "selection-outline"),
     false,
   );
 });

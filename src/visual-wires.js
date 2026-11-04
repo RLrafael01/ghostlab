@@ -1,4 +1,5 @@
 import * as T from "three";
+import { createSelectionOutline } from "./selection-outline.js";
 
 export function terminalPosition(item, name, occurrence = 0) {
   let point = null;
@@ -159,7 +160,7 @@ export function createVisualWires(scene) {
         handle.userData.jumper = { wire, index };
         handles.add(handle);
         wire.handles.push(handle);
-        const outline = new T.BoxHelper(handle, 0x65e0bd);
+        const outline = createSelectionOutline(handle);
         outline.visible = false;
         scene.add(outline);
         wire.outlines.push(outline);
