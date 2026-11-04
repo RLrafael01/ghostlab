@@ -48,6 +48,18 @@ export function createVisualWires(scene) {
   }
   const api = {
     handles,
+    addLoose(position, color = "#e9b640") {
+      const wire = api.connect(null, null, null, null, color, 0.35);
+      wire.ends[0].position.copy(position).add(new T.Vector3(-0.8, 0.12, 0));
+      wire.ends[1].position.copy(position).add(new T.Vector3(0.8, 0.12, 0));
+      return wire;
+    },
+    remove(id) {
+      const index = wires.findIndex((wire) => wire.id === id);
+      if (index < 0) return;
+      dispose(wires[index]);
+      wires.splice(index, 1);
+    },
     get active() {
       return !!gesture;
     },

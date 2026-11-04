@@ -15,6 +15,23 @@
   font: 11px/1.5 system-ui;
   z-index: 6;
 }
+.wire-entry {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 0;
+  border-bottom: 1px solid #353535;
+}
+.wire-entry span {
+  flex-basis: 100%;
+  color: #b6d3ca;
+  font: 11px/1.6 monospace;
+  overflow-wrap: anywhere;
+}
+.wire-entry button {
+  padding: 5px 9px;
+  font-size: 10px;
+}
 body {
   margin: 0;
   background: #080808;

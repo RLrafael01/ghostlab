@@ -18,6 +18,11 @@ import {
 import { createBenchNavigation } from "./bench-navigation.js";
 import { loadCAD, pinNameForHit, UNO_HEADERS } from "./cad-models.js";
 const catalog = {
+  wire: {
+    name: "Fio jumper",
+    color: 0xe9b640,
+    pins: ["Ponta A", "Ponta B"],
+  },
   uno: {
     name: "Arduino Uno",
     color: 0x157c88,
@@ -108,6 +113,20 @@ let selected = null,
   outline = null;
 const placements = new Map();
 async function add(type, x, z, animate = false) {
+  if (type === "wire") {
+    const count = visualWires.snapshot().length;
+    const wire = visualWires.addLoose(
+      new T.Vector3(
+        x ?? -1 + (count % 3) * 2,
+        0,
+        z ?? 2 + Math.floor(count / 3) * 0.6,
+      ),
+    );
+    renderPanel();
+    document.querySelector("footer span").textContent =
+      `Fio jumper #${wire.id} adicionado · arraste as pontas para conectar`;
+    return wire;
+  }
   const data = catalog[type],
     g = new T.Group();
   const status = document.querySelector("footer span");
@@ -176,7 +195,8 @@ function remove() {
   select(null);
 }
 function renderPanel() {
-  document.querySelector("#count").textContent = `${items.length} componentes`;
+  document.querySelector("#count").textContent =
+    `${items.length} componentes · ${visualWires.snapshot().length} fios`;
   document.querySelector("#details").innerHTML = selected
     ? `<div class="selected-icon">◈</div><h3>${catalog[selected.type].name} <small>#${selected.id}</small></h3><div class="eyebrow">POSIÇÃO NA BANCADA</div><div class="coords"><label>X <input id="x" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.x}"></label><label>Z <input id="z" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.z}"></label></div><p class="hint">Arraste a peça na cena ou ajuste X/Z. WASD e setas navegam pela bancada.</p><div class="eyebrow">PINOS</div><div class="pins">${catalog[selected.type].pins.map((p) => `<span>${p}</span>`).join("")}</div><button id="focus-part" class="focus-part">⌕ Focar peça</button><button id="delete" class="danger">Remover componente</button>`
     : '<div class="empty">Selecione um componente na cena ou na lista para inspecionar seus pinos e ajustar a posição.</div>';
@@ -214,6 +234,57 @@ function renderPanel() {
     b.onclick = () => select(item);
     list.append(b);
   });
+  renderWires();
+}
+function renderWires() {
+  let section = document.querySelector("#wire-list");
+  if (!section) {
+    const heading = document.createElement("h3");
+    heading.textContent = "Fios jumper";
+    section = document.createElement("div");
+    section.id = "wire-list";
+    document.querySelector("#parts").after(heading, section);
+  }
+  section.replaceChildren();
+  for (const wire of visualWires.snapshot()) {
+    const row = document.createElement("div");
+    row.className = "wire-entry";
+    const label = document.createElement("span");
+    label.textContent = `Fio #${wire.id} · ${wire.ends.map((end) => (end.componentId === null ? "livre" : `${end.pin} (#${end.componentId})`)).join(" ↔ ")}`;
+    const focus = document.createElement("button");
+    focus.textContent = "Focar";
+    focus.setAttribute("aria-label", `Focar fio jumper #${wire.id}`);
+    focus.onclick = () => {
+      const positions = visualWires
+        .snapshot()
+        .find((entry) => entry.id === wire.id)
+        ?.ends.map((end) => end.position);
+      if (!positions?.every(Boolean)) return;
+      const a = new T.Vector3().fromArray(positions[0]),
+        b = new T.Vector3().fromArray(positions[1]);
+      const center = a.clone().add(b).multiplyScalar(0.5);
+      const direction = camera.position
+        .clone()
+        .sub(controls.target)
+        .normalize();
+      navigation.reset();
+      controls.target.copy(center);
+      camera.position
+        .copy(center)
+        .addScaledVector(direction, Math.max(3, a.distanceTo(b) * 2));
+      controls.update();
+    };
+    const remove = document.createElement("button");
+    remove.textContent = "Remover";
+    remove.setAttribute("aria-label", `Remover fio jumper #${wire.id}`);
+    remove.onclick = () => {
+      jumperInteraction.cancel();
+      visualWires.remove(wire.id);
+      renderPanel();
+    };
+    row.append(label, focus, remove);
+    section.append(row);
+  }
 }
 function moveItem(item, position) {
   const delta = position.clone().sub(item.group.position);
@@ -290,6 +361,7 @@ const jumperInteraction = setupJumperInteraction({
   wires: visualWires,
   items,
   isComponentDragging: () => !!drag,
+  onChange: renderPanel,
 });
 renderer.domElement.addEventListener(
   "pointerdown",

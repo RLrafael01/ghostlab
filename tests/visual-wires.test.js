@@ -25,6 +25,28 @@ function endCenter(mesh, end) {
     point.add(new T.Vector3().fromBufferAttribute(positions, start + i));
   return point.divideScalar(8);
 }
+
+test("a catalog jumper starts with two loose ends and can attach to a terminal", () => {
+  const scene = new T.Scene();
+  const wires = createVisualWires(scene);
+  const wire = wires.addLoose(new T.Vector3(2, 0, 3));
+  assert.equal(wires.snapshot().length, 1);
+  assert.deepEqual(
+    wires.snapshot()[0].ends.map((end) => end.componentId),
+    [null, null],
+  );
+  wires.update();
+  assert.equal(wire.mesh.visible, true);
+  const board = part(4, "a1");
+  board.id = 10;
+  wires.begin(wire, 0);
+  wires.finish({ item: board, pin: "a1" });
+  assert.equal(wires.snapshot()[0].ends[0].componentId, 10);
+  assert.equal(wires.snapshot()[0].ends[1].componentId, null);
+  wires.remove(wire.id);
+  assert.equal(wires.snapshot().length, 0);
+  assert.equal(wires.handles.children.length, 0);
+});
 test("jumpers stay attached to both terminals when a part is translated and rotated", () => {
   const scene = new T.Scene();
   const a = part(-2, "5V"),

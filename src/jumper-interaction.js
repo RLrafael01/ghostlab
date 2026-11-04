@@ -11,6 +11,7 @@ export function setupJumperInteraction({
   wires,
   items,
   isComponentDragging = () => false,
+  onChange = () => {},
 }) {
   const ray = new T.Raycaster();
   const pointer = new T.Vector2();
@@ -163,6 +164,7 @@ export function setupJumperInteraction({
         : "Ponta desconectada · arraste o conector para reconectar";
     if (canvas.hasPointerCapture(pointerId))
       canvas.releasePointerCapture(pointerId);
+    onChange();
   }
   canvas.addEventListener(
     "pointerup",
