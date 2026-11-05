@@ -1,6 +1,6 @@
 # Uso de skills no GhostLab
 
-**55 aplicações registradas** · Matt Pocock: 50 · pstack: 5
+**58 aplicações registradas** · Matt Pocock: 52 · pstack: 6
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
@@ -10,14 +10,15 @@
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
 | Matt Pocock | `implement` | 9 | 2 | 11 |
-| Matt Pocock | `pr` | 6 | 3 | 9 |
+| Matt Pocock | `pr` | 7 | 3 | 10 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
 | Matt Pocock | `tdd` | 1 | 2 | 3 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
-| Matt Pocock | `to-tickets` | 1 | 0 | 1 |
+| Matt Pocock | `to-tickets` | 2 | 0 | 2 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
 | pstack | `principle-prove-it-works` | 4 | 1 | 5 |
-| **Total** | | **45** | **10** | **55** |
+| pstack | `principle-sequence-verifiable-units` | 1 | 0 | 1 |
+| **Total** | | **48** | **10** | **58** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -88,3 +89,6 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 053 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Preparar PR da correção dos conectores sobre o trabalho do Enzo. | concluído | Descrição com LINK TESTE no início, causa, evidências e impacto da captura dos jumpers. Branch codex/accessible-led-connectors baseada no PR #6, sem merge ou alteração da branch do Enzo. Descrição do PR #7 atualizada também com apoio do LED nas bordas da protoboard e evidências da regressão. |
 | 054 | 05/11/2026 | Rafael | Matt Pocock | `diagnosing-bugs` | Impedir que o LED com cabos afunde ao sair da área central de furos. | concluído | Repro determinístico com GLB real: em Z=-0,71 a base da lente caía de 0,4401 para 0,0901, abaixo do topo 0,425. Causa: apoio dependia da região central do encaixe e zerava Y fora dela. Separados apoio e encaixe; apoio usa corpo físico e toda a área da protoboard, inclusive sobreposição parcial. Testes cobrem barramentos, quatro bordas, canto, 10/63/100 colunas, encaixe desligado, saída/retorno e fios no mesmo quadro. Ver tests/component-placement.test.js. |
 | 055 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Verificar a altura do LED nas extremidades com cabos conectados. | concluído | Sugestão aplicada: repetir o arraste real, além do teste de geometria. No navegador, LED arrastado de Z≈-0,40 até Z≈-1,26 permaneceu acima da borda e aceso, com cabos acompanhando; retorno com encaixe desligado também manteve apoio. 36 testes e build aprovados. A correção não cria contatos elétricos implícitos. |
+| 056 | 05/11/2026 | Rafael | Matt Pocock | `to-tickets` | Detalhar todas as implementações restantes da V1, priorizando código, Blink e PWM. | concluído | Criadas 16 issues e uma issue de acompanhamento, espelhos locais, 3 marcos e bloqueios nativos; reaproveitada #3. [Plano](../.scratch/v1-completion/README.md). Publicação autorizada pela solicitação direta do usuário; sem novo ciclo de aprovação da divisão. |
+| 057 | 05/11/2026 | Rafael | pstack | `principle-sequence-verifiable-units` | Ordenar entregas funcionais que demonstrem a execução antes de expandir o catálogo. | concluído | Sugestão: unidades verificáveis e dependências explícitas. Decisão: piloto → Blink → PWM, com entradas, componentes e persistência em ramos independentes. Efeito: 16 entregas com demonstração/testes e validação integrada final; não equivale a implementação nem garante prazo. |
+| 058 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Publicar plano e histórico consolidado em PR de documentação. | concluído | PR dedicado com mapa das issues, evidência de cobertura/dependências e limites. Conferência dos espelhos, estados, marcos e totais; aplicação não altera o software nem encerra as issues novas. |

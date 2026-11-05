@@ -4,9 +4,9 @@ Monte circuitos, programe um microcontrolador e experimente seu funcionamento no
 
 ## Estado do projeto
 
-Escopo da V1 aprovado e especificação publicada no rastreador local. A primeira bancada interativa já pode ser executada localmente. Arduino Uno, C++ e compilação em serviço próprio estão definidos; a integração e a escolha das bibliotecas serão validadas na prova técnica. A divisão por prazo foi aprovada e os tickets locais foram publicados.
+A bancada interativa já pode ser executada localmente. O trabalho restante está organizado no [plano da V1](.scratch/v1-completion/README.md): primeiro executar C++ real no Uno virtual, depois Blink e fade/PWM. Compilação em serviço próprio e emulação ainda precisam ser validadas no piloto.
 
-Metas: **30/10/2026**, interface 3D interativa com prévia identificada; **06/11/2026**, V1 funcional com firmware real. O piloto técnico começa cedo sem bloquear a primeira apresentação.
+Metas originais: **30/10/2026**, interface interativa; **06/11/2026**, V1 funcional. O plano atualizado em 05/11 registra o risco do prazo e organiza a entrega por resultados verificáveis.
 
 ## Experiência proposta
 
@@ -22,8 +22,10 @@ Uma cancela automática: um objeto se aproxima do sensor, o firmware decide quan
 
 - [Escopo e decisões em aberto](docs/PROJECT-BRIEF.md)
 - [Especificação da V1](.scratch/initial-lab/spec.md)
-- [Plano por prazo e dependências](docs/task-proposals/deadline-plan/README.md)
-- [Tickets de implementação](.scratch/initial-lab/issues/)
+- [Plano vigente, prioridades e dependências](.scratch/v1-completion/README.md)
+- [Plano original por prazo — histórico](docs/task-proposals/deadline-plan/README.md)
+- [Issues de implementação restantes](.scratch/v1-completion/issues/)
+- [Tickets iniciais — histórico](.scratch/initial-lab/issues/)
 - [Etapas propostas](docs/ROADMAP.md)
 - [Revisão final da primeira versão](docs/V1-REVIEW.md)
 - [Rascunho do setup das skills](docs/SKILL-SETUP-DRAFT.md)
@@ -38,7 +40,7 @@ Fluxo proposto: `setup-matt-pocock-skills` → `grill-with-docs` → `to-spec` �
 
 Setup concluído: tarefas em Markdown local em `.scratch/`, instruções em `AGENTS.md` e regras em `docs/agents/`. Nenhum framework GSD foi instalado.
 
-Planejamento concluído: [definir a primeira versão](.scratch/initial-lab/issues/01-refinar-primeira-versao.md). Divisão aprovada e tickets publicados; as tarefas 02 (bancada) e 05 (piloto de firmware) podem começar sem bloqueios.
+Planejamento concluído: [definir a primeira versão](.scratch/initial-lab/issues/01-refinar-primeira-versao.md). A divisão inicial foi atualizada em 05/11: [plano restante até a V1](.scratch/v1-completion/README.md), com 16 issues e dependências. A prioridade agora é firmware real → Blink → fade/PWM; a bancada já está implementada.
 
 ## Executar a bancada
 
