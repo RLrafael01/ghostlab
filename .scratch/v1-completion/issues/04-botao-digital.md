@@ -1,6 +1,6 @@
 # 04 — Acionar botão virtual e controlar LED com digitalRead
 
-Status: open
+Status: in-progress
 Priority: P1
 Milestone: Código funcionando — Blink, PWM e entradas básicas
 Blocked by: none
@@ -12,12 +12,12 @@ Apertar e soltar o botão na cena muda a entrada lida pelo programa, que decide 
 
 ## Acceptance criteria
 
-- [ ] Contrato documenta pares internos de terminais do botão, estados pressionado/solto e ligação usada no exemplo.
-- [ ] INPUT_PULLUP funciona no exemplo: apertar fecha o caminho para GND e soltar restaura a entrada; INPUT tem regra de entrada flutuante declarada.
-- [ ] digitalRead lê o pino efetivamente conectado; fio solto ou mudança de pino altera o comportamento sem resposta predeterminada na interface.
+- [x] Contrato documenta pares internos de terminais do botão, estados pressionado/solto e ligação usada no exemplo.
+- [x] INPUT_PULLUP funciona no exemplo: apertar fecha o caminho para GND e soltar restaura a entrada; INPUT tem regra de entrada flutuante declarada.
+- [x] digitalRead lê o pino efetivamente conectado; fio solto ou mudança de pino altera o comportamento sem resposta predeterminada na interface.
 - [ ] Pressionar/soltar com mouse e teclado é acessível e não inicia arraste acidental; interrupção do gesto não deixa botão preso.
 - [ ] Painel mostra estado do botão e sinal lido; programa de controle do LED é editável e executado de verdade.
-- [ ] Teste compilado cobre soltar, apertar, desconectar e reiniciar; contrato integra as falhas educativas quando disponíveis.
+- [x] Teste compilado cobre soltar, apertar, desconectar e reiniciar; contrato integra as falhas educativas quando disponíveis.
 
 ## Verificação
 
@@ -34,3 +34,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
 
 - 05/11/2026 — auditoria da main `0db0ca1`: **Pendente**. Modelo 3D e pinos existem. Faltam interação pressionar/soltar, ligação ao GPIO de entrada, INPUT_PULLUP, painel e teste de firmware com digitalRead. Evidência: `src/main.js`, `src/firmware/uno-simulation.js`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.
+
+- 05/11/2026 — entrega em andamento na branch `codex/inputs-serial-servo`, base main `3137cad`: Botão, pares 1–3/2–4, INPUT_PULLUP e liberação de entradas implementados. Testes reais de firmware e montagem verificam pressão, soltura, desconexão e novo processador; contrato em docs/PERIPHERALS.md. A interação na cena/inspetor e a conferência final nos dois modos ainda aguardam validação integrada. Critérios marcados correspondem às evidências já observadas na branch; issue permanece aberta e `in-progress` até validação e revisão finais. Não é conclusão na main.

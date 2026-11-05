@@ -12,6 +12,7 @@
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --test tests/*.test.js",
     "setup:compiler": "node scripts/setup-compiler.mjs",
+    "serve:compiler": "node scripts/serve-public-compiler.mjs",
     "test:firmware": "node --test --test-concurrency=1 tests/firmware/*.test.js",
     "build:firmware": "node scripts/build-firmware-examples.mjs"
   },

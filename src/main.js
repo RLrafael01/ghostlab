@@ -1,4 +1,10 @@
 import { setupFirmwarePanel } from "./firmware/panel.js";
+import { createDemoCircuit } from "./firmware/demo-circuits.js";
+import { preparePeripheralVisual } from "./peripheral-visuals.js";
+import {
+  mountPeripheralInspector,
+  setupScenePeripheralControls,
+} from "./peripheral-controls.js";
 import "./firmware/style.css";
 import { mountPoint, placeComponent } from "./component-placement.js";
 import { createElectricalView } from "./electrical-view.js";
@@ -57,7 +63,7 @@ const catalog = {
   button: {
     name: "Botão",
     color: 0x444f5b,
-    hint: "Sem polaridade: os quatro pinos formam dois pares de contatos. Eles não são positivo e negativo.",
+    hint: "Segure o topo para pressionar; arraste a base para mover. Os pares 1–3 e 2–4 são ligados internamente; pressionar une os pares. Sem polaridade.",
     pins: ["1", "2", "3", "4"],
     size: [0.8, 0.3, 0.8],
   },
@@ -65,6 +71,7 @@ const catalog = {
     name: "Servo",
     color: 0x3675ca,
     pins: ["GND", "5V", "Sinal"],
+    hint: "Ligue 5V, GND e o sinal. O braço responde a pulsos do código Servo.h; sem alimentação ou sinal válido, mantém a última posição.",
     size: [1.2, 1, 0.7],
   },
   sensor: {
@@ -75,7 +82,7 @@ const catalog = {
   },
   pot: {
     name: "Potenciômetro",
-    hint: "Duas extremidades resistivas e um cursor (Sinal), sem polaridade fixa. VCC e GND indicam a ligação sugerida como divisor de tensão.",
+    hint: "Arraste o eixo para os lados para girar; arraste a base para mover. Ligue VCC a 5V, GND ao terra e Sinal a uma entrada analógica.",
     color: 0x377eb6,
     pins: ["VCC", "Sinal", "GND"],
     size: [0.8, 0.5, 0.8],
@@ -118,14 +125,22 @@ const ray = new T.Raycaster(),
   pointer = new T.Vector2();
 const items = [];
 let firmwareOutput = null;
+let latestCircuit = null;
+let peripheralInspector = null;
+let peripheralInteraction = null;
+let assembling = false;
 setupElectricalPanel(document.querySelector(".electrical-panel"));
 const electricalView = createElectricalView({
   items,
   wires: visualWires,
   status: document.querySelector("#electrical-status"),
   getFirmware: () => firmwareOutput ?? { pins: {} },
+  onInputs: (inputs) => firmwareSession.setInputs(inputs),
+  onState: (state) => {
+    latestCircuit = state;
+  },
 });
-setupFirmwarePanel({
+const firmwareSession = setupFirmwarePanel({
   editor: document.querySelector("#code-panel textarea"),
   container: document.querySelector("#firmware-controls"),
   status: document.querySelector("#firmware-status"),
@@ -133,6 +148,7 @@ setupFirmwarePanel({
   onOutput: (output) => {
     firmwareOutput = output;
   },
+  onAssemble: assembleExample,
   base: import.meta.env.BASE_URL,
 });
 let selectedWire = null;
@@ -170,6 +186,8 @@ async function add(type, x, z, animate = false, surfaceY = 0) {
   boardResize.cancel();
   status.textContent = "Bancada pronta · modelos CAD";
   const item = { id: ++serial, type, group: g };
+  if (type === "button") item.pressed = false;
+  if (type === "pot") item.value = 0.5;
   if (type === "board") item.columns = g.children[0].userData.columns;
   g.position.set(
     x ?? ((items.length % 4) - 1.5) * 2.4,
@@ -179,6 +197,7 @@ async function add(type, x, z, animate = false, surfaceY = 0) {
   g.userData.item = item;
   scene.add(g);
   items.push(item);
+  item.peripheralVisual = preparePeripheralVisual(item);
   if (animate) {
     snapToBoard(item);
     if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
@@ -214,6 +233,7 @@ function selectWire(id) {
 }
 function remove() {
   if (drag) return;
+  peripheralInteraction?.cancel();
   boardResize.cancel();
   if (selectedWire !== null) {
     jumperInteraction.cancel();
@@ -224,6 +244,7 @@ function remove() {
   if (!selected) return;
   jumperInteraction.cancel();
   const item = selected;
+  if (item.type === "uno") firmwareSession.stop();
   placements.delete(item);
   visualWires.removeFor(item);
   for (const child of items)
@@ -244,6 +265,8 @@ function remove() {
   select(null);
 }
 function renderPanel() {
+  peripheralInspector?.dispose();
+  peripheralInspector = null;
   document.querySelector("#count").textContent =
     `${items.length} componentes · ${visualWires.snapshot().length} fios`;
   document.querySelector("#details").innerHTML = selected
@@ -259,6 +282,12 @@ function renderPanel() {
       visualWires.setColor(wire.id, event.target.value);
     });
   }
+  if (selected)
+    peripheralInspector = mountPeripheralInspector(
+      document.querySelector("#details"),
+      selected,
+      () => electricalView.update(),
+    );
   for (const axis of ["x", "z"])
     document.querySelector("#" + axis)?.addEventListener("change", (e) => {
       const n = Number(e.target.value);
@@ -377,7 +406,11 @@ const jumperInteraction = setupJumperInteraction({
   navigation,
   wires: visualWires,
   items,
-  isComponentDragging: () => !!drag || boardResize.active,
+  isComponentDragging: () =>
+    !!drag ||
+    boardResize.active ||
+    !!peripheralInteraction?.active ||
+    assembling,
   onChange: renderPanel,
   onSelect: selectWire,
 });
@@ -391,7 +424,12 @@ const boardResize = setupBoardResize({
   getSelected: () => selected,
   wires: visualWires,
   getMountPoint: mountPoint,
-  isBusy: () => !!drag || visualWires.active || placements.has(selected),
+  isBusy: () =>
+    !!drag ||
+    visualWires.active ||
+    placements.has(selected) ||
+    !!peripheralInteraction?.active ||
+    assembling,
   onStart: () => {
     host.querySelector(".pin-tip").hidden = true;
   },
@@ -403,10 +441,26 @@ const boardResize = setupBoardResize({
         `Protoboard com ${selected.columns} colunas · pontas de contatos removidos ficam soltas`;
   },
 });
+peripheralInteraction = setupScenePeripheralControls({
+  host,
+  canvas: renderer.domElement,
+  items,
+  camera,
+  controls,
+  navigation,
+  wires: visualWires,
+  onSelect: select,
+  onChange: () => {
+    electricalView.update();
+    peripheralInspector?.refresh();
+  },
+  isBusy: () =>
+    !!drag || visualWires.active || boardResize.active || assembling,
+});
 renderer.domElement.addEventListener(
   "pointerdown",
   (event) => {
-    if (event.button !== 0 || drag || boardResize.active) return;
+    if (event.button !== 0 || drag || boardResize.active || assembling) return;
     host.focus({ preventScroll: true });
     navigation.reset();
     updateRay(event);
@@ -590,29 +644,63 @@ setupImmersiveDock(catalog, {
   drop: dropComponent,
 });
 async function loadPresentation() {
-  const [uno, board, led, resistor] = await Promise.all([
-    add("uno", -3.8, 0),
-    add("board", 1.7, 0),
-    add("led", 1.3, -0.4),
-    add("resistor", 0.4, -0.4),
-  ]);
-  if (items.includes(board) && items.includes(led)) snapToBoard(led);
-  if (items.includes(board) && items.includes(resistor)) snapToBoard(resistor);
-  if ([uno, board, led, resistor].every((item) => items.includes(item))) {
-    visualWires.connect(uno, "D9", board, "Superior + 2", "#c43c34", 0.55);
-    visualWires.connect(board, "Superior + 8", resistor, "1", "#c43c34", 0.4);
-    visualWires.connect(resistor, "2", led, "Ânodo +", "#e9b640", 0.35);
-    visualWires.connect(led, "Cátodo −", board, "Superior − 8", "#20a79a", 0.4);
-    visualWires.connect(board, "Superior − 3", uno, "GND", "#4c5360", 0.8);
+  try {
+    await mountExample("blink");
+  } catch {
+    document.querySelector("footer span").textContent =
+      "Falha ao carregar a montagem. Use Montar circuito do exemplo para tentar novamente.";
   }
+}
+async function mountExample(id) {
+  const circuit = await createDemoCircuit(id, {
+    add,
+    connect: (...args) => visualWires.connect(...args),
+  });
+  for (const item of [circuit.led, circuit.resistor, circuit.peripheral].filter(
+    Boolean,
+  ))
+    snapToBoard(item);
+  select(circuit.peripheral);
+  electricalView.update();
+}
+function clearBench() {
+  peripheralInteraction.cancel();
+  jumperInteraction.cancel();
+  boardResize.cancel();
+  if (drag) endDrag({ pointerId: drag.id });
+  for (const item of [...items]) {
+    select(item);
+    remove();
+  }
+  for (const wire of visualWires.snapshot()) visualWires.remove(wire.id);
   select(null);
 }
-loadPresentation();
+async function assembleExample(id) {
+  await initialAssembly;
+  assembling = true;
+  firmwareSession.stop();
+  clearBench();
+  try {
+    await mountExample(id);
+    home();
+  } catch (error) {
+    clearBench();
+    throw error;
+  } finally {
+    assembling = false;
+  }
+}
+const initialAssembly = loadPresentation();
 let lastFrame = performance.now();
 renderer.setAnimationLoop((now) => {
   const deltaSeconds = Math.max(0, (now - lastFrame) / 1000);
   lastFrame = now;
-  if (!drag && !visualWires.active && !boardResize.active) {
+  if (
+    !drag &&
+    !visualWires.active &&
+    !boardResize.active &&
+    !peripheralInteraction.active
+  ) {
     navigation.update(deltaSeconds);
     controls.update();
   }
@@ -634,6 +722,13 @@ renderer.setAnimationLoop((now) => {
     matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
   electricalView.update();
+  for (const item of items)
+    item.peripheralVisual?.update(
+      deltaSeconds,
+      latestCircuit?.servos.find((servo) => servo.id === item.id),
+    );
+  peripheralInspector?.refresh();
+  if (selected?.peripheralVisual) outline?.update();
   renderer.render(scene, camera);
 });
 

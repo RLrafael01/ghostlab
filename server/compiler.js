@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { mkdtemp, mkdir, writeFile, readFile, rm } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { compilerSandbox } from "./compiler-sandbox.js";
 
 export const toolRoot = fileURLToPath(new URL("../.tools/", import.meta.url));
 export const toolEnvironment = {
@@ -17,6 +18,7 @@ export const toolchain = {
   cli: "1.5.1",
   core: "arduino:avr@1.8.6",
   fqbn: "arduino:avr:uno",
+  libraries: { Servo: "1.3.0" },
 };
 export class CompilationError extends Error {
   constructor(message, code = "compile-error", diagnostics = []) {
@@ -28,7 +30,7 @@ export class CompilationError extends Error {
 let busy = false;
 export async function compileSketch(
   source,
-  { signal, timeoutMs = 30_000 } = {},
+  { signal, timeoutMs = 30_000, isolated = false } = {},
 ) {
   if (
     typeof source !== "string" ||
@@ -54,6 +56,17 @@ export async function compileSketch(
     const sketch = resolve(work, "sketch");
     await mkdir(sketch);
     await writeFile(resolve(sketch, "sketch.ino"), source);
+    let sandbox;
+    if (isolated) {
+      try {
+        sandbox = await compilerSandbox({ toolRoot, work });
+      } catch {
+        throw new CompilationError(
+          "Sandbox de compilação indisponível; a demonstração não permite compilar sem isolamento.",
+          "unavailable",
+        );
+      }
+    }
     await runCompiler(
       [
         "compile",
@@ -69,7 +82,7 @@ export async function compileSketch(
         resolve(work, "out"),
         sketch,
       ],
-      { signal, timeoutMs, work },
+      { signal, timeoutMs, work, sandbox },
     );
     const hex = await readFile(resolve(work, "out/sketch.ino.hex"), "utf8");
     return {
@@ -82,13 +95,25 @@ export async function compileSketch(
     busy = false;
   }
 }
-function runCompiler(args, { signal, timeoutMs, work }) {
+function runCompiler(args, { signal, timeoutMs, work, sandbox }) {
   return new Promise((accept, reject) => {
-    const child = spawn(resolve(toolRoot, "bin/arduino-cli"), args, {
-      env: toolEnvironment,
-      detached: true,
-      stdio: ["ignore", "pipe", "pipe"],
-    });
+    const cli = resolve(toolRoot, "bin/arduino-cli");
+    const child = spawn(
+      sandbox?.command ?? cli,
+      sandbox ? [...sandbox.prefix, cli, ...args] : args,
+      {
+        cwd: sandbox ? "/" : undefined,
+        env: sandbox
+          ? {
+              ...toolEnvironment,
+              TMPDIR: sandbox.job,
+              ARDUINO_BUILD_CACHE_PATH: resolve(sandbox.job, "cache"),
+            }
+          : toolEnvironment,
+        detached: true,
+        stdio: ["ignore", "pipe", "pipe"],
+      },
+    );
     let output = "",
       failed;
     const stop = (error) => {
@@ -130,7 +155,15 @@ function runCompiler(args, { signal, timeoutMs, work }) {
         ),
       );
       ps.on("close", (code) => {
-        if (code !== 0) return;
+        if (code !== 0) {
+          stop(
+            new CompilationError(
+              "Não foi possível aplicar o limite de memória.",
+              "resource-limit",
+            ),
+          );
+          return;
+        }
         const kb = stats
           .trim()
           .split("\n")

@@ -1,6 +1,6 @@
 # Uso de skills no GhostLab
 
-**82 aplicações registradas** · Matt Pocock: 68 · pstack: 14
+**85 aplicações registradas** · Matt Pocock: 70 · pstack: 15
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
@@ -9,16 +9,16 @@
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
-| Matt Pocock | `implement` | 11 | 2 | 13 |
+| Matt Pocock | `implement` | 12 | 2 | 14 |
 | Matt Pocock | `pr` | 11 | 3 | 14 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
-| Matt Pocock | `tdd` | 3 | 2 | 5 |
+| Matt Pocock | `tdd` | 4 | 2 | 6 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 2 | 0 | 2 |
 | Matt Pocock | `writing-for-agents` | 5 | 0 | 5 |
 | pstack | `principle-prove-it-works` | 10 | 1 | 11 |
-| pstack | `principle-sequence-verifiable-units` | 3 | 0 | 3 |
-| **Total** | | **72** | **10** | **82** |
+| pstack | `principle-sequence-verifiable-units` | 4 | 0 | 4 |
+| **Total** | | **75** | **10** | **85** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -122,3 +122,7 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 080 | 05/11/2026 | Rafael | Matt Pocock | `writing-for-agents` | Tornar obrigatória a atualização das issues a cada entrega. | concluído | AGENTS.md aciona o rastreador antes de implementação, correção, revisão e PR. Procedimento único em docs/agents/issue-tracker.md define critérios parciais, evidências, espelhos e Closes no merge; template de PR reforça a verificação. Autorização recorrente do usuário registrada. |
 | 081 | 05/11/2026 | Rafael | pstack | `principle-sequence-verifiable-units` | Organizar o trabalho restante em entregas verificáveis. | concluído | Sugestão: ordenar unidades com resultado observável. Decisão: conferir main, auditar critérios por frente, atualizar pendências e verificar espelhos; #15 pode avançar com #12/#13, depois entradas, componentes, projetos e integração final conforme dependências. Efeito: 13 issues existentes cobrem o restante, sem duplicação ou aumento de escopo; prazo não reestimado. |
 | 082 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Conferir a conclusão real das issues e as atualizações do plano. | concluído | Sugestão: verificar artefatos e estado efetivo. Decisão: confrontar código/testes da main 0db0ca1, critérios e merges do GitHub; testar revisão e respostas de compilação substituídas. Efeito: três testes passam, um critério da #15 concluído; #12–#24 continuam abertas e #2/#3/#9–#11 já fechadas. Estados, checklists e totais conferidos após atualização. |
+
+| 083 | 05/11/2026 | Rafael | Matt Pocock | `implement` | Implementar entradas digitais/analógicas, UART, servo e compilação acessível para #12–#16. | em andamento | Trabalho coordenado na branch codex/inputs-serial-servo, base 3137cad: engine, circuito, interface, exemplos e serviço próprio isolado. Oito artefatos compilados; quatro fontes e HEX anteriores preservados. Documentação em [PERIPHERALS](PERIPHERALS.md) e [PUBLIC-COMPILER](PUBLIC-COMPILER.md). Validação integrada, revisão e publicação pendentes; uma aplicação agregada, sem duplicação por agente. |
+| 084 | 05/11/2026 | Rafael | Matt Pocock | `tdd` | Verificar entradas, UART, Servo, sessão/interface e serviço nas fronteiras aprovadas. | em andamento | Ciclos red→green de GPIO/INPUT_PULLUP, ADC, UART e pulsos Servo com C++ compilado; demos verificam circuito e firmware reais, desconexão e hashes. Teste de Timer1 comprova perda de PWM em D9/D10 com Servo e continuidade de D3/Timer2. Testes adicionais da sessão, interação e serviço integram a mesma aplicação. Suíte final e navegador ainda pendentes. |
+| 085 | 05/11/2026 | Rafael | pstack | `principle-sequence-verifiable-units` | Dividir #12–#16 em entregas observáveis de ponta a ponta. | em andamento | Sugestão: provar uma unidade antes de expandir. Decisão: entradas→GPIO/ADC→LED, UART→monitor, pulsos→servo e serviço→compilação pública, com demos reproduzíveis e contratos compartilhados. Efeito parcial: testes direcionados passaram e oito exemplos estão compilados; integração final ainda não concluída. #17–#24 permanecem no plano, sem representar demos como a V1 completa. |

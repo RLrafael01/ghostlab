@@ -7,21 +7,42 @@ const reasons = {
   unlimited: "sem resistor no caminho · fora deste modelo",
   unsupported: "ligações fora do modelo · confira 5 V e GND",
 };
+const servoReasons = {
+  unpowered: "sem alimentação suportada",
+  open: "sem sinal conectado",
+  "invalid-pulse": "pulsos ausentes ou fora da faixa",
+  unsupported: "ligações fora do modelo",
+};
 
 export function createElectricalView({
   items,
   wires,
   status,
   getFirmware = () => null,
+  onInputs = () => {},
+  onState = () => {},
 }) {
-  let previous = "";
+  let previous = "",
+    result;
+  function peripheral(titleText, detailText) {
+    const row = status.ownerDocument.createElement("p");
+    row.className = "electrical-peripheral";
+    const title = status.ownerDocument.createElement("strong");
+    const detail = status.ownerDocument.createElement("span");
+    title.textContent = titleText;
+    detail.textContent = detailText;
+    row.append(title, detail);
+    status.append(row);
+  }
   return {
     update() {
       const project = {
-        components: items.map(({ id, type, columns }) => ({
+        components: items.map(({ id, type, columns, pressed, value }) => ({
           id,
           type,
           columns,
+          pressed,
+          value,
         })),
         wires: wires.connections(),
       };
@@ -31,13 +52,20 @@ export function createElectricalView({
         firmware?.unoId,
         firmware?.pins,
       ]);
-      if (signature === previous) return;
+      if (signature === previous) return result;
       previous = signature;
-      const result = simulateCircuit(project, firmware);
+      result = simulateCircuit(project, firmware);
+      onInputs(result.inputs);
+      onState(result);
       status.replaceChildren();
-      if (!result.leds.length)
+      if (!(
+        result.leds?.length ||
+        result.buttons?.length ||
+        result.pots?.length ||
+        result.servos?.length
+      ))
         status.textContent = "Adicione um LED para testar o circuito.";
-      for (const led of result.leds) {
+      for (const led of result.leds ?? []) {
         const item = items.find((item) => item.id === led.id);
         item.group.traverse((object) => {
           if (!object.userData.ledLens) return;
@@ -58,6 +86,58 @@ export function createElectricalView({
         row.append(title, reason);
         status.append(row);
       }
+      for (const button of result.buttons ?? []) {
+        peripheral(
+          `Botão #${button.id} · ${button.pressed ? "pressionado" : "solto"}`,
+          `Pares internos: 1/3 e 2/4${button.reason === "unsupported" ? " · ligações fora do modelo" : ""}`,
+        );
+      }
+      for (const pot of result.pots ?? []) {
+        const voltage = Number.isFinite(pot.voltage)
+          ? `${pot.voltage.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} V`
+          : pot.reason === "unsupported"
+            ? "ligações fora do modelo"
+            : "sem alimentação suportada";
+        peripheral(
+          `Potenciômetro #${pot.id} · ${Math.round(pot.value * 100)}%`,
+          `Tensão modelada: ${voltage}`,
+        );
+      }
+      for (const servo of result.servos ?? []) {
+        peripheral(
+          `Servo #${servo.id} · ${servo.active ? "ativo" : "inativo"}`,
+          servo.active
+            ? `Alvo: ${Math.round(servo.angle)}° · resposta visual: 300°/s`
+            : `${servoReasons[servo.reason] ?? "sem atuação"} · mantém última posição`,
+        );
+      }
+      if (result.unsupportedInputs?.length) {
+        peripheral(
+          "Entradas em conflito · fora do modelo",
+          result.unsupportedInputs.join(" · "),
+        );
+      }
+      const inputs = Object.entries(firmware?.pins ?? {}).filter(
+        ([name, pin]) =>
+          !pin.output &&
+          (pin.input === 0 || pin.input === 1) &&
+          !result.unsupportedInputs?.includes(name) &&
+          (pin.pullup ||
+            result.inputs?.digital?.[name] != null ||
+            result.inputs?.analog?.[name] != null),
+      );
+      if (inputs.length) {
+        peripheral(
+          "Entradas GPIO · firmware",
+          inputs
+            .map(
+              ([name, pin]) =>
+                `${name}: ${pin.input ? "HIGH" : "LOW"}${pin.pullup ? " (INPUT_PULLUP)" : ""}`,
+            )
+            .join(" · "),
+        );
+      }
+      return result;
     },
   };
 }

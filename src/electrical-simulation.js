@@ -1,4 +1,5 @@
 import { breadboardLayout } from "./breadboard-layout.js";
+import { simulatePeripherals } from "./peripheral-circuit.js";
 
 export function simulateCircuit({ components, wires }, firmware = null) {
   const byId = new Map(
@@ -51,6 +52,12 @@ export function simulateCircuit({ components, wires }, firmware = null) {
   for (const component of components)
     if (component.type === "resistor")
       connect(pin(component, "1"), pin(component, "2"), true);
+    else if (component.type === "button") {
+      // The CAD labels 1/3 on one side and 2/4 on the opposite side.
+      connect(pin(component, "1"), pin(component, "3"));
+      connect(pin(component, "2"), pin(component, "4"));
+      if (component.pressed) connect(pin(component, "1"), pin(component, "2"));
+    }
   const sources = components
     .filter((component) => component.type === "uno")
     .flatMap((component) => {
@@ -129,6 +136,7 @@ export function simulateCircuit({ components, wires }, firmware = null) {
       return firmware ? { ...result, brightness } : result;
     });
   return {
+    ...simulatePeripherals({ components, firmware, pin, reachable }),
     leds,
     sources: [...new Set(sources.map((source) => source.id))].map((id) => ({
       id,

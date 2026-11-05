@@ -50,6 +50,8 @@ if (!installed) {
 const options = { env: toolEnvironment, stdio: "inherit" };
 execFileSync(cli, ["core", "update-index"], options);
 execFileSync(cli, ["core", "install", toolchain.core], options);
+for (const [name, version] of Object.entries(toolchain.libraries))
+  execFileSync(cli, ["lib", "install", `${name}@${version}`], options);
 console.log(
   "Compilador pronto: Arduino CLI " + toolchain.cli + " / " + toolchain.core,
 );
