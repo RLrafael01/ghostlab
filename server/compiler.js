@@ -182,6 +182,8 @@ function runCompiler(args, { signal, timeoutMs, work }) {
       const diagnostics = output
         .slice(0, 65_536)
         .replaceAll(work, "<projeto>")
+        .replaceAll(toolRoot, "<toolchain>/")
+        .replace(/\x1b\[[0-9;]*m/g, "")
         .trim()
         .split("\n");
       reject(

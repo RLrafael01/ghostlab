@@ -9,3 +9,9 @@ Instalação inclui setup, planejamento, modelagem de domínio, implementação,
 ## Modelos 3D
 
 O catálogo utiliza ativos sob CC BY 4.0, CC BY 3.0, CC0 e MIT. Ver [autores, alterações e licenças](public/models/ATTRIBUTION.md) e [manifesto de fontes](public/models/manifest.json). Essas licenças aplicam-se aos respectivos ativos.
+
+## Emulação e toolchain de firmware
+
+AVR8js 0.21.1, Uri Shaked e colaboradores, MIT: [licença integral](licenses/avr8js-LICENSE). A cópia também acompanha a distribuição web em `firmware/avr8js-LICENSE.txt`. Fonte do pacote: https://github.com/wokwi/avr8js, commit `bee6f0a94e0e27786f6bc21aee3c775849fb50fd`.
+
+O setup baixa Arduino CLI 1.5.1 e Arduino AVR core 1.8.6 de suas distribuições oficiais. Binários, core e respectivas licenças ficam em `.tools/`, sem versionamento. Os exemplos HEX incluem código do Arduino AVR core (LGPL-2.1-or-later): fonte correspondente fixada em https://github.com/arduino/ArduinoCore-avr/tree/1.8.6; os sketches autorais ficam em `src/firmware/examples.js`. O comando `npm run build:firmware` recompila os exemplos com a toolchain documentada em `docs/FIRMWARE.md`, permitindo alterar e relincar o core localmente.

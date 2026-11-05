@@ -1,24 +1,24 @@
 # Uso de skills no GhostLab
 
-**58 aplicações registradas** · Matt Pocock: 52 · pstack: 6
+**64 aplicações registradas** · Matt Pocock: 56 · pstack: 8
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
-| Matt Pocock | `code-review` | 9 | 2 | 11 |
+| Matt Pocock | `code-review` | 10 | 2 | 12 |
 | Matt Pocock | `diagnosing-bugs` | 3 | 0 | 3 |
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
-| Matt Pocock | `implement` | 9 | 2 | 11 |
-| Matt Pocock | `pr` | 7 | 3 | 10 |
+| Matt Pocock | `implement` | 10 | 2 | 12 |
+| Matt Pocock | `pr` | 8 | 3 | 11 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
-| Matt Pocock | `tdd` | 1 | 2 | 3 |
+| Matt Pocock | `tdd` | 2 | 2 | 4 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 2 | 0 | 2 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
-| pstack | `principle-prove-it-works` | 4 | 1 | 5 |
-| pstack | `principle-sequence-verifiable-units` | 1 | 0 | 1 |
-| **Total** | | **48** | **10** | **58** |
+| pstack | `principle-prove-it-works` | 5 | 1 | 6 |
+| pstack | `principle-sequence-verifiable-units` | 2 | 0 | 2 |
+| **Total** | | **54** | **10** | **64** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -92,3 +92,9 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 056 | 05/11/2026 | Rafael | Matt Pocock | `to-tickets` | Detalhar todas as implementações restantes da V1, priorizando código, Blink e PWM. | concluído | Criadas 16 issues e uma issue de acompanhamento, espelhos locais, 3 marcos e bloqueios nativos; reaproveitada #3. [Plano](../.scratch/v1-completion/README.md). Publicação autorizada pela solicitação direta do usuário; sem novo ciclo de aprovação da divisão. |
 | 057 | 05/11/2026 | Rafael | pstack | `principle-sequence-verifiable-units` | Ordenar entregas funcionais que demonstrem a execução antes de expandir o catálogo. | concluído | Sugestão: unidades verificáveis e dependências explícitas. Decisão: piloto → Blink → PWM, com entradas, componentes e persistência em ramos independentes. Efeito: 16 entregas com demonstração/testes e validação integrada final; não equivale a implementação nem garante prazo. |
 | 058 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Publicar plano e histórico consolidado em PR de documentação. | concluído | PR dedicado com mapa das issues, evidência de cobertura/dependências e limites. Conferência dos espelhos, estados, marcos e totais; aplicação não altera o software nem encerra as issues novas. |
+| 059 | 05/11/2026 | Rafael | Matt Pocock | `implement` | Resolver issues #9, #10 e #11. | concluído | Compilador próprio local, worker AVR, controles, Blink e PWM ligados ao grafo; [documentação](FIRMWARE.md). Bases dos PRs #6/#7/#25 preservadas; sem merge automático. |
+| 060 | 05/11/2026 | Rafael | Matt Pocock | `tdd` | Verificar compilação, simulação e fluxo pelas interfaces aprovadas na spec. | concluído | Teste inicial falhou por compilador/simulação ausentes; integração GPIO falhou com LED apagado; regressão de Worker falhou com estado running. Ao final, 45 testes da aplicação e 3 de compilação real passaram. [Evidências](FIRMWARE-REVIEW.md). |
+| 061 | 05/11/2026 | Rafael | pstack | `principle-sequence-verifiable-units` | Entregar piloto, Blink e PWM em etapas verificáveis. | concluído | Sugestão: provar cada unidade antes de ampliar. Decisão: compilar Blink 1000/250 ms, integrar circuito e medir PWM 0/64/128/192/255 nos seis pinos. Efeito: caminho completo comprovado; compilação pública continua na #15. |
+| 062 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Verificar artefatos reais e interações no navegador. | concluído | Sugestão: testar o resultado real. Decisão: executar HEX recém-compilado e testar Fade/50%, parada/reinício, GND removido, código inválido e fullscreen. Efeito: comportamentos observados e imagens em docs/evidence; sem alegar cálculo analógico ou backend público. |
+| 063 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar implementação contra padrões e as três issues. | concluído | Dois revisores contra 72fe5a4; ambos localizaram falha síncrona ao iniciar Worker. Corrigida e coberta por regressão; revisão de retorno sem pendências. [Relatório](FIRMWARE-REVIEW.md). |
+| 064 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Publicar firmware real, Blink e PWM para revisão. | concluído | PR com LINK TESTE, escopo das três issues, dependências anteriores, evidências e distinção entre compilação local e exemplos pré-compilados da prévia pública. Histórico consolidado atualizado. |

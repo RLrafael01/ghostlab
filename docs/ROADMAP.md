@@ -18,7 +18,7 @@ Plano atualizado em 05/11/2026. [Todas as issues no GitHub](https://github.com/R
 - [Exemplos editáveis e cancela automática](https://github.com/RLrafael01/ghostlab/issues/23).
 - [Integração, regressões e apresentação da V1](https://github.com/RLrafael01/ghostlab/issues/24).
 
-A bancada já existe; o LED com fonte fixa está no PR #6 e os ajustes de interação no PR #7. O editor ainda não executa firmware. A issue #3 existente foi mantida, com suas dependências, sem duplicar o trabalho do Enzo.
+A bancada já existe; o LED com fonte fixa está no PR #6 e os ajustes de interação no PR #7. As issues #9–#11 estão implementadas nesta branch: firmware real, Blink e PWM, com [uso e limites](FIRMWARE.md); revisão/merge na main permanecem pendentes. A issue #3 existente foi mantida, com suas dependências, sem duplicar o trabalho do Enzo.
 
 “Versão final” significa a [V1 aprovada](../.scratch/initial-lab/spec.md), acrescida do detalhamento explícito de PWM solicitado agora. Outras placas, nuvem/contas e simulação elétrica geral ficam fora.
 

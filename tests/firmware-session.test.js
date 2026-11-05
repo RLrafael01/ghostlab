@@ -83,3 +83,22 @@ test("editar, parar e respostas fora de ordem não iniciam firmware obsoleto", a
   assert.equal(session.snapshot().phase, "stopped");
   assert.equal(session.snapshot().output, null);
 });
+
+test("bloqueio do Worker informa erro recuperável ao executar e reiniciar", async () => {
+  const seen = [];
+  const session = createFirmwareSession({
+    compile: async () => artifact,
+    createRunner() {
+      throw new Error("Worker indisponível");
+    },
+    onChange: (state) => seen.push(state.phase),
+  });
+  session.edit("programa");
+  await session.execute();
+  assert.equal(session.snapshot().phase, "error");
+  assert.equal(session.snapshot().output, null);
+  assert.equal(seen.at(-1), "error");
+  assert.doesNotThrow(() => session.restart());
+  assert.equal(session.snapshot().phase, "error");
+  assert.match(session.snapshot().message, /Worker indisponível/);
+});

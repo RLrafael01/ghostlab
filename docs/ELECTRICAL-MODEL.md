@@ -1,5 +1,7 @@
 # Modelo elétrico inicial — issue #3
 
+Documento histórico do recorte inicial. A extensão das issues #9–#11 adiciona GPIO/PWM e firmware real; veja [FIRMWARE.md](FIRMWARE.md). O exemplo atual usa D9 no lugar de 5 V.
+
 O exemplo abre com 5 V do Uno → barramento positivo → resistor → LED → barramento negativo → GND. O painel e a emissão de luz do LED usam o resultado de `simulateCircuit`, sem executar o texto do editor.
 
 ## Contrato da simulação

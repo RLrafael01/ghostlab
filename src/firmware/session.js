@@ -36,24 +36,28 @@ export function createFirmwareSession({
       binary.origin === "example"
         ? "Executando firmware pré-compilado deste exemplo."
         : "Executando código compilado no servidor local.";
-    runner = createRunner(
-      binary.hex,
-      (output) => {
-        if (generation === id) {
-          state.output = output;
-          emit();
-        }
-      },
-      (error) => {
-        if (generation === id) {
-          halt();
-          state.phase = "error";
-          state.message = String(error);
-          emit();
-        }
-      },
-    );
-    emit();
+    const fail = (error) => {
+      if (generation !== id) return;
+      halt();
+      state.phase = "error";
+      state.message = String(error);
+      emit();
+    };
+    try {
+      runner = createRunner(
+        binary.hex,
+        (output) => {
+          if (generation === id) {
+            state.output = output;
+            emit();
+          }
+        },
+        fail,
+      );
+      emit();
+    } catch (error) {
+      fail(error);
+    }
   }
   return {
     snapshot: () => ({ ...state }),
