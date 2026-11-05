@@ -1,6 +1,6 @@
 import { breadboardLayout } from "./breadboard-layout.js";
 
-export function simulateCircuit({ components, wires }) {
+export function simulateCircuit({ components, wires }, firmware = null) {
   const byId = new Map(
     components.map((component) => [component.id, component]),
   );
@@ -53,29 +53,46 @@ export function simulateCircuit({ components, wires }) {
       connect(pin(component, "1"), pin(component, "2"), true);
   const sources = components
     .filter((component) => component.type === "uno")
-    .map((component) => ({
-      id: component.id,
-      high: reachable(pin(component, "5V")),
-      low: reachable(pin(component, "GND")),
-      directHigh: reachable(pin(component, "5V"), false),
-      directLow: reachable(pin(component, "GND"), false),
-    }));
+    .flatMap((component) => {
+      const pins = firmware?.unoId === component.id ? firmware.pins : {};
+      const drivers = [
+        { name: "5V", duty: 1 },
+        ...Object.entries(pins ?? {})
+          .filter(
+            ([name, value]) =>
+              /^(D([0-9]|1[0-3])|A[0-5])$/.test(name) && value.output,
+          )
+          .map(([name, value]) => ({ name, duty: value.duty })),
+      ];
+      return drivers.map((driver) => ({
+        id: component.id,
+        brightness: Math.max(0, Math.min(1, driver.duty)),
+        high: reachable(pin(component, driver.name)),
+        low: reachable(pin(component, "GND")),
+        directHigh: reachable(pin(component, driver.name), false),
+        directLow: reachable(pin(component, "GND"), false),
+      }));
+    });
+  const overlap = (a, b) => [...a].some((node) => b.has(node));
   for (const source of sources)
     source.unsupported =
-      [...source.high].some((node) => source.low.has(node)) ||
+      overlap(source.high, source.low) ||
       sources.some(
         (other) =>
           other !== source &&
-          [...source.high, ...source.low].some(
-            (node) => other.high.has(node) || other.low.has(node),
-          ),
+          (overlap(source.high, other.high) ||
+            (other.id !== source.id &&
+              (overlap(source.high, other.low) ||
+                overlap(source.low, other.high) ||
+                overlap(source.low, other.low)))),
       );
   const leds = components
     .filter((component) => component.type === "led")
     .map((component) => {
       const anode = pin(component, "Ânodo +"),
         cathode = pin(component, "Cátodo −");
-      let reason = "open";
+      let reason = "open",
+        brightness = 0;
       if (
         sources.some(
           (source) =>
@@ -90,25 +107,34 @@ export function simulateCircuit({ components, wires }) {
         const forward = sources.find(
           (source) => source.high.has(anode) && source.low.has(cathode),
         );
-        if (forward)
+        if (forward) {
+          brightness = forward.brightness;
           reason =
             forward.directHigh.has(anode) && forward.directLow.has(cathode)
               ? "unlimited"
               : "closed";
-        else if (
+        } else if (
           sources.some(
             (source) => source.high.has(cathode) && source.low.has(anode),
           )
         )
           reason = "reversed";
       }
-      return { id: component.id, on: reason === "closed", reason };
+      if (reason !== "closed") brightness = 0;
+      const result = {
+        id: component.id,
+        on: reason === "closed" && brightness > 0,
+        reason,
+      };
+      return firmware ? { ...result, brightness } : result;
     });
   return {
     leds,
-    sources: sources.map(({ id, unsupported }) => ({
+    sources: [...new Set(sources.map((source) => source.id))].map((id) => ({
       id,
-      supported: !unsupported,
+      supported: !sources.some(
+        (source) => source.id === id && source.unsupported,
+      ),
     })),
   };
 }

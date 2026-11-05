@@ -5,6 +5,7 @@ import {
   breadboardLayout,
 } from "./breadboard-layout.js";
 import { replaceBreadboard } from "./parametric-board.js";
+import { placeComponent } from "./component-placement.js";
 
 export { BOARD_COLUMN_LIMITS } from "./breadboard-layout.js";
 
@@ -39,13 +40,15 @@ export function createBoardResize(
   );
   const connections = wires?.captureFor(board);
   const attachments = items
-    .filter((item) => item.mountedTo === board)
+    .filter((item) => item.type !== "board")
     .map((item) => {
+      const pin = mountPoint(item);
       const worldMount =
-        mountPoint(item)?.clone() ?? item.group.getWorldPosition(new Vector3());
+        pin?.clone() ?? item.group.getWorldPosition(new Vector3());
       const localMount = group.worldToLocal(worldMount.clone());
       return {
         item,
+        mountedTo: item.mountedTo,
         position: item.group.position.clone(),
         worldPosition: item.group.getWorldPosition(new Vector3()),
         worldMount,
@@ -88,7 +91,9 @@ export function createBoardResize(
       for (const attachment of attachments) {
         const child = attachment.item.group;
         let position;
-        if (attachment.column < 1 || attachment.column > columns) {
+        if (attachment.mountedTo !== board) {
+          position = attachment.worldPosition.clone();
+        } else if (attachment.column < 1 || attachment.column > columns) {
           attachment.item.mountedTo = null;
           position = attachment.worldPosition.clone().add(firstColumnShift);
           position.y = 0;
@@ -105,6 +110,9 @@ export function createBoardResize(
           child.parent ? child.parent.worldToLocal(position) : position,
         );
         child.updateWorldMatrix(true, true);
+        // Contact removal and physical support are independent: a casing can
+        // still overlap the rim after its original column disappears.
+        placeComponent(attachment.item, items, false);
       }
       connections?.sync();
       return columns;
@@ -116,7 +124,7 @@ export function createBoardResize(
       group.position.copy(originalPosition);
       group.updateWorldMatrix(true, true);
       for (const attachment of attachments) {
-        attachment.item.mountedTo = board;
+        attachment.item.mountedTo = attachment.mountedTo;
         attachment.item.group.position.copy(attachment.position);
         attachment.item.group.updateWorldMatrix(true, true);
       }

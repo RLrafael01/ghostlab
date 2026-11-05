@@ -8,7 +8,12 @@ const reasons = {
   unsupported: "ligações fora do modelo · confira 5 V e GND",
 };
 
-export function createElectricalView({ items, wires, status }) {
+export function createElectricalView({
+  items,
+  wires,
+  status,
+  getFirmware = () => null,
+}) {
   let previous = "";
   return {
     update() {
@@ -20,10 +25,15 @@ export function createElectricalView({ items, wires, status }) {
         })),
         wires: wires.connections(),
       };
-      const signature = JSON.stringify(project);
+      const firmware = getFirmware();
+      const signature = JSON.stringify([
+        project,
+        firmware?.unoId,
+        firmware?.pins,
+      ]);
       if (signature === previous) return;
       previous = signature;
-      const result = simulateCircuit(project);
+      const result = simulateCircuit(project, firmware);
       status.replaceChildren();
       if (!result.leds.length)
         status.textContent = "Adicione um LED para testar o circuito.";
@@ -32,7 +42,8 @@ export function createElectricalView({ items, wires, status }) {
         item.group.traverse((object) => {
           if (!object.userData.ledLens) return;
           object.material.emissive.set("#ff1528");
-          object.material.emissiveIntensity = led.on ? 2.5 : 0;
+          object.material.emissiveIntensity =
+            (led.brightness ?? (led.on ? 1 : 0)) * 2.5;
         });
         const row = status.ownerDocument.createElement("p");
         row.className = "electrical-led";
@@ -40,7 +51,10 @@ export function createElectricalView({ items, wires, status }) {
         const title = status.ownerDocument.createElement("strong");
         title.textContent = `LED #${led.id} · ${led.on ? "aceso" : "apagado"}`;
         const reason = status.ownerDocument.createElement("span");
-        reason.textContent = reasons[led.reason];
+        reason.textContent =
+          (led.brightness !== undefined
+            ? `Brilho: ${Math.round(led.brightness * 100)}% · `
+            : "") + reasons[led.reason];
         row.append(title, reason);
         status.append(row);
       }

@@ -2,23 +2,44 @@ import * as T from "three";
 import { BREADBOARD, breadboardLayout } from "./breadboard-layout.js";
 import { leadTip, terminalPosition } from "./visual-wires.js";
 
+// Solid bodies from the imported CAD models. Leads may enter holes; connection
+// guides and decorative targets must not extend the footprint that supports a part.
+const bodies = {
+  led: ["Funda"],
+  button: ["button-4", "button-5", "button-6", "button-7", "button-8"],
+  resistor: ["Resistor-body"],
+  pot: ["pot-0", "pot-1", "pot-2"],
+  servo: ["servo-0", "servo-1", "servo-2"],
+  sensor: ["HC-SR04"],
+  uno: ["arduino-unostep"],
+};
+
 export function mountPoint(item) {
   return item.type === "led"
     ? leadTip(item, "Ânodo +")
     : item.type === "button"
       ? leadTip(item, "1")
-      : terminalPosition(item, "1");
+      : item.type === "resistor"
+        ? terminalPosition(item, "1")
+        : null;
 }
 export function placeComponent(item, items, snap = true) {
-  if (!["led", "resistor", "button"].includes(item.type)) return;
+  if (item.type === "board") {
+    // Moving the supporting surface under a loose part also changes its height.
+    for (const other of items)
+      if (bodies[other.type]) placeComponent(other, items, false);
+    return;
+  }
+  if (!bodies[item.type]) return;
+  const solidParts = bodies[item.type]
+    .map((name) => item.group.getObjectByName(name))
+    .filter(Boolean);
+  if (!solidParts.length) return;
   item.mountedTo = null;
   item.group.position.y = 0;
   item.group.updateWorldMatrix(true, true);
-  const physicalBody =
-    item.type === "led"
-      ? (item.group.getObjectByName("Funda") ?? item.group)
-      : item.group;
-  const footprint = new T.Box3().setFromObject(physicalBody);
+  const footprint = new T.Box3();
+  for (const part of solidParts) footprint.expandByObject(part);
   const board = items.find((candidate) => {
     if (candidate.type !== "board") return false;
     candidate.group.updateWorldMatrix(true, true);
@@ -35,6 +56,15 @@ export function placeComponent(item, items, snap = true) {
   });
   if (!board) return;
   const anchor = board.group.worldToLocal(terminalPosition(board, "a1"));
+  const surfaceY = board.group.localToWorld(anchor.clone()).y;
+  const holeMounted = ["led", "resistor", "button"].includes(item.type);
+  if (!holeMounted) {
+    // Rest the casing on the surface without pretending its pins fit the holes.
+    item.group.position.y += surfaceY + 0.015 - footprint.min.y;
+    item.group.updateWorldMatrix(true, true);
+    item.mountedTo = board;
+    return;
+  }
   const reference = mountPoint(item) ?? item.group.position.clone();
   const local = board.group.worldToLocal(reference.clone());
   const pitch = BREADBOARD.pitch * BREADBOARD.sceneScale;
@@ -66,6 +96,11 @@ export function placeComponent(item, items, snap = true) {
   );
   target.y -= 0.055;
   item.group.position.add(target.sub(reference));
+  // CAD lead lengths differ: inserting a lead must never bury the solid casing.
+  item.group.position.y = Math.max(
+    item.group.position.y,
+    surfaceY + 0.015 - footprint.min.y,
+  );
   item.group.updateWorldMatrix(true, true);
   item.mountedTo = board;
 }

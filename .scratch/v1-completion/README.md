@@ -10,7 +10,7 @@ A [especificação aprovada](../initial-lab/spec.md) continua sendo a fonte do e
 - Issue #2 concluída no PR #4; não criar outra tarefa para o mesmo gesto.
 - Issue #3 do Enzo e PR #6 ainda abertos: conectividade, protoboard e LED com fonte fixa implementados para revisão.
 - PR #7 ainda aberto: conectores acessíveis e apoio do LED nas bordas.
-- Editor ainda não executa firmware. Nenhuma issue nova está concluída apenas porque foi publicada.
+- Issues #9–#11 implementadas e verificadas nesta branch, com firmware real, Blink e PWM. Ver [evidência](../../docs/FIRMWARE-REVIEW.md). O merge continua sujeito a revisão; as demais issues seguem pendentes.
 
 ## Ordem recomendada
 

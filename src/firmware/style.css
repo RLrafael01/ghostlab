@@ -1,0 +1,110 @@
+.firmware-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #363c3a;
+}
+.firmware-actions label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #b9c9c4;
+}
+.firmware-actions select,
+.firmware-actions button {
+  font: 12px system-ui;
+  padding: 7px 9px;
+  border: 1px solid #43514c;
+  border-radius: 5px;
+  background: #171e1b;
+  color: #e1ede8;
+}
+.firmware-actions .run-firmware {
+  color: #baf4dd;
+  border-color: #628c79;
+}
+.firmware-actions button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.firmware-state {
+  padding: 7px 12px;
+  font: 11px/1.5 system-ui;
+  color: #a7dfc4;
+}
+.firmware-note {
+  margin: 0;
+  padding: 0 12px 8px;
+  color: #9baca4;
+  font: 10px/1.5 system-ui;
+}
+.firmware-diagnostics {
+  padding: 8px 12px;
+  color: #ffc1af;
+  font: 12px system-ui;
+}
+.firmware-diagnostics pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 120px;
+  overflow: auto;
+  font: 11px/1.5 monospace;
+}
+.editor .firmware-controls {
+  flex-shrink: 0;
+}
+.editor textarea {
+  min-height: 100px;
+  flex: 1;
+}
+.firmware-pilot {
+  box-sizing: border-box;
+  margin: 30px auto;
+  max-width: 850px;
+  padding: 20px;
+  background: #111815;
+  color: #e4f0e9;
+  font: 14px system-ui;
+}
+.firmware-pilot textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 320px;
+  background: #080c0a;
+  color: #cce9d9;
+  padding: 16px;
+  font: 14px/1.6 monospace;
+}
+.pilot-led {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ff293d;
+  box-shadow: 0 0 25px #ff293d77;
+}
+#code-panel {
+  display: flex;
+  flex-direction: column;
+  height: min(330px, 42vh);
+  min-height: 260px;
+  overflow: hidden;
+}
+#code-panel .editor-head {
+  flex-shrink: 0;
+}
+#code-panel textarea {
+  height: auto;
+  min-height: 80px;
+  flex: 1;
+  box-sizing: border-box;
+}
+#code-panel .firmware-controls {
+  max-height: 190px;
+  overflow: auto;
+}
+main:fullscreen #code-panel {
+  max-height: calc(100vh - 290px);
+}
