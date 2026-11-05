@@ -1,6 +1,6 @@
 # Uso de skills no GhostLab
 
-**78 aplicações registradas** · Matt Pocock: 67 · pstack: 11
+**79 aplicações registradas** · Matt Pocock: 67 · pstack: 12
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
@@ -16,9 +16,9 @@
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 2 | 0 | 2 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
-| pstack | `principle-prove-it-works` | 8 | 1 | 9 |
+| pstack | `principle-prove-it-works` | 9 | 1 | 10 |
 | pstack | `principle-sequence-verifiable-units` | 2 | 0 | 2 |
-| **Total** | | **68** | **10** | **78** |
+| **Total** | | **69** | **10** | **79** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -116,3 +116,5 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 077 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Publicar correção de reconexão com prévia para testar. | concluído | [PR #29](https://github.com/RLrafael01/ghostlab/pull/29) publicado com LINK TESTE no início, causa reproduzida, captura e roteiro. Branch codex/led-jumper-reconnect baseada na main após PR #28; sem merge automático. |
 
 | 078 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar PR #27 do Enzo e conferir quais issues podem ser encerradas. | concluído | Base main 0db0ca1, head 212d3d5; Standards: 3 P2, Spec: 2 P2 sobrepostos. Restauração com código editado não reinicia firmware, ajuda nega dano e IDs do histórico colidem. [Relatório](PR27-REVIEW.md). #2/#3/#9–#11 já integradas e encerradas; checklists/descrições e plano atualizados. #12–#24 permanecem incompletas. |
+
+| 079 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Afinar o contorno de seleção para visualizar os terminais dos jumpers. | concluído | Sugestão: conferir o resultado renderizado. Decisão: reduzir a linha de 2,5 para 1 pixel e inspecionar LED e ponta selecionados no navegador. Efeito: contorno mais discreto, conexão ao Ânodo + preservada; 12 testes existentes de fios/interação e build aprovados. Área de captura e dimensões da caixa preservadas. |
