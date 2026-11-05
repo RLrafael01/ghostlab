@@ -3,7 +3,7 @@
 Status: open
 Priority: P2
 Milestone: V1 completa — componentes, projetos e falhas
-Blocked by: v1-completion/02 (GitHub #10)
+Blocked by: none
 GitHub: https://github.com/RLrafael01/ghostlab/issues/18
 
 ## What to build
@@ -33,3 +33,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 ## Comments
 
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
+
+- 05/11/2026 — auditoria da main `0db0ca1`: **Parcial**. Desconectar o LED já apaga e reconectar recupera; alguns motivos elétricos estão diferenciados. Faltam distinguir alimentação ausente de sinal solto, curto retido na fonte, destaque do caminho, recuperação por reinício e explicação sob demanda. Nenhum critério composto está integralmente concluído. Evidência: `src/electrical-simulation.js`, `src/electrical-view.js`, `tests/electrical-simulation.test.js`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.

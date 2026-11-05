@@ -13,13 +13,15 @@ Conectar e remover fios entre pinos, explorando a montagem e os grupos de contat
 
 ## Acceptance criteria
 
-- [ ] Criar, selecionar e remover conexões com feedback de origem e destino.
-- [ ] Conexões ficam registradas no projeto com identificadores estáveis e grupos internos da protoboard representados.
-- [ ] Ligações erradas continuam permitidas; a prévia não afirma executar uma simulação elétrica validada.
-- [ ] Adicionar/remover componente atualiza suas conexões sem deixar fios presos a objetos inexistentes.
+- [x] Criar, selecionar e remover conexões com feedback de origem e destino.
+- [x] Conexões ficam registradas no projeto com identificadores estáveis e grupos internos da protoboard representados.
+- [x] Ligações erradas continuam permitidas; a prévia não afirma executar uma simulação elétrica validada.
+- [x] Adicionar/remover componente atualiza suas conexões sem deixar fios presos a objetos inexistentes.
 - [ ] Formato inicial admite parâmetros e código, para futura integração com firmware e persistência.
 
 ## Comments
+
+- 05/11/2026 (Rafael, auditoria): PRs #4 e #6 integrados na main; issues #2/#3 encerradas. Criação, seleção, remoção, referências estáveis em memória e grupos internos estão implementados em `src/visual-wires.js` e `src/electrical-simulation.js`, com testes de fios/conectividade e [evidências](../../../docs/ELECTRICAL-MODEL.md). O circuito é identificado como simplificado e permite ligações incorretas. Isso não equivale ao formato versionado que reúne parâmetros, código e montagem: o último critério segue na [#20](https://github.com/RLrafael01/ghostlab/issues/20). Status permanece `open` por esse recorte pendente; usar a decomposição `v1-completion` para continuar sem duplicar o trabalho entregue.
 
 - 05/11/2026 (Enzo): issue GitHub #3 implementada no PR #6: grupos internos por coluna e barramentos, pontas livres, LED alimentado pelas conexões e invariância ao mover peças. 32 testes e build aprovados; limites e evidências em docs/ELECTRICAL-MODEL.md. O formato completo de projeto com parâmetros, código e persistência permanece fora desse recorte; este ticket amplo continua aberto.
 

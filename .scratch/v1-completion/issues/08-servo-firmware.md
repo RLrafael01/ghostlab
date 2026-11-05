@@ -3,7 +3,7 @@
 Status: open
 Priority: P2
 Milestone: V1 completa — componentes, projetos e falhas
-Blocked by: v1-completion/02 (GitHub #10)
+Blocked by: none
 GitHub: https://github.com/RLrafael01/ghostlab/issues/16
 
 ## What to build
@@ -32,3 +32,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 ## Comments
 
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
+
+- 05/11/2026 — auditoria da main `0db0ca1`: **Pendente**. Modelo 3D e pinos existem; faltam interpretação dos pulsos, posição do eixo, contrato de alimentação/sinal e biblioteca Servo fixada com testes compilados. Implementar medição pelos ciclos/eventos do emulador: snapshots de GPIO/PWM a cada 20 ms não preservam a largura dos pulsos. Evidência: `src/firmware/uno-simulation.js`, `scripts/setup-compiler.mjs`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.

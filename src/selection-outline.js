@@ -36,7 +36,7 @@ export function createSelectionOutline(object) {
     geometry,
     new LineMaterial({
       color: 0x79ffd5,
-      linewidth: 2.5,
+      linewidth: 1,
       depthTest: false,
       depthWrite: false,
       toneMapped: false,

@@ -22,5 +22,7 @@ Abrir uma cancela pronta, mover o carrinho e acionar controles para mostrar sens
 
 ## Comments
 
+- 05/11/2026 (Rafael, auditoria): tarefa histórica substituída no plano vigente pela [cancela com firmware real, #23](https://github.com/RLrafael01/ghostlab/issues/23). Não implementar um novo controlador demonstrativo para cumprir este roteiro antigo. A cancela ainda não foi entregue na main; nenhum critério foi marcado como concluído e o estado continua `open`, conforme os estados permitidos no rastreador. A substituição de planejamento não é evidência de implementação. Continuar pela [tarefa vigente](../../v1-completion/issues/15-exemplos-cancela.md).
+
 - 28/10/2026: divisão revisada com `to-tickets` para apresentações em 30/10 e 06/11.
 - 28/10/2026: divisão e dependências aprovadas pelo usuário; ticket publicado com estado open.

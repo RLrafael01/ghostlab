@@ -3,7 +3,7 @@
 Status: open
 Priority: P1
 Milestone: Código funcionando — Blink, PWM e entradas básicas
-Blocked by: v1-completion/01 (GitHub #9)
+Blocked by: none
 GitHub: https://github.com/RLrafael01/ghostlab/issues/13
 
 ## What to build
@@ -32,3 +32,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 ## Comments
 
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
+
+- 05/11/2026 — auditoria da main `0db0ca1`: **Pendente**. O firmware já tem controle de sessões, mas ainda não há UART integrada, transporte das mensagens, buffer limitado ou monitor serial. Evidência: `src/firmware/uno-simulation.js`, `src/firmware/panel.js`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.

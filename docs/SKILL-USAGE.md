@@ -1,24 +1,24 @@
 # Uso de skills no GhostLab
 
-**73 aplicações registradas** · Matt Pocock: 63 · pstack: 10
+**82 aplicações registradas** · Matt Pocock: 68 · pstack: 14
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
-| Matt Pocock | `code-review` | 12 | 2 | 14 |
-| Matt Pocock | `diagnosing-bugs` | 4 | 0 | 4 |
+| Matt Pocock | `code-review` | 14 | 2 | 16 |
+| Matt Pocock | `diagnosing-bugs` | 5 | 0 | 5 |
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
 | Matt Pocock | `implement` | 11 | 2 | 13 |
-| Matt Pocock | `pr` | 10 | 3 | 13 |
+| Matt Pocock | `pr` | 11 | 3 | 14 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
 | Matt Pocock | `tdd` | 3 | 2 | 5 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 2 | 0 | 2 |
-| Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
-| pstack | `principle-prove-it-works` | 7 | 1 | 8 |
-| pstack | `principle-sequence-verifiable-units` | 2 | 0 | 2 |
-| **Total** | | **63** | **10** | **73** |
+| Matt Pocock | `writing-for-agents` | 5 | 0 | 5 |
+| pstack | `principle-prove-it-works` | 10 | 1 | 11 |
+| pstack | `principle-sequence-verifiable-units` | 3 | 0 | 3 |
+| **Total** | | **72** | **10** | **82** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -109,3 +109,16 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 071 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Verificar cards e janela no navegador real. | concluído | Sugestão: observar gestos e resultado renderizado. Decisão: testar em 1440×900 e 1024×768, arraste, resize, teclado, recolhimento, edição e execução local. Efeito: cards separados e janela preserva código/tamanho/posição; Blink 250 ms executado como Personalizado. 64 testes e build aprovados; [evidência](evidence/workbench-panels.png). |
 | 072 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar painéis contra padrões e pedido do usuário desde 6a1f31a. | concluído | Dois revisores independentes sobre 6a1f31a...30fe489: Standards 0 achados; Spec 0 achados. [Revisão e validação](WORKBENCH-PANELS-REVIEW.md). |
 | 073 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Publicar correções da interface com link de teste destacado. | concluído | [PR #28](https://github.com/RLrafael01/ghostlab/pull/28) publicado com LINK TESTE no início, captura, roteiro e limite da compilação pública. Histórico: 73 aplicações, Rafael 63 / Enzo 10. Sem merge na main. |
+
+| 074 | 05/11/2026 | Rafael | Matt Pocock | `diagnosing-bugs` | Corrigir LED sem resposta após retirar e reconectar o cabo amarelo. | concluído | Reproduzido por ponteiros DOM e navegador: símbolo + deixava a ponta livre; depois, o usuário revelou que o interior do círculo ainda conectava em c31 atrás dele. Três regressões em câmeras diferentes falharam com furo incorreto/ponta solta. Captura cobre símbolos, aro e interior por geometria de alvo, preservando o terminal canônico e o firmware. Grade 3×3, polaridades, rotação, zoom e furo vizinho externo cobertos em tests/jumper-firmware-reconnect.test.js. Continuação da mesma aplicação. |
+| 075 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Repetir o gesto real de reconexão com firmware. | concluído | Sugestão: repetir o cenário original, não apenas checar build. Decisão: testar símbolo e interior do círculo no navegador, com LED ligado e Fade. Efeito: após c35 → interior +, a dica confirma Ânodo +, LED volta a 100% e PWM segue variando sem reiniciar. 77 testes e build aprovados; [captura do interior](evidence/jumper-led-circle-reconnect.png). Retomada após reprodução do usuário, sem nova contagem. |
+| 076 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar a correção de reconexão desde 0db0ca1. | concluído | Revisores independentes desde 0db0ca1: Standards 0 achados; Spec 0 achados. Revisão retomada para o interior do círculo: geometria invisível aceita raycast, não renderiza/sombreia, mantém clonagem/descarte e fica dentro do aro; furo vizinho externo continua acessível. Referências elétricas e execução preservadas. |
+| 077 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Publicar correção de reconexão com prévia para testar. | concluído | [PR #29](https://github.com/RLrafael01/ghostlab/pull/29) publicado com LINK TESTE no início, causa reproduzida, captura e roteiro. Branch codex/led-jumper-reconnect baseada na main após PR #28; sem merge automático. |
+
+| 078 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar PR #27 do Enzo e conferir quais issues podem ser encerradas. | concluído | Base main 0db0ca1, head 212d3d5; Standards: 3 P2, Spec: 2 P2 sobrepostos. Restauração com código editado não reinicia firmware, ajuda nega dano e IDs do histórico colidem. [Relatório](PR27-REVIEW.md). #2/#3/#9–#11 já integradas e encerradas; checklists/descrições e plano atualizados. #12–#24 permanecem incompletas. |
+
+| 079 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Afinar o contorno de seleção para visualizar os terminais dos jumpers. | concluído | Sugestão: conferir o resultado renderizado. Decisão: reduzir a linha de 2,5 para 1 pixel e inspecionar LED e ponta selecionados no navegador. Efeito: contorno mais discreto, conexão ao Ânodo + preservada; 12 testes existentes de fios/interação e build aprovados. Área de captura e dimensões da caixa preservadas. |
+
+| 080 | 05/11/2026 | Rafael | Matt Pocock | `writing-for-agents` | Tornar obrigatória a atualização das issues a cada entrega. | concluído | AGENTS.md aciona o rastreador antes de implementação, correção, revisão e PR. Procedimento único em docs/agents/issue-tracker.md define critérios parciais, evidências, espelhos e Closes no merge; template de PR reforça a verificação. Autorização recorrente do usuário registrada. |
+| 081 | 05/11/2026 | Rafael | pstack | `principle-sequence-verifiable-units` | Organizar o trabalho restante em entregas verificáveis. | concluído | Sugestão: ordenar unidades com resultado observável. Decisão: conferir main, auditar critérios por frente, atualizar pendências e verificar espelhos; #15 pode avançar com #12/#13, depois entradas, componentes, projetos e integração final conforme dependências. Efeito: 13 issues existentes cobrem o restante, sem duplicação ou aumento de escopo; prazo não reestimado. |
+| 082 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Conferir a conclusão real das issues e as atualizações do plano. | concluído | Sugestão: verificar artefatos e estado efetivo. Decisão: confrontar código/testes da main 0db0ca1, critérios e merges do GitHub; testar revisão e respostas de compilação substituídas. Efeito: três testes passam, um critério da #15 concluído; #12–#24 continuam abertas e #2/#3/#9–#11 já fechadas. Estados, checklists e totais conferidos após atualização. |

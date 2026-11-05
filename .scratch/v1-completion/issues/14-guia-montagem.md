@@ -31,3 +31,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 ## Comments
 
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
+
+- 05/11/2026 — auditoria da main `0db0ca1`: **Pendente**. Editor e referências dos fios existem; faltam download do sketch e guia com componentes, parâmetros, contatos, pontas livres e limites da simulação. Evidência: `src/main.js`, `src/visual-wires.js`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.

@@ -3,7 +3,7 @@
 Status: open
 Priority: P2
 Milestone: V1 completa — componentes, projetos e falhas
-Blocked by: v1-completion/02 (GitHub #10), v1-completion/05 (GitHub #13)
+Blocked by: v1-completion/05 (GitHub #13)
 GitHub: https://github.com/RLrafael01/ghostlab/issues/17
 
 ## What to build
@@ -32,3 +32,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 ## Comments
 
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
+
+- 05/11/2026 — auditoria da main `0db0ca1`: **Pendente**. Modelo HC-SR04 e pinos existem; faltam objeto de teste, distância, Trig/Echo temporizado, timeout, painel e serial. A temporização deve usar ciclos/eventos do emulador, não apenas snapshots de 20 ms. Evidência: `src/main.js`, `src/firmware/uno-simulation.js`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.

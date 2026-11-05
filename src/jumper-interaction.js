@@ -39,7 +39,9 @@ export function setupJumperInteraction({
   function terminals() {
     return items.flatMap((item) => {
       const names = new Map();
+      const targets = [];
       item.group.traverse((object) => {
+        if (object.userData.connectionTarget) targets.push(object);
         const counts = new Map();
         object.userData.pinNames?.forEach((pin) => {
           const occurrence = counts.get(pin) ?? 0;
@@ -58,6 +60,7 @@ export function setupJumperInteraction({
           pin,
           occurrence,
           position: terminalPosition(item, pin, occurrence),
+          targets: targets.filter((object) => object.userData.pinName === pin),
         }))
         .filter((terminal) => terminal.position);
     });
@@ -93,10 +96,22 @@ export function setupJumperInteraction({
       event.clientY > rect.bottom
     )
       return null;
+    // A visible connection guide owns its drop area, including the polarity
+    // symbol. Resolve to the canonical terminal, never to a hole behind it.
+    const terminals = gesture.terminals.filter((terminal) =>
+      items.includes(terminal.item),
+    );
+    const hit = ray.intersectObjects(
+      terminals.flatMap((terminal) => terminal.targets),
+      false,
+    )[0];
+    if (hit)
+      return terminals.find((terminal) =>
+        terminal.targets.includes(hit.object),
+      );
     let nearest = null,
       distance = 14;
-    for (const terminal of gesture.terminals) {
-      if (!items.includes(terminal.item)) continue;
+    for (const terminal of terminals) {
       const screen = terminal.position.clone().project(camera);
       if (screen.z < -1 || screen.z > 1) continue;
       const d = Math.hypot(

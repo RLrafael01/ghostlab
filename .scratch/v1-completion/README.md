@@ -6,19 +6,32 @@ A [especificação aprovada](../initial-lab/spec.md) continua sendo a fonte do e
 
 ## Estado verificado
 
-- Main em a49f84e: bancada 3D, montagem, jumpers, fullscreen/inspetor e redimensionamento.
-- Issue #2 concluída no PR #4; não criar outra tarefa para o mesmo gesto.
-- Issue #3 do Enzo e PR #6 ainda abertos: conectividade, protoboard e LED com fonte fixa implementados para revisão.
-- PR #7 ainda aberto: conectores acessíveis e apoio do LED nas bordas.
-- Issues #9–#11 implementadas e verificadas nesta branch, com firmware real, Blink e PWM. Ver [evidência](../../docs/FIRMWARE-REVIEW.md). O merge continua sujeito a revisão; as demais issues seguem pendentes.
+- Auditoria em 05/11/2026 sobre a main `0db0ca1`: bancada 3D, montagem, jumpers, fullscreen/inspetor, redimensionamento e editor flutuante integrados. A auditoria conferiu código, histórico de merges e evidências existentes; não equivale a um novo ensaio completo da V1.
+- Issues #2 e #3 concluídas: PRs #4 e #6 integrados, com conexões, grupos da protoboard e LED. O PR #7 também foi integrado, com conectores acessíveis e apoio do LED nas bordas.
+- Issues #9–#11 concluídas e integradas pelo [PR #26](https://github.com/RLrafael01/ghostlab/pull/26), merge `6a1f31a`: compilação local, firmware real, Blink e PWM. Ver [revisão e testes](../../docs/FIRMWARE-REVIEW.md) e [uso e limites](../../docs/FIRMWARE.md).
+- O [PR #27 do Enzo](https://github.com/RLrafael01/ghostlab/pull/27), revisão `212d3d5`, foi fechado sem merge. Seu trabalho parcial de entradas GPIO, falhas e esquema de projeto não está entregue na main e não encerra as issues correspondentes.
+- Nova auditoria em 05/11/2026: **13 issues de entrega ainda abertas (#12–#24)**, além do acompanhamento #8. Todas as necessidades restantes da V1 já estão cobertas; nenhuma issue duplicada foi criada. Nenhuma dessas 13 tem todos os critérios atendidos na main.
+- O PR #29 contém a correção de reconexão em todo o círculo/símbolo do LED e o contorno fino de seleção; aguarda aprovação/merge. A prévia de um PR não comprova entrega na main.
+- #15 teve um critério marcado como concluído: identificação da revisão executada, conferida no painel e no código, e descarte de respostas de compilação substituídas, coberto por três testes de sessão. O serviço público de compilação continua pendente. #18 e #23 têm bases parciais (LED reage à desconexão; presets Blink/Fade), sem fechar seus critérios completos.
 
 ## Ordem recomendada
 
-**Começar por #9 → #10 → #11: piloto real → Blink na bancada → fade/PWM.** Em seguida, botão, serial e potenciômetro. A compilação pelo link de teste precisa de serviço próprio acessível; hospedagem estática sozinha não fornece esse serviço.
+**Próximas entregas funcionais: #12, #13 e #14 — botão, serial e potenciômetro.** Piloto, Blink e PWM (#9–#11) já foram entregues. A #15 continua P0 e pode avançar em paralelo: editar e compilar pelo link de teste precisa de serviço próprio acessível; hospedagem estática sozinha não fornece esse serviço.
 
-Serial pode avançar após o piloto; persistência pode avançar após #3 sem esperar firmware. Bloqueios são pré-requisitos técnicos, não datas nem uma fila totalmente serial. P0 indica prioridade imediata, P1 os básicos seguintes, e P2 os demais requisitos obrigatórios da V1. As issues ficam sem responsável até alguém assumi-las.
+| Frente restante | Issues | Resultado para considerar pronto |
+| --- | --- | --- |
+| Código editado pelo link | #15 | Alterar um sketch em outra máquina, compilar e executar a nova versão sem instalação. |
+| Entradas e depuração | #12, #13, #14 | Botão → LED/serial; potenciômetro → analogRead → brilho PWM. |
+| Servo, sensor e cancela | #16, #17, #23 | Objeto muda a distância; firmware decide e move a cancela, com exemplo editável. |
+| Erros experimentáveis | #18, #19 | Curto, falta de sinal/alimentação, dano e recuperação com causa explicável. |
+| Projetos e montagem física | #20, #21, #22 | Salvar/reabrir, compartilhar arquivo e exportar sketch/lista de ligações. |
+| Entrega final | #24 | Ensaio integrado, evidências, documentação, histórico de skills e versão estável da main. |
 
-| Ordem | Prioridade | Entrega e espelho local | GitHub | Bloqueada por |
+#12, #13, #14, #15, #16, #18 e #20 já têm seus pré-requisitos atendidos e podem ser assumidas em paralelo conforme a capacidade da dupla. #17 espera #13; #19 espera #18; #21/#22 esperam #20; #23 reúne os componentes e projetos; #24 valida o conjunto. Não transformar quantidade de issues em percentual de software pronto: as entregas têm tamanhos diferentes.
+
+Os pré-requisitos de serial e persistência já foram atendidos pelo piloto e pela #3, respectivamente; essas entregas podem avançar sem esperar todos os componentes. Bloqueios são pré-requisitos técnicos, não datas nem uma fila totalmente serial. P0 indica prioridade imediata, P1 os básicos seguintes, e P2 os demais requisitos obrigatórios da V1. Conferir o responsável e assumir a issue antes de iniciar.
+
+| Ordem | Prioridade | Entrega e espelho local | GitHub | Pré-requisitos (inclui concluídos) |
 | --- | --- | --- | --- | --- |
 | 01 | P0 | [Compilar e executar um sketch real do Uno no navegador](issues/01-piloto-firmware.md) | [#9](https://github.com/RLrafael01/ghostlab/issues/9) | none |
 | 02 | P0 | [Executar Blink e ligar/desligar o LED pelas ligações da bancada 3D](issues/02-blink-na-bancada.md) | [#10](https://github.com/RLrafael01/ghostlab/issues/10) | v1-completion/01 (GitHub #9), GitHub #3 |
@@ -43,17 +56,17 @@ Serial pode avançar após o piloto; persistência pode avançar após #3 sem es
 - [V1 completa — componentes, projetos e falhas](https://github.com/RLrafael01/ghostlab/milestone/2)
 - [V1 final — validação e apresentação](https://github.com/RLrafael01/ghostlab/milestone/3)
 
-O prazo original de 06/11/2026 está em risco: em 05/11 o piloto de compilação/emulação ainda não foi comprovado. Não foi estimado um novo prazo nem reduzido o escopo; os marcos organizam a entrega por resultados. Não apresentar animação, leitura de palavras-chave no sketch ou firmware antigo como execução do código atual.
+Na publicação inicial do plano em 05/11/2026, o prazo original de 06/11/2026 foi registrado em risco porque o piloto ainda não havia sido comprovado. A prova de compilação/emulação e as entregas Blink/PWM foram concluídas depois, no PR #26. O risco do prazo permanece pelas issues #12–#24 ainda abertas; não foi estimado um novo prazo nem reduzido o escopo. Os marcos organizam a entrega por resultados. Não apresentar animação, leitura de palavras-chave no sketch ou firmware antigo como execução do código atual.
 
 ## Cobertura e plano anterior
 
 | Tarefa de initial-lab | Tratamento no plano atual |
 | --- | --- |
 | 01–02 | Definição e bancada concluídas; conservar evidências anteriores. |
-| 03 | Jumpers entregues em #2; modelo elétrico em #3/PR #6; formato completo de projeto na nova #20. |
+| 03 | Jumpers e modelo elétrico entregues em #2/#3; tarefa antiga continua parcial pelo formato completo de projeto pendente em #20. |
 | 04 | Prévia demonstrativa histórica; o exemplo passa diretamente a firmware real em #23, sem implementar novo controlador fictício. |
-| 05 | Piloto #9, botão #12 e serial #13. |
-| 06 | Bancada #10, PWM #11, botão #12, serial #13 e compilação na prévia #15. |
+| 05 | Piloto #9 concluído; tarefa antiga continua parcial por botão #12 e serial #13. |
+| 06 | Bancada #10 e PWM #11 concluídos; faltam botão #12, serial #13 e compilação na prévia #15. |
 | 07 | Potenciômetro/dimmer #14. |
 | 08 | Servo #16 e sensor #17. |
 | 09 | Falhas e curto #18. |
@@ -67,13 +80,13 @@ Os arquivos antigos conservam o histórico e não foram encerrados automaticamen
 
 ## Atualização e entrega
 
-As tarefas continuam versionadas em Markdown conforme o rastreador local; GitHub ganha espelhos e relações nativas para facilitar a colaboração. IDs locais 01–16 pertencem a v1-completion; números do GitHub são identificadores diferentes. Atualizar estado e evidência local e no GitHub no PR de cada implementação. Não há sincronização automática dos corpos.
+As tarefas continuam versionadas em Markdown, com espelhos e relações nativas no GitHub. IDs locais 01–16 pertencem a v1-completion; números do GitHub são identificadores diferentes. Em toda implementação, correção ou revisão, seguir o [fluxo obrigatório de atualização e fechamento](../../docs/agents/issue-tracker.md): marcar critérios verificados, registrar evidências, atualizar o espelho e usar `Closes #N` quando a entrega completa puder fechar no merge. As descrições não têm sincronização automática.
 
 Antes de implementar, conferir bloqueios e assumir a issue. Entregar em branch/PR, com LINK TESTE no início da descrição, testes pertinentes e roteiro reproduzível. Registrar as skills efetivamente utilizadas e o responsável em [SKILL-USAGE](../../docs/SKILL-USAGE.md), com totais atualizados. Uma aprovação de outra pessoa e checks verdes continuam necessários; não dar merge automático por terminar código.
 
-Contrato de conclusão: critérios observáveis atendidos, teste de firmware real quando aplicável, comportamento em tela cheia e reduzida, limitações descritas e revisão. Todos os novos tickets permanecem abertos até isso ocorrer.
+Contrato de conclusão: critérios observáveis atendidos, teste de firmware real quando aplicável, comportamento em tela cheia e reduzida, limitações descritas e revisão. Tickets 01–03 (#9–#11) estão `done`; tickets 04–16 (#12–#24) permanecem `open`. Uma entrega parcial ou um PR fechado sem merge não comprova conclusão na main.
 
 ## Base técnica
 
-- [AVR8js](https://github.com/wokwi/avr8js): recebe código de máquina compilado e exige integração dos componentes; candidato sujeito ao piloto.
+- [AVR8js](https://github.com/wokwi/avr8js): emulador validado no piloto para CPU, GPIO e timers; recebe código de máquina compilado e exige integração dos demais componentes. [Versões e limites verificados](../../docs/FIRMWARE.md).
 - [Fade do Arduino](https://docs.arduino.cc/built-in-examples/basics/Fade/): referência para o exemplo educativo de PWM.
