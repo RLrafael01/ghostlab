@@ -1,5 +1,8 @@
 # GhostLab — implementação restante até a V1
 
+Status: in-progress
+GitHub: https://github.com/RLrafael01/ghostlab/issues/8
+
 Atualizado em 05/11/2026 a pedido de Rafael. [Acompanhar plano no GitHub](https://github.com/RLrafael01/ghostlab/issues/8).
 
 A [especificação aprovada](../initial-lab/spec.md) continua sendo a fonte do escopo. Este plano detalha o trabalho restante e prioriza código real, Blink e controle suave de brilho por PWM, conforme a nova solicitação. O plano por datas anterior fica como histórico; a versão final aqui é a V1 já aprovada. Outras placas, contas, colaboração simultânea, bibliotecas arbitrárias e simulação analógica de propósito geral continuam fora.
@@ -11,12 +14,14 @@ A [especificação aprovada](../initial-lab/spec.md) continua sendo a fonte do e
 - Issues #9–#11 concluídas e integradas pelo [PR #26](https://github.com/RLrafael01/ghostlab/pull/26), merge `6a1f31a`: compilação local, firmware real, Blink e PWM. Ver [revisão e testes](../../docs/FIRMWARE-REVIEW.md) e [uso e limites](../../docs/FIRMWARE.md).
 - O [PR #27 do Enzo](https://github.com/RLrafael01/ghostlab/pull/27), revisão `212d3d5`, foi fechado sem merge. Seu trabalho parcial de entradas GPIO, falhas e esquema de projeto não está entregue na main e não encerra as issues correspondentes.
 - Nova auditoria em 05/11/2026: **13 issues de entrega ainda abertas (#12–#24)**, além do acompanhamento #8. Todas as necessidades restantes da V1 já estão cobertas; nenhuma issue duplicada foi criada. Nenhuma dessas 13 tem todos os critérios atendidos na main.
-- O PR #29 contém a correção de reconexão em todo o círculo/símbolo do LED e o contorno fino de seleção; aguarda aprovação/merge. A prévia de um PR não comprova entrega na main.
-- #15 teve um critério marcado como concluído: identificação da revisão executada, conferida no painel e no código, e descarte de respostas de compilação substituídas, coberto por três testes de sessão. O serviço público de compilação continua pendente. #18 e #23 têm bases parciais (LED reage à desconexão; presets Blink/Fade), sem fechar seus critérios completos.
+- O PR #29 foi integrado à main em `3137cad`, base da entrega atual: reconexão em todo o círculo/símbolo do LED, contorno fino de seleção e auditoria do rastreador. A prévia de um PR não comprova entrega na main antes do merge.
+- **#12–#16 concluídas na branch, aguardando merge do [PR #30](https://github.com/RLrafael01/ghostlab/pull/30)**: botão, monitor serial, potenciômetro, compilação pública de demonstração e servo. 119 testes aprovados, revisão sem bloqueadores após correções e navegador nos dois modos, com código editado pelo HTTPS e recuperação após indisponibilidade. [Evidência e roteiro](../../docs/PERIPHERALS-REVIEW.md). Os tickets locais estão `done`; as issues do GitHub permanecem abertas até o merge e a main ainda está em `3137cad`.
+- #15 usa serviço próprio isolado e túnel HTTPS temporário, validado com código editado, erro de C++ e desligamento/recuperação. O build da base main foi validado, mas sua publicação depende do merge. A disponibilidade exige computador e túnel ativos. [Operação e limites](../../docs/PUBLIC-COMPILER.md).
+- #18 e #23 têm bases parciais, sem critérios completos novos: LED reage à desconexão e a branch atual oferece montagem de oito demos. Esses atalhos não implementam projeto persistido, sensor ou cancela. #8 continua parcial até validar toda a V1.
 
 ## Ordem recomendada
 
-**Próximas entregas funcionais: #12, #13 e #14 — botão, serial e potenciômetro.** Piloto, Blink e PWM (#9–#11) já foram entregues. A #15 continua P0 e pode avançar em paralelo: editar e compilar pelo link de teste precisa de serviço próprio acessível; hospedagem estática sozinha não fornece esse serviço.
+**Entrega pronta para revisão/merge: #12–#16 — botão, serial, potenciômetro, compilação pública e servo.** Piloto, Blink e PWM (#9–#11) já estão integrados. Após integrar o PR #30, avançar com sensor #17, falhas #18 e projetos #20; depois, cancela, recuperação, compartilhamento e entrega final. Editar e compilar pelo link exige o serviço de demonstração ativo; hospedagem estática sozinha não fornece compilação.
 
 | Frente restante | Issues | Resultado para considerar pronto |
 | --- | --- | --- |
@@ -27,7 +32,7 @@ A [especificação aprovada](../initial-lab/spec.md) continua sendo a fonte do e
 | Projetos e montagem física | #20, #21, #22 | Salvar/reabrir, compartilhar arquivo e exportar sketch/lista de ligações. |
 | Entrega final | #24 | Ensaio integrado, evidências, documentação, histórico de skills e versão estável da main. |
 
-#12, #13, #14, #15, #16, #18 e #20 já têm seus pré-requisitos atendidos e podem ser assumidas em paralelo conforme a capacidade da dupla. #17 espera #13; #19 espera #18; #21/#22 esperam #20; #23 reúne os componentes e projetos; #24 valida o conjunto. Não transformar quantidade de issues em percentual de software pronto: as entregas têm tamanhos diferentes.
+#12–#16 estão concluídas na branch do PR #30; não duplicar esse trabalho. #18 e #20 podem avançar em paralelo conforme a capacidade da dupla. #17 espera a integração da #13; #19 espera #18; #21/#22 esperam #20; #23 reúne os componentes e projetos; #24 valida o conjunto. Não transformar quantidade de issues em percentual de software pronto: as entregas têm tamanhos diferentes.
 
 Os pré-requisitos de serial e persistência já foram atendidos pelo piloto e pela #3, respectivamente; essas entregas podem avançar sem esperar todos os componentes. Bloqueios são pré-requisitos técnicos, não datas nem uma fila totalmente serial. P0 indica prioridade imediata, P1 os básicos seguintes, e P2 os demais requisitos obrigatórios da V1. Conferir o responsável e assumir a issue antes de iniciar.
 
@@ -65,9 +70,9 @@ Na publicação inicial do plano em 05/11/2026, o prazo original de 06/11/2026 f
 | 01–02 | Definição e bancada concluídas; conservar evidências anteriores. |
 | 03 | Jumpers e modelo elétrico entregues em #2/#3; tarefa antiga continua parcial pelo formato completo de projeto pendente em #20. |
 | 04 | Prévia demonstrativa histórica; o exemplo passa diretamente a firmware real em #23, sem implementar novo controlador fictício. |
-| 05 | Piloto #9 concluído; tarefa antiga continua parcial por botão #12 e serial #13. |
-| 06 | Bancada #10 e PWM #11 concluídos; faltam botão #12, serial #13 e compilação na prévia #15. |
-| 07 | Potenciômetro/dimmer #14. |
+| 05 | Piloto #9 integrado; botão/serial comprovados pelo PR #30, tarefa antiga concluída na branch e aguardando merge. |
+| 06 | Bancada #10/PWM #11 integrados; botão, serial e compilação pública concluídos na branch do PR #30. |
+| 07 | Potenciômetro/dimmer #14 concluído na branch do PR #30. |
 | 08 | Servo #16 e sensor #17. |
 | 09 | Falhas e curto #18. |
 | 10 | Dano e recuperação #19. |
@@ -84,7 +89,7 @@ As tarefas continuam versionadas em Markdown, com espelhos e relações nativas 
 
 Antes de implementar, conferir bloqueios e assumir a issue. Entregar em branch/PR, com LINK TESTE no início da descrição, testes pertinentes e roteiro reproduzível. Registrar as skills efetivamente utilizadas e o responsável em [SKILL-USAGE](../../docs/SKILL-USAGE.md), com totais atualizados. Uma aprovação de outra pessoa e checks verdes continuam necessários; não dar merge automático por terminar código.
 
-Contrato de conclusão: critérios observáveis atendidos, teste de firmware real quando aplicável, comportamento em tela cheia e reduzida, limitações descritas e revisão. Tickets 01–03 (#9–#11) estão `done`; tickets 04–16 (#12–#24) permanecem `open`. Uma entrega parcial ou um PR fechado sem merge não comprova conclusão na main.
+Contrato de conclusão: critérios observáveis atendidos, teste de firmware real quando aplicável, comportamento em tela cheia e reduzida, limitações descritas e revisão. Tickets 01–03 (#9–#11) estão `done`; tickets 04–08 (#12–#16) estão `done` na branch do PR #30, aguardando merge; tickets 09–16 (#17–#24) permanecem `open`. O acompanhamento #8 continua parcial. Uma entrega parcial ou um PR fechado sem merge não comprova conclusão na main.
 
 ## Base técnica
 

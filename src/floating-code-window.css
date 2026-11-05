@@ -48,6 +48,11 @@ main:fullscreen #code-panel.floating-code-window textarea {
 main:fullscreen #code-panel.floating-code-window .firmware-controls {
   max-height: min(190px, 42%);
 }
+main:fullscreen
+  #code-panel.floating-code-window:has(.serial-monitor[open])
+  .firmware-controls {
+  max-height: calc(100% - 108px);
+}
 
 main:fullscreen .floating-code-window .code-window-tool {
   display: inline-flex;

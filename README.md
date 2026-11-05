@@ -4,7 +4,7 @@ Monte circuitos, programe um microcontrolador e experimente seu funcionamento no
 
 ## Estado do projeto
 
-A bancada executa firmware real do Uno, com Blink e fade/PWM seguindo as ligações. Compilação própria está disponível no servidor local; a prévia estática executa os quatro exemplos originais pré-compilados. [Como executar, testar e limites](docs/FIRMWARE.md). O restante da V1 permanece no [plano de implementação](.scratch/v1-completion/README.md).
+A bancada executa firmware real do Uno, com Blink, fade/PWM, botão, potenciômetro, monitor serial e servo seguindo as ligações. O editor oferece oito exemplos e montagem dos circuitos correspondentes. A compilação própria funciona localmente e pode ser configurada na prévia por um serviço de demonstração isolado, acessível por túnel HTTPS temporário; sua disponibilidade depende do computador hospedeiro. Sem esse serviço configurado, a página estática executa os exemplos originais pré-compilados. [Firmware](docs/FIRMWARE.md), [entradas, serial e servo](docs/PERIPHERALS.md) e [compilação pública](docs/PUBLIC-COMPILER.md). As issues #12–#16 foram verificadas no [PR #30, com link de teste e roteiro](docs/PERIPHERALS-REVIEW.md), aguardando merge. O restante da V1 continua no [plano de implementação](.scratch/v1-completion/README.md).
 
 Metas originais: **30/10/2026**, interface interativa; **06/11/2026**, V1 funcional. O plano atualizado em 05/11 registra o risco do prazo e organiza a entrega por resultados verificáveis.
 
@@ -40,7 +40,7 @@ Fluxo proposto: `setup-matt-pocock-skills` → `grill-with-docs` → `to-spec` �
 
 Setup concluído: tarefas em Markdown local em `.scratch/`, instruções em `AGENTS.md` e regras em `docs/agents/`. Nenhum framework GSD foi instalado.
 
-Planejamento concluído: [definir a primeira versão](.scratch/initial-lab/issues/01-refinar-primeira-versao.md). A divisão inicial foi atualizada em 05/11: [plano restante até a V1](.scratch/v1-completion/README.md), com 16 issues e dependências. A prioridade agora é firmware real → Blink → fade/PWM; a bancada já está implementada.
+Planejamento concluído: [definir a primeira versão](.scratch/initial-lab/issues/01-refinar-primeira-versao.md). A divisão inicial foi atualizada em 05/11: [plano restante até a V1](.scratch/v1-completion/README.md), com 16 issues e dependências. Firmware real, Blink e PWM já estão integrados; esta entrega amplia entradas, depuração e servo, com compilação acessível para demonstração.
 
 ## Executar a bancada
 
@@ -55,6 +55,16 @@ npm run dev
 Abra o endereço mostrado no terminal (normalmente http://127.0.0.1:5173). Para gerar a versão de apresentação: `npm run build` e `npm run preview`.
 
 Clique no catálogo para adicionar; arraste diretamente as peças sobre a bancada para mover. Selecione na cena ou lista; ajuste X/Z no inspetor para posicionar a peça. Clique na bancada e mantenha WASD ou as setas pressionadas para navegar com a câmera sobre sua superfície; essas teclas não movem as peças. Delete remove a seleção. Arraste o fundo para orbitar e use o scroll para zoom; “Visão inicial” restaura a câmera. Código é compilado localmente e executado em um worker AVR; a conectividade e o LED usam o modelo elétrico simplificado. [Blink, PWM e prévia pública](docs/FIRMWARE.md).
+
+### Testar botão, dimmer, serial e servo
+
+1. No editor, escolha **Botão · entrada digital**, **Potenciômetro · dimmer**, **Serial · contador e LED** ou **Servo · 0°, 90° e 180°**.
+2. Clique em **Montar circuito** e confirme a substituição da bancada; depois, **Compilar e executar**. Trocar apenas o exemplo muda o código, sem substituir sua montagem.
+3. No botão, segure o topo da peça ou o controle do inspetor com mouse/Espaço/Enter. No potenciômetro, arraste a haste ou ajuste a porcentagem no inspetor. Observe LED e **Estado elétrico**.
+4. Abra **Monitor serial** no editor para acompanhar leituras e comandos do firmware. Recolher ou limpar o monitor não reinicia o programa.
+5. Em tela cheia, abra **Código** pelo dock e **Inspetor** para acessar os mesmos controles. Desconecte e reconecte um sinal para conferir que a resposta depende dos fios.
+
+O botão usa D2 com `INPUT_PULLUP` e controla o LED em D9; o dimmer lê A0 e gera PWM em D9. O servo usa D6 e `Servo.h`, que ocupa Timer1 e interfere no PWM de D9/D10; use D3/D11 para combinar servo e dimmer. [Contratos, limites e roteiro detalhado](docs/PERIPHERALS.md).
 
 Sete componentes usam modelos 3D importados, incluindo geometrias CAD convertidas de STEP. A protoboard usa geometria paramétrica com furos reais para permitir alterar a quantidade de colunas. Escala comum: 1 mm = 0,0445 unidade da cena. Materiais e alvos de interação são adaptações visuais; não há validação de tolerâncias para fabricação. Fontes, autores e licenças: [atribuições dos modelos](public/models/ATTRIBUTION.md). Para reproduzir as conversões: `node scripts/convert-cad.mjs`.
 
@@ -78,7 +88,7 @@ No LED, os alvos + e − nas laterais permitem conectar sem esconder as pontas d
 A retirada e o encaixe têm transição curta; a preferência de movimento reduzido usa posicionamento imediato. Ligações incorretas são permitidas: o gesto altera referências de terminais e atualiza o estado elétrico simplificado. Circuitos fora do modelo mantêm o LED apagado, sem simular dano. Os contatos GND fisicamente distintos do Uno mantêm referências separadas. Os testes cobrem reconexão, ponta solta, cancelamento, limpeza ao remover peças e movimento reduzido.
 
 
-Botão e resistor não têm polaridade: seus pinos são contatos, não positivo/negativo. O potenciômetro tem duas extremidades resistivas e um cursor; VCC/GND no inspetor indicam a ligação sugerida como divisor de tensão. Servo e sensor usam alimentação, GND e sinais. Essas orientações aparecem no inspetor e não acrescentam comportamento elétrico aos componentes ainda pendentes. Referências: [botões](https://learn.adafruit.com/make-it-switch/what-about-breadboard-switches), [resistores](https://learn.adafruit.com/adafruit-arduino-lesson-2-leds/leds?view=all) e [potenciômetro](https://docs.arduino.cc/built-in-examples/analog/AnalogInput/).
+Botão e resistor não têm polaridade: seus pinos são contatos, não positivo/negativo. O botão une os pares 1–3 e 2–4 ao pressionar. O potenciômetro tem duas extremidades resistivas e um cursor; VCC/GND no inspetor indicam a ligação suportada como divisor de tensão. Servo e sensor usam alimentação, GND e sinais; o sensor de distância ainda está pendente na #17. [Contratos dos componentes funcionais](docs/PERIPHERALS.md). Referências: [botões](https://learn.adafruit.com/make-it-switch/what-about-breadboard-switches), [resistores](https://learn.adafruit.com/adafruit-arduino-lesson-2-leds/leds?view=all) e [potenciômetro](https://docs.arduino.cc/built-in-examples/analog/AnalogInput/).
 
 ## Primeiro circuito elétrico
 
@@ -109,7 +119,7 @@ A `main` exige PR, uma aprovação de outra pessoa, conversas resolvidas e o che
 3. Em **Checks → Publish site**, abra o link da prévia no resumo da execução ou em **View deployment**. O endereço é `https://rlrafael01.github.io/ghostlab/pr-N/`, substituindo N pelo número do PR.
 4. A outra pessoa testa, revisa Files changed e aprova. Então faça merge e atualize a main local.
 
-O workflow `.github/workflows/pr.yml` instala dependências, roda `npm test`, faz o build e publica cada PR do próprio repositório em uma pasta independente. A etapa de publicação não executa o código do PR. Forks recebem testes/build, sem publicação automática com permissões de escrita. As prévias são públicas e executam os exemplos de firmware pré-compilados. Compilar texto alterado requer o servidor local até a issue #15; não coloque segredos no frontend. A branch `preview-pages` guarda somente arquivos gerados e nunca deve ser mesclada na main. As prévias permanecem disponíveis após fechar o PR; a limpeza é manual nesta versão. Publicações são serializadas em uma fila de até 100 execuções; execuções de commits ultrapassados ou PRs fechados são interrompidas antes de alterar os arquivos publicados. `revision.txt` na pasta da prévia identifica o commit publicado.
+O workflow `.github/workflows/pr.yml` instala dependências, roda `npm test`, faz o build e publica cada PR do próprio repositório em uma pasta independente. A etapa de publicação não executa o código do PR. Forks recebem testes/build, sem publicação automática com permissões de escrita. As prévias são públicas e oferecem os exemplos de firmware pré-compilados. Compilar texto alterado requer o servidor local ou o [serviço público de demonstração configurado](docs/PUBLIC-COMPILER.md); o endpoint é temporário e não contém credenciais no frontend. A branch `preview-pages` guarda somente arquivos gerados e nunca deve ser mesclada na main. As prévias permanecem disponíveis após fechar o PR; a limpeza é manual nesta versão. Publicações são serializadas em uma fila de até 100 execuções; execuções de commits ultrapassados ou PRs fechados são interrompidas antes de alterar os arquivos publicados. `revision.txt` na pasta da prévia identifica o commit publicado.
 
 Os workflows passam a acompanhar as novas branches criadas da main depois que este PR de configuração for aprovado e mesclado. A prévia do Sites criada anteriormente é uma cópia manual separada.
 

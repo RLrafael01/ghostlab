@@ -1,24 +1,24 @@
 # Uso de skills no GhostLab
 
-**82 aplicações registradas** · Matt Pocock: 68 · pstack: 14
+**88 aplicações registradas** · Matt Pocock: 72 · pstack: 16
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
-| Matt Pocock | `code-review` | 14 | 2 | 16 |
+| Matt Pocock | `code-review` | 15 | 2 | 17 |
 | Matt Pocock | `diagnosing-bugs` | 5 | 0 | 5 |
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
-| Matt Pocock | `implement` | 11 | 2 | 13 |
-| Matt Pocock | `pr` | 11 | 3 | 14 |
+| Matt Pocock | `implement` | 12 | 2 | 14 |
+| Matt Pocock | `pr` | 12 | 3 | 15 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
-| Matt Pocock | `tdd` | 3 | 2 | 5 |
+| Matt Pocock | `tdd` | 4 | 2 | 6 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 2 | 0 | 2 |
 | Matt Pocock | `writing-for-agents` | 5 | 0 | 5 |
-| pstack | `principle-prove-it-works` | 10 | 1 | 11 |
-| pstack | `principle-sequence-verifiable-units` | 3 | 0 | 3 |
-| **Total** | | **72** | **10** | **82** |
+| pstack | `principle-prove-it-works` | 11 | 1 | 12 |
+| pstack | `principle-sequence-verifiable-units` | 4 | 0 | 4 |
+| **Total** | | **78** | **10** | **88** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -122,3 +122,11 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 080 | 05/11/2026 | Rafael | Matt Pocock | `writing-for-agents` | Tornar obrigatória a atualização das issues a cada entrega. | concluído | AGENTS.md aciona o rastreador antes de implementação, correção, revisão e PR. Procedimento único em docs/agents/issue-tracker.md define critérios parciais, evidências, espelhos e Closes no merge; template de PR reforça a verificação. Autorização recorrente do usuário registrada. |
 | 081 | 05/11/2026 | Rafael | pstack | `principle-sequence-verifiable-units` | Organizar o trabalho restante em entregas verificáveis. | concluído | Sugestão: ordenar unidades com resultado observável. Decisão: conferir main, auditar critérios por frente, atualizar pendências e verificar espelhos; #15 pode avançar com #12/#13, depois entradas, componentes, projetos e integração final conforme dependências. Efeito: 13 issues existentes cobrem o restante, sem duplicação ou aumento de escopo; prazo não reestimado. |
 | 082 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Conferir a conclusão real das issues e as atualizações do plano. | concluído | Sugestão: verificar artefatos e estado efetivo. Decisão: confrontar código/testes da main 0db0ca1, critérios e merges do GitHub; testar revisão e respostas de compilação substituídas. Efeito: três testes passam, um critério da #15 concluído; #12–#24 continuam abertas e #2/#3/#9–#11 já fechadas. Estados, checklists e totais conferidos após atualização. |
+
+| 083 | 05/11/2026 | Rafael | Matt Pocock | `implement` | Implementar entradas digitais/analógicas, UART, servo e compilação acessível para #12–#16. | concluído | [PR #30](https://github.com/RLrafael01/ghostlab/pull/30), implementação até 63f83fc: engine, circuito, interface, oito demos e serviço próprio isolado. Fontes/HEX dos quatro exemplos anteriores preservados. #12–#16 concluídas na branch, aguardando merge; 119 testes e verificação pública aprovados, com disponibilidade temporária declarada. [Relatório](PERIPHERALS-REVIEW.md). Aplicação coordenada única, sem duplicação por agente. |
+| 084 | 05/11/2026 | Rafael | Matt Pocock | `tdd` | Verificar entradas, UART, Servo, sessão/interface e serviço nas fronteiras aprovadas. | concluído | Red→green com firmware real para GPIO, ADC, UART, Servo e demos; regressões de alvo no reinício e última conversão ADC corrigidas. 98 testes da aplicação passaram (3 de isolamento macOS ignorados na suíte portável) e 18/18 de firmware e 3/3 de isolamento macOS passaram (119 aprovados ao todo); rechecagem 7 testes UI + 2 ADC reais verde. Timer1/PWM, canais independentes, snapshot seguro e ADC desabilitado cobertos. [Relatório](PERIPHERALS-REVIEW.md). |
+| 085 | 05/11/2026 | Rafael | pstack | `principle-sequence-verifiable-units` | Dividir #12–#16 em entregas observáveis de ponta a ponta. | concluído | Sugestão: provar uma unidade antes de expandir. Decisão: entradas→GPIO/ADC→LED, UART→monitor, pulsos→servo e serviço→compilação pública, com demos reproduzíveis. Efeito: cinco entregas verificadas, incluindo código editado pelo HTTPS e recuperação após indisponibilidade; 119 testes aprovados. #17–#24 continuam pendentes, sem apresentar demos como a V1 completa. |
+
+| 086 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Verificar entradas, servo e compilação pública no navegador e no isolamento real. | concluído | Sugestão: observar o fluxo inteiro e suas falhas. Decisão: testar gestos em tela normal/cheia, botão por mouse/teclado, pot, servo, código alterado pelo HTTPS, C++ inválido e serviço desligado/recuperado; executar suítes reais e sandbox. Efeito: ADC 0/512/1023, PWM 0/128/255, UART e três ângulos respondem; Blink 125 ms compila pelo link, erros preservam fonte, religar recupera execução. 119 testes aprovados e CI verde; build da base main validado. [Evidências e limites](PERIPHERALS-REVIEW.md). |
+| 087 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar #12–#16 nos eixos Standards e Spec desde 3137cad. | concluído | Dois revisores independentes: Standards sem violações obrigatórias, sugestão P3 de deduplicar preparação de pivôs aceita como pequena duplicação; Spec identificou alvo antigo ao reiniciar após remontagem e leitura ADC ausente no painel. Corrigidos em 63f83fc e rechecados com 7 testes UI e 2 ADC reais; nenhum bloqueador restante. [Relatório](PERIPHERALS-REVIEW.md). |
+| 088 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Publicar entradas, serial, servo e compilador de demonstração com prévia testável. | concluído | [PR #30](https://github.com/RLrafael01/ghostlab/pull/30) publicado com [LINK TESTE](https://rlrafael01.github.io/ghostlab/pr-30/), roteiro, contratos, evidências e histórico consolidado. #12–#16 concluídas na branch e aguardando merge; #8 permanece parcial. Serviço temporário disponível na verificação, main preservada e sem merge automático. |

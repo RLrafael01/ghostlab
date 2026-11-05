@@ -1,6 +1,6 @@
 # 05 — Validar compilação e execução real em um piloto
 
-Status: open
+Status: done
 Milestone: M2
 Target: 30/10/2026
 Blocked by: none
@@ -14,9 +14,9 @@ Compilar um sketch de Uno em serviço próprio e verificar botão, LED e serial 
 ## Acceptance criteria
 
 - [x] Toolchain e bibliotecas fixadas, com limites de tempo e recursos e instruções para execução local.
-- [ ] Firmware realmente compilado executa no navegador; botão altera entrada e firmware controla saída e serial.
+- [x] Firmware realmente compilado executa no navegador; botão altera entrada e firmware controla saída e serial.
 - [x] Erro de compilação ou indisponibilidade é visível e não apresenta sucesso falso.
-- [ ] Registrar prova e limitações; confirmar viabilidade de entradas, saídas e temporização antes de ampliar o catálogo.
+- [x] Registrar prova e limitações; confirmar viabilidade de entradas, saídas e temporização antes de ampliar o catálogo.
 - [x] Não depender de endpoint de demonstração de terceiros; nenhuma conta ou implantação em produção é necessária.
 
 ## Comments
@@ -25,3 +25,5 @@ Compilar um sketch de Uno em serviço próprio e verificar botão, LED e serial 
 
 - 28/10/2026: divisão revisada com `to-tickets` para apresentações em 30/10 e 06/11.
 - 28/10/2026: divisão e dependências aprovadas pelo usuário; ticket publicado com estado open.
+
+- 05/11/2026 — critérios funcionais concluídos na branch do [PR #30](https://github.com/RLrafael01/ghostlab/pull/30), aguardando merge. Entrada digital, ADC, UART e execução de código editado foram comprovados com firmware real e na bancada pelo link público. O plano v1-completion substitui a sequência do piloto isolado por provas integradas; não replica a bancada em pilot.html. [Contratos](../../../docs/PERIPHERALS.md), [119 testes e roteiro](../../../docs/PERIPHERALS-REVIEW.md). O parâmetro do potenciômetro pertence ao componente; salvamento continua nas #20/#21.

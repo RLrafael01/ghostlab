@@ -3,6 +3,11 @@ import {
   avrInstruction,
   AVRIOPort,
   AVRTimer,
+  AVRADC,
+  ADCMuxInputType,
+  adcConfig,
+  AVRUSART,
+  usart0Config,
   portBConfig,
   portCConfig,
   portDConfig,
@@ -13,6 +18,7 @@ import {
 } from "avr8js";
 const HZ = 16_000_000;
 const WINDOW = HZ / 50;
+const SERIAL_CAPACITY = 4096;
 
 function programFromHex(hex) {
   if (typeof hex !== "string" || hex.length > 100_000)
@@ -61,6 +67,44 @@ export class UnoSimulation {
     this.timers = [timer0Config, timer1Config, timer2Config].map(
       (config) => new AVRTimer(this.cpu, config),
     );
+    this.adc = new AVRADC(this.cpu, adcConfig);
+    this.analogReadings = {};
+    let pendingADCChannel = null;
+    const readADC = this.adc.onADCRead;
+    const completeADC = this.adc.completeADCRead.bind(this.adc);
+    this.adc.onADCRead = (input) => {
+      pendingADCChannel =
+        input.type === ADCMuxInputType.SingleEnded && input.channel < 6
+          ? `A${input.channel}`
+          : null;
+      readADC(input);
+    };
+    this.adc.completeADCRead = (value) => {
+      // Disabled ADC reads complete with zero without calling onADCRead.
+      const channel = pendingADCChannel;
+      pendingADCChannel = null;
+      completeADC(value);
+      if (channel !== null)
+        this.analogReadings[channel] = {
+          value,
+          milliseconds: (this.cpu.cycles / HZ) * 1000,
+        };
+    };
+    this.usart = new AVRUSART(this.cpu, usart0Config, HZ);
+    this.serialBytes = new Uint8Array(SERIAL_CAPACITY);
+    this.serialStart = 0;
+    this.serialLength = 0;
+    this.serialDropped = 0;
+    this.serialDecoder = new TextDecoder();
+    this.usart.onByteTransmit = (byte) => {
+      if (this.serialLength === SERIAL_CAPACITY) {
+        this.serialStart = (this.serialStart + 1) % SERIAL_CAPACITY;
+        this.serialDropped++;
+      } else this.serialLength++;
+      this.serialBytes[
+        (this.serialStart + this.serialLength - 1) % SERIAL_CAPACITY
+      ] = byte;
+    };
     this.pins = Array.from({ length: 20 }, (_, i) => ({
       name: i < 14 ? `D${i}` : `A${i - 14}`,
       port: this.ports[i < 8 ? 0 : i < 14 ? 1 : 2],
@@ -71,21 +115,73 @@ export class UnoSimulation {
       transitions: 0,
       duty: 0,
       pwm: false,
+      risingCycle: null,
+      previousRisingCycle: null,
+      fallingCycle: null,
+      pulseWidthUs: null,
+      pulsePeriodUs: null,
     }));
     this.nextWindow = WINDOW;
+    this.digitalInputs = {};
     for (const port of this.ports) port.addListener(() => this.capture(port));
+  }
+  setInputs({ digital = {}, analog = {} } = {}) {
+    if (!digital || typeof digital !== "object" || Array.isArray(digital))
+      throw new Error("Entradas digitais inválidas.");
+    if (!analog || typeof analog !== "object" || Array.isArray(analog))
+      throw new Error("Entradas analógicas inválidas.");
+    for (const [name, value] of Object.entries(digital))
+      if (
+        !this.pins.some((pin) => pin.name === name) ||
+        ![0, 1, null].includes(value)
+      )
+        throw new Error("Entrada digital inválida.");
+    for (const [name, value] of Object.entries(analog))
+      if (
+        !/^A[0-5]$/.test(name) ||
+        (value !== null && (!Number.isFinite(value) || value < 0 || value > 5))
+      )
+        throw new Error("Entrada analógica inválida.");
+    this.digitalInputs = { ...digital };
+    for (const pin of this.pins) this.applyInput(pin);
+    for (let channel = 0; channel < 6; channel++)
+      this.adc.channelValues[channel] = analog[`A${channel}`] ?? 0;
+  }
+  applyInput(pin) {
+    const value = this.digitalInputs[pin.name];
+    pin.port.setPin(
+      pin.bit,
+      value == null ? pin.state === PinState.InputPullUp : value === 1,
+    );
   }
   capture(port, cycle = this.cpu.cycles) {
     for (const pin of this.pins) {
       if (port && pin.port !== port) continue;
       if (pin.state === PinState.High) pin.high += cycle - pin.last;
       const state = pin.port.pinState(pin.bit);
-      if (pin.state !== state) pin.transitions++;
+      if (pin.state !== state) {
+        pin.transitions++;
+        if (state === PinState.High) {
+          pin.pulsePeriodUs =
+            pin.previousRisingCycle === null
+              ? null
+              : (cycle - pin.previousRisingCycle) / (HZ / 1_000_000);
+          pin.risingCycle = pin.previousRisingCycle = cycle;
+        } else if (state === PinState.Low && pin.risingCycle !== null) {
+          pin.pulseWidthUs = (cycle - pin.risingCycle) / (HZ / 1_000_000);
+          pin.fallingCycle = cycle;
+          pin.risingCycle = null;
+        } else if (state === PinState.Input || state === PinState.InputPullUp) {
+          pin.risingCycle = pin.previousRisingCycle = pin.fallingCycle = null;
+          pin.pulseWidthUs = pin.pulsePeriodUs = null;
+        }
+      }
       pin.state = state;
       pin.last = cycle;
+      this.applyInput(pin);
     }
   }
-  advance(milliseconds) {
+  advance(milliseconds, { drainSerial = true } = {}) {
     if (
       !Number.isFinite(milliseconds) ||
       milliseconds < 0 ||
@@ -107,11 +203,39 @@ export class UnoSimulation {
         this.nextWindow = this.cpu.cycles + WINDOW;
       }
     }
-    return this.snapshot();
+    const output = this.snapshot();
+    if (drainSerial) output.serial = this.drainSerial();
+    return output;
+  }
+  drainSerial() {
+    const bytes = new Uint8Array(this.serialLength);
+    for (let index = 0; index < bytes.length; index++)
+      bytes[index] =
+        this.serialBytes[(this.serialStart + index) % SERIAL_CAPACITY];
+    // If bytes were discarded, an earlier partial UTF-8 character is no longer valid.
+    if (this.serialDropped) this.serialDecoder = new TextDecoder();
+    const output = {
+      text: this.serialDecoder.decode(bytes, { stream: true }),
+      dropped: this.serialDropped,
+      baud: this.usart.txEnable ? this.usart.baudRate : null,
+    };
+    this.serialStart = this.serialLength = this.serialDropped = 0;
+    return output;
   }
   snapshot() {
     return {
       milliseconds: (this.cpu.cycles / HZ) * 1000,
+      analogReadings: Object.fromEntries(
+        Object.entries(this.analogReadings).map(([name, reading]) => [
+          name,
+          { ...reading },
+        ]),
+      ),
+      serial: {
+        text: "",
+        dropped: 0,
+        baud: this.usart.txEnable ? this.usart.baudRate : null,
+      },
       pins: Object.fromEntries(
         this.pins.map((pin) => [
           pin.name,
@@ -120,6 +244,14 @@ export class UnoSimulation {
             level: pin.state === PinState.High ? 1 : 0,
             duty: pin.pwm ? pin.duty : pin.state === PinState.High ? 1 : 0,
             pwm: pin.pwm,
+            input: (this.cpu.data[pin.port.portConfig.PIN] >> pin.bit) & 1,
+            pullup: pin.state === PinState.InputPullUp,
+            pulseWidthUs: pin.pulseWidthUs,
+            pulsePeriodUs: pin.pulsePeriodUs,
+            pulseAgeMs:
+              pin.fallingCycle === null
+                ? null
+                : (this.cpu.cycles - pin.fallingCycle) / (HZ / 1000),
           },
         ]),
       ),

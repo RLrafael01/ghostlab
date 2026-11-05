@@ -1,6 +1,6 @@
-# Firmware real: Blink e PWM
+# Firmware real: código, entradas e periféricos
 
-Implementação das issues #9, #10 e #11. O sketch é compilado pelo Arduino CLI em HEX para o Uno e executado por AVR8js em um Web Worker. O circuito recebe os estados dos GPIOs do firmware; a animação não interpreta palavras do código.
+O sketch é compilado pelo Arduino CLI em HEX para o Uno e executado por AVR8js em um Web Worker. O circuito recebe os estados dos GPIOs do firmware; a animação não interpreta palavras do código. Além de Blink e PWM, o fluxo inclui entradas digitais/analógicas, saída serial e pulsos para servo. Veja os circuitos e limites em [Periféricos](PERIPHERALS.md).
 
 ## Executar e editar código localmente
 
@@ -29,28 +29,31 @@ A [página piloto](../pilot.html) fica em `/pilot.html` no servidor e demonstra 
 
 ## Prévia pública
 
-GitHub Pages só hospeda arquivos estáticos. Os quatro exemplos originais têm firmware real previamente compilado, vinculado ao texto por SHA-256; a interface informa **“Executando firmware pré-compilado deste exemplo”**. Um texto diferente nunca reutiliza esse firmware como se tivesse sido compilado.
+GitHub Pages hospeda arquivos estáticos. A aplicação lê `compiler-config.json` na base da publicação e, quando configurado, envia o código atual ao compilador próprio de demonstração por HTTPS. O resultado precisa corresponder ao SHA-256 do sketch enviado e é identificado como compilação remota. A configuração vale para a main e para cada pasta de PR.
 
-Para compilar alterações, use o servidor local acima. Serviço indisponível, resposta incompatível ou erro de C++ preservam o texto e mostram diagnóstico. Hospedar um compilador próprio acessível pelo link público é a issue #15, separada deste recorte; não foi criado um endpoint público nesta entrega.
+O serviço de demonstração depende do computador e do túnel ativos; não é hospedagem permanente. Serviço indisponível, resposta incompatível, limite excedido ou erro de C++ preservam o texto e mostram diagnóstico, sem executar outro firmware silenciosamente. Preparação, origens permitidas, configuração e ciclo de disponibilidade estão em [Compilador público](PUBLIC-COMPILER.md). O servidor local acima continua disponível para desenvolvimento.
+
+Somente quando a configuração está ausente (404), os exemplos originais com artefato gerado podem executar firmware previamente compilado, vinculado ao texto por SHA-256. A interface informa **“Executando firmware pré-compilado deste exemplo”**. Código editado nunca reutiliza esse firmware como se tivesse sido compilado. Com compilador remoto configurado, indisponibilidade não ativa esse fallback.
 
 Reproduza os artefatos dos exemplos com `npm run build:firmware`. Os arquivos contêm HEX, hash do sketch e versões da toolchain. Não há interpretador parcial de C++ nem tabela de animações.
 
 ## Versões e limites
 
-| Item | Versão/limite |
-| --- | --- |
-| Arduino CLI | 1.5.1; download oficial com SHA-256 fixado por plataforma |
-| Arduino AVR core | arduino:avr@1.8.6 |
-| Alvo | arduino:avr:uno, ATmega328P, 16 MHz, flash 32 KiB / SRAM 2 KiB |
-| Compilador do core | avr-gcc 7.3.0-atmel3.6.1-arduino7 |
-| Emulador | avr8js 0.21.1, MIT |
-| Entrada | sketch até 32768 bytes; envelope HTTP até 40000 bytes |
-| Recursos | 1 compilação por processo, 30 s, saída de diagnóstico até 64 KiB |
-| Memória | grupo de processos limitado por monitoramento a 512 MiB, amostragem de 250 ms |
+| Item                     | Versão/limite                                                                 |
+| ------------------------ | ----------------------------------------------------------------------------- |
+| Arduino CLI              | 1.5.1; download oficial com SHA-256 fixado por plataforma                     |
+| Arduino AVR core         | arduino:avr@1.8.6                                                             |
+| Biblioteca oficial Servo | 1.3.0, instalada e fixada pelo setup                                          |
+| Alvo                     | arduino:avr:uno, ATmega328P, 16 MHz, flash 32 KiB / SRAM 2 KiB                |
+| Compilador do core       | avr-gcc 7.3.0-atmel3.6.1-arduino7                                             |
+| Emulador                 | avr8js 0.21.1, MIT                                                            |
+| Entrada                  | sketch até 32768 bytes; envelope HTTP até 40000 bytes                         |
+| Recursos                 | 1 compilação por processo, 30 s, saída de diagnóstico até 64 KiB              |
+| Memória                  | grupo de processos limitado por monitoramento a 512 MiB, amostragem de 250 ms |
 
-O serviço escuta em loopback, exige Host local e mesma origem no navegador. Compila somente o alvo fixado, não aceita flags ou comandos do cliente, usa diretório temporário por trabalho e remove-o ao terminar. Cancelamento e timeout encerram o grupo de processos do compilador. O monitor é um limite operacional, não isolamento de segurança: este serviço local compila código confiável do usuário e **não deve ser exposto à internet**; a hospedagem pública exige isolamento próprio na issue #15.
+O serviço **local integrado ao Vite** escuta em loopback, exige Host local e mesma origem no navegador. Compila somente o alvo fixado, não aceita flags ou comandos do cliente, usa diretório temporário por trabalho e remove-o ao terminar. Cancelamento e timeout encerram o grupo de processos do compilador. Esse serviço compila código confiável do usuário e não deve ser exposto à internet. O serviço público separado exige sandbox macOS, origens HTTPS declaradas, limites de uso e escrita/rede restritas; seu processo recusa iniciar sem isolamento. Os detalhes e limitações estão em [Compilador público](PUBLIC-COMPILER.md).
 
-Esta etapa implementa CPU, GPIO e timers, não todo o hardware externo do Uno. Entradas por botão/potenciômetro, UART/monitor serial, sensor, servo e bibliotecas adicionais seguem nas respectivas issues. Uma placa executa firmware por vez; adicionar outras não cria mais processadores. Circuito é simplificado, sem corrente, tensão analógica geral, curto educativo retido ou dano virtual. Não há garantia de precisão para montagem física. Hardware PWM com configurações customizadas permanece sujeito à fidelidade do emulador; os testes cobrem o core e exemplos fixados.
+CPU, GPIO, timers, entrada de botão/potenciômetro, transmissão UART ao monitor e pulsos do Servo.h estão conectados ao firmware real. Isso não implementa todo o hardware externo do Uno: sensor do catálogo e outras bibliotecas/periféricos não ganham comportamento automaticamente. Uma placa executa firmware por vez; adicionar outras não cria mais processadores. Circuito é simplificado, sem corrente, tensão analógica geral, curto educativo retido ou dano virtual. Não há garantia de precisão para montagem física. Hardware PWM e protocolos customizados permanecem sujeitos à fidelidade do emulador; veja os limites específicos em [Periféricos](PERIPHERALS.md).
 
 ## Verificação
 

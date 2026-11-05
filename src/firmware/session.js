@@ -8,6 +8,8 @@ export function createFirmwareSession({
     runner,
     artifact,
     executedSource;
+  let inputs = {},
+    inputSignature = "{}";
   let state = {
     phase: "idle",
     source: "",
@@ -17,6 +19,7 @@ export function createFirmwareSession({
     message: "Pronto para executar.",
     diagnostics: [],
     origin: null,
+    serial: { text: "", dropped: 0, droppedBytes: 0, baud: null, session: 0 },
   };
   const emit = () => onChange({ ...state });
   function halt() {
@@ -32,10 +35,19 @@ export function createFirmwareSession({
     state.phase = "running";
     state.executedRevision = revision;
     state.origin = binary.origin;
+    state.serial = {
+      text: "",
+      dropped: 0,
+      droppedBytes: 0,
+      baud: null,
+      session: state.serial.session + 1,
+    };
     state.message =
       binary.origin === "example"
         ? "Executando firmware pré-compilado deste exemplo."
-        : "Executando código compilado no servidor local.";
+        : binary.origin === "remote-compiler"
+          ? "Executando código compilado no serviço de demonstração."
+          : "Executando código compilado no servidor local.";
     const fail = (error) => {
       if (generation !== id) return;
       halt();
@@ -48,11 +60,22 @@ export function createFirmwareSession({
         binary.hex,
         (output) => {
           if (generation === id) {
+            const text = state.serial.text + (output.serial?.text ?? "");
+            const discarded = Math.max(0, text.length - 8192);
+            state.serial = {
+              ...state.serial,
+              text: text.slice(-8192),
+              dropped: state.serial.dropped + discarded,
+              droppedBytes:
+                state.serial.droppedBytes + (output.serial?.dropped ?? 0),
+              baud: output.serial?.baud ?? state.serial.baud,
+            };
             state.output = output;
             emit();
           }
         },
         fail,
+        inputs,
       );
       emit();
     } catch (error) {
@@ -61,6 +84,17 @@ export function createFirmwareSession({
   }
   return {
     snapshot: () => ({ ...state }),
+    setInputs(next) {
+      const signature = JSON.stringify(next);
+      if (signature === inputSignature) return;
+      inputs = JSON.parse(signature);
+      inputSignature = signature;
+      runner?.setInputs?.(inputs);
+    },
+    clearSerial() {
+      state.serial = { ...state.serial, text: "", dropped: 0, droppedBytes: 0 };
+      emit();
+    },
     edit(source) {
       if (source === state.source) return;
       state.source = source;

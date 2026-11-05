@@ -1,6 +1,6 @@
 # 07 — Compilar e executar código pelo link de teste e na apresentação
 
-Status: open
+Status: done
 Priority: P0
 Milestone: Código funcionando — Blink, PWM e entradas básicas
 Blocked by: none
@@ -12,13 +12,13 @@ Outra pessoa abre a prévia do PR no navegador, edita Blink e o executa sem inst
 
 ## Acceptance criteria
 
-- [ ] Prévia usa serviço de compilação próprio de demonstração acessível por HTTPS e configurável; documentar execução local equivalente e ciclo de disponibilidade.
-- [ ] Fluxo mantém toolchain fixa e limites do piloto, credenciais somente no servidor, origens permitidas e limites de uso adequados ao link público.
-- [ ] Código inválido, limite excedido, timeout e serviço fora do ar mostram mensagens recuperáveis, sem perder edição ou executar silenciosamente firmware antigo.
+- [x] Prévia usa serviço de compilação próprio de demonstração acessível por HTTPS e configurável; documentar execução local equivalente e ciclo de disponibilidade.
+- [x] Fluxo mantém toolchain fixa e limites do piloto, credenciais somente no servidor, origens permitidas e limites de uso adequados ao link público.
+- [x] Código inválido, limite excedido, timeout e serviço fora do ar mostram mensagens recuperáveis, sem perder edição ou executar silenciosamente firmware antigo.
 - [x] Identificar compilação/execução atual; resposta de uma requisição substituída não sobrescreve a nova.
-- [ ] Validar em navegador de outra sessão e nas pastas de PR/main, respeitando a configuração de base dos assets.
-- [ ] Não pressupor que hospedagem estática compile C++; documentar endpoint, custos/limites e configuração de segredos. Serviço comercial em produção permanece fora do escopo.
-- [ ] Caso a infraestrutura não esteja disponível, registrar bloqueio real; uma animação ou apenas um firmware pré-compilado não satisfaz editar→compilar→executar.
+- [x] Validar em navegador de outra sessão e nas pastas de PR/main, respeitando a configuração de base dos assets.
+- [x] Não pressupor que hospedagem estática compile C++; documentar endpoint, custos/limites e configuração de segredos. Serviço comercial em produção permanece fora do escopo.
+- [x] Caso a infraestrutura não esteja disponível, registrar bloqueio real; uma animação ou apenas um firmware pré-compilado não satisfaz editar→compilar→executar.
 
 ## Verificação
 
@@ -35,3 +35,9 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
 
 - 05/11/2026 — auditoria da main `0db0ca1`: **Parcial**. Identificação da revisão e descarte de respostas substituídas já funcionam; critério correspondente marcado, com três testes de sessão aprovados. Faltam endpoint público HTTPS configurável, disponibilidade/limites públicos e validação em outra sessão. A prévia estática executa somente exemplos originais pré-compilados; código editado ainda exige o servidor local. Evidência: `src/firmware/session.js`, `tests/firmware-session.test.js`, `src/firmware/compiler-client.js`, `docs/FIRMWARE.md`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.
+
+- 05/11/2026 — entrega em andamento na branch `codex/inputs-serial-servo`, base main `3137cad`: Em implementação: serviço próprio de demonstração isolado, configuração HTTPS por pasta e túnel temporário operado pelo responsável. Orientações em docs/PUBLIC-COMPILER.md. O serviço depende do computador/túnel ativos; não é produção. A validação por navegador/HTTPS nas pastas PR/main, erros e disponibilidade será registrada antes de concluir. O critério de revisão executada já comprovado continua marcado. Critérios marcados correspondem às evidências já observadas na branch; issue permanece aberta e `in-progress` até validação e revisão finais. Não é conclusão na main.
+
+- 05/11/2026 — [PR #30](https://github.com/RLrafael01/ghostlab/pull/30), implementação `63f83fc`: endpoint próprio de demonstração ativo por HTTPS, configurável por publicação. No navegador público, Blink editado para 125 ms foi compilado/executado, com UART real; C++ inválido mostrou diagnóstico e preservou fonte. Operação, disponibilidade, isolamento/limites e ausência de segredos no frontend documentados. **Permanece in-progress** até conferir indisponibilidade/recuperação, validação operacional final das bases e resultado final explícito dos testes macOS. [Relatório](../../../docs/PERIPHERALS-REVIEW.md).
+
+- 05/11/2026 — **Concluída na branch, aguardando merge do [PR #30](https://github.com/RLrafael01/ghostlab/pull/30)**. Sandbox macOS final: 3/3 passaram, incluindo leitura privada bloqueada, C++/Servo, erro/timeout/recuperação HTTP, escrita no job, rede negada e limite de arquivo. Serviço HTTPS desligado durante o teste: compilação mostrou indisponibilidade e preservou código, sem executar firmware antigo; ao religar no mesmo endpoint, compilação e servo reais voltaram. Prévia pública testada com código editado; build `/ghostlab/main/` validado para assets/configuração/firmware. A main só será publicada após merge aprovado; o túnel é temporário e depende do computador ativo. Total final: 119 testes aprovados. [CI 63f83fc](https://github.com/RLrafael01/ghostlab/actions/runs/42124841210) verde; [relatório e roteiro](../../../docs/PERIPHERALS-REVIEW.md). Não há bloqueio de infraestrutura no momento dessa verificação.

@@ -5,6 +5,7 @@ setupFirmwarePanel({
   container: document.querySelector("#pilot-controls"),
   status: document.querySelector("#pilot-status"),
   base: import.meta.env.BASE_URL,
+  getTarget: () => "pilot-uno",
   onOutput(output) {
     const pin = output?.pins.D9,
       brightness = pin?.output ? pin.duty : 0;
