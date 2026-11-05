@@ -1,9 +1,9 @@
 # 06 — Executar o código do usuário no circuito 3D
 
-Status: open
+Status: done
 Milestone: M2
 Target: 02/11/2026
-Blocked by: 03, 05
+Blocked by: none
 
 Divisão aprovada pelo usuário em 28/10/2026. Ticket publicado no rastreador local. Datas são metas de planejamento, não evidência de conclusão.
 
@@ -14,10 +14,10 @@ Editar C++, compilar e controlar botão e LED pelas ligações reais do projeto 
 ## Acceptance criteria
 
 - [x] Código modificado muda o comportamento na cena pelo firmware e não pelo controlador da prévia.
-- [ ] Conectividade da montagem e contatos da protoboard determinam entradas e saídas.
-- [ ] Iniciar, parar, reiniciar e terminal serial funcionam; erros de compilação preservam código e identificam o programa que pode executar.
+- [x] Conectividade da montagem e contatos da protoboard determinam entradas e saídas.
+- [x] Iniciar, parar, reiniciar e terminal serial funcionam; erros de compilação preservam código e identificam o programa que pode executar.
 - [x] Prévia e execução real ficam distinguíveis; demonstrar execução funcional sem usar respostas predefinidas.
-- [ ] Teste com firmware realmente compilado cobre botão, LED, serial e alteração de fio.
+- [x] Teste com firmware realmente compilado cobre botão, LED, serial e alteração de fio.
 
 ## Comments
 
@@ -25,3 +25,5 @@ Editar C++, compilar e controlar botão e LED pelas ligações reais do projeto 
 
 - 28/10/2026: divisão revisada com `to-tickets` para apresentações em 30/10 e 06/11.
 - 28/10/2026: divisão e dependências aprovadas pelo usuário; ticket publicado com estado open.
+
+- 05/11/2026 — critérios funcionais concluídos na branch do [PR #30](https://github.com/RLrafael01/ghostlab/pull/30), aguardando merge. Entrada digital, ADC, UART e execução de código editado foram comprovados com firmware real e na bancada pelo link público. O plano v1-completion substitui a sequência do piloto isolado por provas integradas; não replica a bancada em pilot.html. [Contratos](../../../docs/PERIPHERALS.md), [119 testes e roteiro](../../../docs/PERIPHERALS-REVIEW.md). O parâmetro do potenciômetro pertence ao componente; salvamento continua nas #20/#21.
