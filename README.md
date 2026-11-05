@@ -60,7 +60,7 @@ Sete componentes usam modelos 3D importados, incluindo geometrias CAD convertida
 
 A bancada abre com Uno, protoboard, LED, resistor e cinco jumpers formando um circuito de referência: **5 V → resistor → LED → GND**. O LED acende pelo resultado das ligações. Retirar o retorno apaga a luz; reconectar a GND volta a acendê-la. Fios curvos acompanham os terminais ao mover as peças. Novos fios podem ser adicionados pelo catálogo e removidos pela lista.
 
-“Encaixe visual” aproxima LED, resistor e botão dos contatos da protoboard; é uma ajuda de posicionamento, não valida passo de todos os terminais, polaridade, colisões ou conectividade. Componentes apoiados acompanham a protoboard; removê-la os devolve à bancada. Desative a opção para posicionamento livre. No inspetor, “Focar peça” aproxima a câmera para examinar inscrições e materiais.
+“Encaixe visual” aproxima LED, resistor e botão dos contatos da protoboard; é uma ajuda de posicionamento, não valida passo de todos os terminais, polaridade, colisões ou conectividade. Componentes apoiados acompanham a protoboard; removê-la os devolve à bancada. Desative a opção para posicionamento livre. O apoio na protoboard continua ativo: o LED mantém a altura sobre os barramentos e enquanto seu corpo ainda sobrepõe uma borda; só retorna à altura da mesa ao sair completamente da placa. Os alvos laterais dos cabos não contam como corpo apoiado. No inspetor, “Focar peça” aproxima a câmera para examinar inscrições e materiais.
 
 Iluminação de estúdio, sombras de contato, materiais de plástico/metal/encapsulamento e serigrafia autoral melhoram a leitura. Inscrições do GhostLab não reproduzem o layout de fabricação do fabricante. A referência visual orienta o acabamento; a placa permanece Uno, sem adicionar Pico ou display OLED ao escopo.
 
@@ -69,6 +69,8 @@ Verificação de fios: `node --test tests/*.test.js`.
 ### Encaixar e desencaixar jumpers
 
 Adicione **Fio jumper** pelo catálogo ou pelo dock em tela cheia: o novo cabo entra com duas pontas livres. Também é possível arrastar o item do catálogo para posicioná-lo na bancada. A lista **Fios jumper** permite focar e remover cada cabo e mostra os terminais conectados ou livres. Arraste um dos pequenos conectores coloridos nas pontas dos cabos. A ponta sai do contato e o cabo acompanha o cursor; a outra ponta continua presa. Aproxime a ponta de um pino ou furo da protoboard: o contato fica destacado e seu nome aparece no aviso sobre a cena. Solte para encaixar, ou solte longe dos contatos para deixar a ponta livre. Escape cancela e restaura o estado anterior, inclusive quando a ponta já estava desconectada. Para facilitar o gesto, selecione o Uno e use “Focar peça”.
+
+No LED, os alvos + e − nas laterais permitem conectar sem esconder as pontas dentro do plástico. As linhas pontilhadas são guias visuais para os terminais, não furos extras da protoboard. Os conectores podem ser agarrados a até 12 pixels do centro; quando há mais de um próximo, vence o mais perto.
 
 A retirada e o encaixe têm transição curta; a preferência de movimento reduzido usa posicionamento imediato. Ligações incorretas são permitidas: o gesto altera referências de terminais e atualiza o estado elétrico simplificado. Circuitos fora do modelo mantêm o LED apagado, sem simular dano. Os contatos GND fisicamente distintos do Uno mantêm referências separadas. Os testes cobrem reconexão, ponta solta, cancelamento, limpeza ao remover peças e movimento reduzido.
 
