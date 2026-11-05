@@ -68,3 +68,29 @@ test("analogWrite gera níveis PWM nos seis pinos do Uno e saída digital no pin
     assert.equal(sim.snapshot().pins.D7.duty, value < 128 ? 0 : 1);
   }
 });
+
+test("HC-SR04 entrega duas distâncias por pulseIn e permite timeout sem eco", async () => {
+  const { examples } = await import("../../src/firmware/examples.js");
+  const { hex } = await compileSketch(examples.distance.source);
+  for (const [distanceCm, expected, led] of [
+    [20, 20, 1],
+    [75, 75, 0],
+    [450, null, 0],
+  ]) {
+    const simulation = new UnoSimulation(hex);
+    simulation.setInputs({
+      sensors: [{ id: 1, triggerPin: "D7", echoPin: "D6", distanceCm }],
+    });
+    const result = simulation.advance(65);
+    if (expected === null) assert.match(result.serial.text, /Sem eco/);
+    else {
+      const reading = result.serial.text.match(/([0-9.]+) cm/);
+      assert.ok(reading, result.serial.text);
+      assert.ok(
+        Math.abs(Number(reading[1]) - expected) < 0.5,
+        result.serial.text,
+      );
+    }
+    assert.equal(result.pins.D9.level, led);
+  }
+});

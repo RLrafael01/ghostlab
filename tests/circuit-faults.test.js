@@ -35,4 +35,3 @@ test("curto direto identifica o fio e exige reinício após correção", () => {
   simulation.restart();
   assert.equal(simulation.evaluate(project).leds[0].on, true);
 });
-

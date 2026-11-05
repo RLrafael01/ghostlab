@@ -133,6 +133,31 @@ void loop() {
 }
 `,
   },
+  distance: {
+    name: "Sensor · distância no serial",
+    source: `const int TRIG = 7, ECHO = 6, LED = 9;
+void setup() {
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+  pinMode(LED, OUTPUT);
+  Serial.begin(9600);
+}
+void loop() {
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(12);
+  digitalWrite(TRIG, LOW);
+  unsigned long echo = pulseIn(ECHO, HIGH, 30000);
+  if (echo) {
+    Serial.print(echo / 58.0, 1);
+    Serial.println(" cm");
+  } else {
+    Serial.println("Sem eco");
+  }
+  digitalWrite(LED, echo && echo < 30UL * 58);
+  delay(80);
+}
+`,
+  },
   servo: {
     name: "Servo · 0°, 90° e 180°",
     source: `#include <Servo.h>

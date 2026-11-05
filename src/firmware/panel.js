@@ -151,7 +151,10 @@ export function setupFirmwarePanel({
   });
   stop.addEventListener("click", () => session.stop());
   restart.addEventListener("click", () => {
-    if (resolveTarget()) { onRestart(); session.restart(); }
+    if (resolveTarget()) {
+      onRestart();
+      session.restart();
+    }
   });
   window.addEventListener("pagehide", () => session.stop());
   return session;

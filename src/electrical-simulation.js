@@ -184,13 +184,26 @@ export function simulateCircuit({ components, wires }, firmware = null, state) {
       return firmware ? { ...result, brightness } : result;
     });
   return {
-    ...simulatePeripherals({ components, firmware, pin, reachable, disabledSources: state?.shorts }),
+    ...simulatePeripherals({
+      components,
+      firmware,
+      pin,
+      reachable,
+      disabledSources: state?.shorts,
+    }),
     leds,
-    ...(state && { faults: Array.from(state.shorts, ([id, wireIds]) => ({ id, kind: "short", wireIds })) }),
+    ...(state && {
+      faults: Array.from(state.shorts, ([id, wireIds]) => ({
+        id,
+        kind: "short",
+        wireIds,
+      })),
+    }),
     sources: [...new Set(sources.map((source) => source.id))].map((id) => ({
       id,
       supported: !sources.some(
-        (source) => source.id === id && (source.unsupported || state?.shorts.has(id)),
+        (source) =>
+          source.id === id && (source.unsupported || state?.shorts.has(id)),
       ),
     })),
   };

@@ -44,16 +44,22 @@ export function createElectricalView({
     status.append(row);
   }
   return {
-    restart() { simulation.restart(); previous = ""; },
+    restart() {
+      simulation.restart();
+      previous = "";
+    },
     update() {
       const project = {
-        components: items.map(({ id, type, columns, pressed, value }) => ({
-          id,
-          type,
-          columns,
-          pressed,
-          value,
-        })),
+        components: items.map(
+          ({ id, type, columns, pressed, value, distanceCm }) => ({
+            id,
+            type,
+            columns,
+            pressed,
+            value,
+            distanceCm,
+          }),
+        ),
         wires: wires.connections(),
       };
       const firmware = getFirmware();
@@ -62,6 +68,7 @@ export function createElectricalView({
         firmware?.unoId,
         firmware?.pins,
         firmware?.analogReadings,
+        firmware?.echoReadings,
       ]);
       if (signature === previous) return result;
       previous = signature;
@@ -69,12 +76,20 @@ export function createElectricalView({
       const wireIds = new Set(result.faults.flatMap((fault) => fault.wireIds));
       for (const mesh of wires.meshes ?? []) {
         mesh.material.emissive.set("#ff3322");
-        mesh.material.emissiveIntensity = wireIds.has(mesh.userData.wireId) ? 1.5 : 0;
+        mesh.material.emissiveIntensity = wireIds.has(mesh.userData.wireId)
+          ? 1.5
+          : 0;
       }
       details.hidden = result.faults.length === 0;
       if (details.hidden) details.open = false;
-      const message = result.faults.map(({ id }) => `Uno #${id}: um caminho direto uniu 5 V a GND. Retire o jumper do caminho destacado e reinicie. O modelo não calcula corrente ou aquecimento.`).join(" ");
-      if (explanation.textContent !== message) explanation.textContent = message;
+      const message = result.faults
+        .map(
+          ({ id }) =>
+            `Uno #${id}: um caminho direto uniu 5 V a GND. Retire o jumper do caminho destacado e reinicie. O modelo não calcula corrente ou aquecimento.`,
+        )
+        .join(" ");
+      if (explanation.textContent !== message)
+        explanation.textContent = message;
       onInputs(result.inputs);
       onState(result);
       status.replaceChildren();
@@ -82,7 +97,8 @@ export function createElectricalView({
         result.leds?.length ||
         result.buttons?.length ||
         result.pots?.length ||
-        result.servos?.length
+        result.servos?.length ||
+        result.sensors?.length
       ))
         status.textContent = "Adicione um LED para testar o circuito.";
       for (const led of result.leds ?? []) {
@@ -121,6 +137,21 @@ export function createElectricalView({
         peripheral(
           `Potenciômetro #${pot.id} · ${Math.round(pot.value * 100)}%`,
           `Tensão modelada: ${voltage}`,
+        );
+      }
+      for (const sensor of result.sensors ?? []) {
+        const reading = firmware?.echoReadings?.[sensor.id];
+        const state = {
+          ready: "aguardando pulso",
+          open: "Trig/Echo desconectado",
+          unpowered: "sem alimentação",
+          "out-of-range": "fora da faixa",
+        }[sensor.reason];
+        peripheral(
+          `Sensor #${sensor.id} · objeto a ${sensor.distanceCm} cm`,
+          sensor.reason === "ready" && reading != null
+            ? `Eco: ${reading.toFixed(1)} cm`
+            : state,
         );
       }
       for (const servo of result.servos ?? []) {
