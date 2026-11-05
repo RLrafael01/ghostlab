@@ -101,6 +101,11 @@ export function createElectricalView({
         result.sensors?.length
       ))
         status.textContent = "Adicione um LED para testar o circuito.";
+      for (const fault of result.faults)
+        peripheral(
+          `Uno #${fault.id} · fonte em falha`,
+          "Corrija o curto e reinicie.",
+        );
       for (const led of result.leds ?? []) {
         const item = items.find((item) => item.id === led.id);
         item.group.traverse((object) => {
@@ -170,6 +175,7 @@ export function createElectricalView({
       }
       const inputs = Object.entries(firmware?.pins ?? {}).filter(
         ([name, pin]) =>
+          !result.faults.some(({ id }) => id === firmware?.unoId) &&
           !pin.output &&
           (pin.input === 0 || pin.input === 1) &&
           !result.unsupportedInputs?.includes(name) &&
