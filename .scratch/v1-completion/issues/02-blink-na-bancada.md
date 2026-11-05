@@ -1,6 +1,6 @@
 # 02 — Executar Blink e ligar/desligar o LED pelas ligações da bancada 3D
 
-Status: open
+Status: in-progress
 Priority: P0
 Milestone: Código funcionando — Blink, PWM e entradas básicas
 Blocked by: v1-completion/01 (GitHub #9), GitHub #3

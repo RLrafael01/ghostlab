@@ -1,6 +1,6 @@
 # 01 — Compilar e executar um sketch real do Uno no navegador
 
-Status: open
+Status: in-progress
 Priority: P0
 Milestone: Código funcionando — Blink, PWM e entradas básicas
 Blocked by: none

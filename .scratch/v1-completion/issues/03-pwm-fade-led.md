@@ -1,6 +1,6 @@
 # 03 — Controlar brilho do LED por PWM e executar fade suave pelo código
 
-Status: open
+Status: in-progress
 Priority: P0
 Milestone: Código funcionando — Blink, PWM e entradas básicas
 Blocked by: v1-completion/02 (GitHub #10)
