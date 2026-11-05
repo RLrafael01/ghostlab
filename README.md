@@ -63,7 +63,7 @@ Sete componentes usam modelos 3D importados, incluindo geometrias CAD convertida
 
 A bancada abre com Uno, protoboard, LED, resistor e cinco jumpers formando um circuito de referência: **D9 → resistor → LED → GND**. Execute Blink ou Fade no editor para controlar o LED pelo firmware e pelas ligações. Retirar o retorno apaga a luz; reconectar a GND volta a acendê-la. Fios curvos acompanham os terminais ao mover as peças. Novos fios podem ser adicionados pelo catálogo e removidos pela lista.
 
-“Encaixe visual” aproxima LED, resistor e botão dos contatos da protoboard; é uma ajuda de posicionamento, não valida passo de todos os terminais, polaridade, colisões ou conectividade. Componentes apoiados acompanham a protoboard; removê-la os devolve à bancada. Desative a opção para posicionamento livre. O apoio na protoboard continua ativo: o LED mantém a altura sobre os barramentos e enquanto seu corpo ainda sobrepõe uma borda; só retorna à altura da mesa ao sair completamente da placa. Os alvos laterais dos cabos não contam como corpo apoiado. No inspetor, “Focar peça” aproxima a câmera para examinar inscrições e materiais.
+“Encaixe visual” aproxima LED, resistor e botão dos contatos da protoboard; é uma ajuda de posicionamento, não valida passo de todos os terminais, polaridade, colisões ou conectividade. Componentes apoiados acompanham a protoboard; removê-la os devolve à bancada. Desative a opção para posicionamento livre. O apoio na protoboard continua ativo: os corpos das peças mantêm a altura sobre os barramentos e enquanto ainda sobrepõem uma borda; só retornam à altura da mesa ao sair completamente da placa. Uno, servo, sensor e potenciômetro apoiam a carcaça sem forçar seus pinos nos furos; o apoio também acompanha movimento e redimensionamento da base. Os alvos laterais dos cabos não contam como corpo apoiado. No inspetor, “Focar peça” aproxima a câmera para examinar inscrições e materiais.
 
 Iluminação de estúdio, sombras de contato, materiais de plástico/metal/encapsulamento e serigrafia autoral melhoram a leitura. Inscrições do GhostLab não reproduzem o layout de fabricação do fabricante. A referência visual orienta o acabamento; a placa permanece Uno, sem adicionar Pico ou display OLED ao escopo.
 
@@ -77,6 +77,8 @@ No LED, os alvos + e − nas laterais permitem conectar sem esconder as pontas d
 
 A retirada e o encaixe têm transição curta; a preferência de movimento reduzido usa posicionamento imediato. Ligações incorretas são permitidas: o gesto altera referências de terminais e atualiza o estado elétrico simplificado. Circuitos fora do modelo mantêm o LED apagado, sem simular dano. Os contatos GND fisicamente distintos do Uno mantêm referências separadas. Os testes cobrem reconexão, ponta solta, cancelamento, limpeza ao remover peças e movimento reduzido.
 
+
+Botão e resistor não têm polaridade: seus pinos são contatos, não positivo/negativo. O potenciômetro tem duas extremidades resistivas e um cursor; VCC/GND no inspetor indicam a ligação sugerida como divisor de tensão. Servo e sensor usam alimentação, GND e sinais. Essas orientações aparecem no inspetor e não acrescentam comportamento elétrico aos componentes ainda pendentes. Referências: [botões](https://learn.adafruit.com/make-it-switch/what-about-breadboard-switches), [resistores](https://learn.adafruit.com/adafruit-arduino-lesson-2-leds/leds?view=all) e [potenciômetro](https://docs.arduino.cc/built-in-examples/analog/AnalogInput/).
 
 ## Primeiro circuito elétrico
 

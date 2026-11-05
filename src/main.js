@@ -42,17 +42,20 @@ const catalog = {
     name: "LED vermelho",
     color: 0xe85d62,
     pins: ["Ânodo +", "Cátodo −"],
+    hint: "Conecte os cabos nos alvos + e − ao lado do LED. As linhas pontilhadas indicam os terminais correspondentes.",
     size: [0.5, 0.7, 0.5],
   },
   resistor: {
     name: "Resistor",
     color: 0xd2b788,
     pins: ["1", "2"],
+    hint: "Sem polaridade: os terminais 1 e 2 não têm positivo ou negativo.",
     size: [1, 0.25, 0.3],
   },
   button: {
     name: "Botão",
     color: 0x444f5b,
+    hint: "Sem polaridade: os quatro pinos formam dois pares de contatos. Eles não são positivo e negativo.",
     pins: ["1", "2", "3", "4"],
     size: [0.8, 0.3, 0.8],
   },
@@ -70,6 +73,7 @@ const catalog = {
   },
   pot: {
     name: "Potenciômetro",
+    hint: "Duas extremidades resistivas e um cursor (Sinal), sem polaridade fixa. VCC e GND indicam a ligação sugerida como divisor de tensão.",
     color: 0x377eb6,
     pins: ["VCC", "Sinal", "GND"],
     size: [0.8, 0.5, 0.8],
@@ -240,7 +244,7 @@ function renderPanel() {
   document.querySelector("#count").textContent =
     `${items.length} componentes · ${visualWires.snapshot().length} fios`;
   document.querySelector("#details").innerHTML = selected
-    ? `<div class="selected-icon">◈</div><h3>${catalog[selected.type].name} <small>#${selected.id}</small></h3><div class="eyebrow">POSIÇÃO NA BANCADA</div><div class="coords"><label>X <input id="x" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.x}"></label><label>Z <input id="z" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.z}"></label></div><p class="hint">${selected.type === "board" ? `Arraste as extremidades · ${selected.columns} colunas · ${breadboardLayout(selected.columns).contactCount} furos · passo de 2,54 mm. Escape cancela o ajuste.` : selected.type === "led" ? "Conecte os cabos nos alvos + e − ao lado do LED. As linhas pontilhadas indicam os terminais correspondentes." : "Arraste a peça na cena ou ajuste X/Z. WASD e setas navegam pela bancada."}</p><div class="eyebrow">PINOS</div><div class="pins">${catalog[selected.type].pins.map((p) => `<span>${p}</span>`).join("")}</div><button id="focus-part" class="focus-part">⌕ Focar peça</button><button id="delete" class="danger">Remover componente</button>`
+    ? `<div class="selected-icon">◈</div><h3>${catalog[selected.type].name} <small>#${selected.id}</small></h3><div class="eyebrow">POSIÇÃO NA BANCADA</div><div class="coords"><label>X <input id="x" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.x}"></label><label>Z <input id="z" type="number" step="0.5" min="-15" max="15" value="${selected.group.position.z}"></label></div><p class="hint">${selected.type === "board" ? `Arraste as extremidades · ${selected.columns} colunas · ${breadboardLayout(selected.columns).contactCount} furos · passo de 2,54 mm. Escape cancela o ajuste.` : (catalog[selected.type].hint ?? "Arraste a peça na cena ou ajuste X/Z. WASD e setas navegam pela bancada.")}</p><div class="eyebrow">PINOS</div><div class="pins">${catalog[selected.type].pins.map((p) => `<span>${p}</span>`).join("")}</div><button id="focus-part" class="focus-part">⌕ Focar peça</button><button id="delete" class="danger">Remover componente</button>`
     : '<div class="empty">Selecione um componente na cena ou na lista para inspecionar seus pinos e ajustar a posição.</div>';
   const wire = visualWires
     .snapshot()
@@ -615,7 +619,10 @@ renderer.setAnimationLoop((now) => {
     const ease = 1 - Math.pow(1 - t, 3);
     model.scale.setScalar(0.8 + 0.2 * ease);
     model.position.y = 0.5 * (1 - ease);
-    if (t === 1) placements.delete(item);
+    if (t === 1) {
+      placements.delete(item);
+      placeComponent(item, items, false);
+    }
     if (selected === item) outline?.update();
   }
   boardResize.update();

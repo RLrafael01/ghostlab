@@ -1,24 +1,24 @@
 # Uso de skills no GhostLab
 
-**64 aplicações registradas** · Matt Pocock: 56 · pstack: 8
+**68 aplicações registradas** · Matt Pocock: 59 · pstack: 9
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
-| Matt Pocock | `code-review` | 10 | 2 | 12 |
-| Matt Pocock | `diagnosing-bugs` | 3 | 0 | 3 |
+| Matt Pocock | `code-review` | 11 | 2 | 13 |
+| Matt Pocock | `diagnosing-bugs` | 4 | 0 | 4 |
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
 | Matt Pocock | `implement` | 10 | 2 | 12 |
-| Matt Pocock | `pr` | 8 | 3 | 11 |
+| Matt Pocock | `pr` | 9 | 3 | 12 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
 | Matt Pocock | `tdd` | 2 | 2 | 4 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 2 | 0 | 2 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
-| pstack | `principle-prove-it-works` | 5 | 1 | 6 |
+| pstack | `principle-prove-it-works` | 6 | 1 | 7 |
 | pstack | `principle-sequence-verifiable-units` | 2 | 0 | 2 |
-| **Total** | | **54** | **10** | **64** |
+| **Total** | | **58** | **10** | **68** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -98,3 +98,8 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 062 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Verificar artefatos reais e interações no navegador. | concluído | Sugestão: testar o resultado real. Decisão: executar HEX recém-compilado e testar Fade/50%, parada/reinício, GND removido, código inválido e fullscreen. Efeito: comportamentos observados e imagens em docs/evidence; sem alegar cálculo analógico ou backend público. |
 | 063 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar implementação contra padrões e as três issues. | concluído | Dois revisores contra 72fe5a4; ambos localizaram falha síncrona ao iniciar Worker. Corrigida e coberta por regressão; revisão de retorno sem pendências. [Relatório](FIRMWARE-REVIEW.md). |
 | 064 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Publicar firmware real, Blink e PWM para revisão. | concluído | PR com LINK TESTE, escopo das três issues, dependências anteriores, evidências e distinção entre compilação local e exemplos pré-compilados da prévia pública. Histórico consolidado atualizado. |
+
+| 065 | 05/11/2026 | Rafael | Matt Pocock | `diagnosing-bugs` | Corrigir componentes afundando na protoboard. | concluído | Repro com CAD real: pot/servo/sensor/Uno falharam, botão/resistor passaram. Causa: apoio limitado a três tipos. Novo teste também revelou queda prematura do servo durante redução da placa. Apoio pelo corpo, reencontro com base móvel e cancelamento do redimensionamento verificados em tests/component-support.test.js. |
+| 066 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Conferir altura e movimento dos modelos reais. | em verificação | Sugestão: verificar geometria e interação real. Decisão: testar os GLBs/glTF e colocar/arrastar os componentes no navegador. Efeito até aqui: 55 testes e build passam; servo, botão, sensor e potenciômetro visíveis acima da superfície. O apoio visual não cria conectividade elétrica. |
+| 067 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar correção de apoio desde 5f6d9b0. | em revisão | Dois eixos: padrões documentados e pedido de impedir corpos dentro da protoboard; sem atribuir polaridade a contatos não polarizados. |
+| 068 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Atualizar o PR #26 com correção de apoio e orientações dos terminais. | em preparação | LINK TESTE preservado no início; evidências e totais consolidados serão atualizados após revisão/publicação. |
