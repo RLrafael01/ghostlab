@@ -96,6 +96,58 @@ test("growing beneath a loose casing supports it and cancel restores its origina
   assert.ok(servo.group.position.distanceTo(original) < 1e-6);
 });
 
+test("button retains support on a partially removed column and gains support when the board grows beneath it", async () => {
+  const button = await cadModel("button");
+  const board = { id: 2, type: "board", columns: 63, group: new T.Group() };
+  board.group.add(createBreadboard(board.columns));
+  const items = [board, button];
+  button.group.position.x = terminalPosition(board, "a60").x;
+  placeComponent(button, items, false);
+  const shrink = createBoardResize(board, { x: 1, z: 0 }, items, mountPoint);
+  shrink.move(
+    shrink.corner
+      .clone()
+      .add(new T.Vector3(-5 * breadboardLayout(63).pitch, 0, 0)),
+  );
+  assert.ok(
+    cadBody(button).min.y >= 0.425,
+    "partially supported button sank after shrinking",
+  );
+  assert.equal(button.mountedTo, board);
+  shrink.move(
+    shrink.corner
+      .clone()
+      .add(new T.Vector3(-33 * breadboardLayout(63).pitch, 0, 0)),
+  );
+  assert.equal(button.mountedTo, null);
+  const grow = createBoardResize(board, { x: 1, z: 0 }, items, mountPoint);
+  grow.move(
+    grow.corner
+      .clone()
+      .add(new T.Vector3(33 * breadboardLayout(30).pitch, 0, 0)),
+  );
+  assert.ok(
+    cadBody(button).min.y >= 0.425,
+    "growing underneath the button buried it",
+  );
+  assert.equal(button.mountedTo, board);
+  grow.cancel();
+  assert.equal(button.mountedTo, null);
+});
+
+test("servo mounting ears also preserve support until the entire casing clears the board", async () => {
+  const servo = await cadModel("servo");
+  const board = { id: 2, type: "board", columns: 63, group: new T.Group() };
+  board.group.add(createBreadboard(board.columns));
+  servo.group.position.x = breadboardLayout(63).width / 2 + 0.55;
+  placeComponent(servo, [board, servo], false);
+  const ears = new T.Box3().setFromObject(
+    servo.group.getObjectByName("servo-1"),
+  );
+  assert.ok(ears.min.y >= 0.425, "servo mounting ears intersect the rim");
+  assert.equal(servo.mountedTo, board);
+});
+
 for (const direction of [-1, 1]) {
   test(`resizing from ${direction < 0 ? "left" : "right"} preserves a partially supported servo casing, clears it only when outside, and cancels atomically`, async () => {
     const servo = await cadModel("servo");

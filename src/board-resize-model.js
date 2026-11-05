@@ -40,11 +40,7 @@ export function createBoardResize(
   );
   const connections = wires?.captureFor(board);
   const attachments = items
-    .filter(
-      (item) =>
-        item.type !== "board" &&
-        (item.mountedTo === board || !mountPoint(item)),
-    )
+    .filter((item) => item.type !== "board")
     .map((item) => {
       const pin = mountPoint(item);
       const worldMount =
@@ -53,7 +49,6 @@ export function createBoardResize(
       return {
         item,
         mountedTo: item.mountedTo,
-        hasMountPin: !!pin,
         position: item.group.position.clone(),
         worldPosition: item.group.getWorldPosition(new Vector3()),
         worldMount,
@@ -115,10 +110,9 @@ export function createBoardResize(
           child.parent ? child.parent.worldToLocal(position) : position,
         );
         child.updateWorldMatrix(true, true);
-        // A casing resting on the board is supported by its footprint, not by
-        // a fictional hole column. This also handles growth beneath loose parts.
-        if (!attachment.hasMountPin)
-          placeComponent(attachment.item, items, false);
+        // Contact removal and physical support are independent: a casing can
+        // still overlap the rim after its original column disappears.
+        placeComponent(attachment.item, items, false);
       }
       connections?.sync();
       return columns;

@@ -5,13 +5,13 @@ import { leadTip, terminalPosition } from "./visual-wires.js";
 // Solid bodies from the imported CAD models. Leads may enter holes; connection
 // guides and decorative targets must not extend the footprint that supports a part.
 const bodies = {
-  led: "Funda",
-  button: "button-6",
-  resistor: "Resistor-body",
-  pot: "pot-0",
-  servo: "servo-2",
-  sensor: "HC-SR04",
-  uno: "arduino-unostep",
+  led: ["Funda"],
+  button: ["button-4", "button-5", "button-6", "button-7", "button-8"],
+  resistor: ["Resistor-body"],
+  pot: ["pot-0", "pot-1", "pot-2"],
+  servo: ["servo-0", "servo-1", "servo-2"],
+  sensor: ["HC-SR04"],
+  uno: ["arduino-unostep"],
 };
 
 export function mountPoint(item) {
@@ -31,12 +31,15 @@ export function placeComponent(item, items, snap = true) {
     return;
   }
   if (!bodies[item.type]) return;
+  const solidParts = bodies[item.type]
+    .map((name) => item.group.getObjectByName(name))
+    .filter(Boolean);
+  if (!solidParts.length) return;
   item.mountedTo = null;
   item.group.position.y = 0;
   item.group.updateWorldMatrix(true, true);
-  const physicalBody =
-    item.group.getObjectByName(bodies[item.type]) ?? item.group;
-  const footprint = new T.Box3().setFromObject(physicalBody);
+  const footprint = new T.Box3();
+  for (const part of solidParts) footprint.expandByObject(part);
   const board = items.find((candidate) => {
     if (candidate.type !== "board") return false;
     candidate.group.updateWorldMatrix(true, true);
