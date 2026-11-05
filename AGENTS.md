@@ -14,7 +14,7 @@ Ao aplicar uma skill de Matt Pocock ou pstack, siga as convenções de `docs/SKI
 
 ### Issue tracker
 
-Specs e tarefas em Markdown local em `.scratch/`. Antes de criar, consultar ou atualizar tarefas, leia `docs/agents/issue-tracker.md`.
+Specs e tarefas versionadas em `.scratch/`, com issues espelhadas no GitHub. Antes de implementar, corrigir, revisar ou publicar um PR, leia `docs/agents/issue-tracker.md` e atualize as issues relacionadas conforme a entrega.
 
 ### Domain docs
 

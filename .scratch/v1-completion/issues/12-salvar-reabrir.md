@@ -3,7 +3,7 @@
 Status: open
 Priority: P2
 Milestone: V1 completa — componentes, projetos e falhas
-Blocked by: GitHub #3
+Blocked by: none
 GitHub: https://github.com/RLrafael01/ghostlab/issues/20
 
 ## What to build
@@ -33,3 +33,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 ## Comments
 
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
+
+- 05/11/2026 — auditoria da main `0db0ca1`: **Pendente**. Montagem e código vivem em memória. Faltam formato versionado, salvar/reabrir, bancada vazia, proteção contra descarte e recuperação de erro de armazenamento. Evidência: `src/main.js`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.

@@ -3,7 +3,7 @@
 Status: open
 Priority: P1
 Milestone: Código funcionando — Blink, PWM e entradas básicas
-Blocked by: v1-completion/02 (GitHub #10)
+Blocked by: none
 GitHub: https://github.com/RLrafael01/ghostlab/issues/12
 
 ## What to build
@@ -32,3 +32,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 ## Comments
 
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
+
+- 05/11/2026 — auditoria da main `0db0ca1`: **Pendente**. Modelo 3D e pinos existem. Faltam interação pressionar/soltar, ligação ao GPIO de entrada, INPUT_PULLUP, painel e teste de firmware com digitalRead. Evidência: `src/main.js`, `src/firmware/uno-simulation.js`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.

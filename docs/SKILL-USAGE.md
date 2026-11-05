@@ -1,6 +1,6 @@
 # Uso de skills no GhostLab
 
-**79 aplicações registradas** · Matt Pocock: 67 · pstack: 12
+**82 aplicações registradas** · Matt Pocock: 68 · pstack: 14
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
@@ -15,10 +15,10 @@
 | Matt Pocock | `tdd` | 3 | 2 | 5 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 2 | 0 | 2 |
-| Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
-| pstack | `principle-prove-it-works` | 9 | 1 | 10 |
-| pstack | `principle-sequence-verifiable-units` | 2 | 0 | 2 |
-| **Total** | | **69** | **10** | **79** |
+| Matt Pocock | `writing-for-agents` | 5 | 0 | 5 |
+| pstack | `principle-prove-it-works` | 10 | 1 | 11 |
+| pstack | `principle-sequence-verifiable-units` | 3 | 0 | 3 |
+| **Total** | | **72** | **10** | **82** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -118,3 +118,7 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 078 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar PR #27 do Enzo e conferir quais issues podem ser encerradas. | concluído | Base main 0db0ca1, head 212d3d5; Standards: 3 P2, Spec: 2 P2 sobrepostos. Restauração com código editado não reinicia firmware, ajuda nega dano e IDs do histórico colidem. [Relatório](PR27-REVIEW.md). #2/#3/#9–#11 já integradas e encerradas; checklists/descrições e plano atualizados. #12–#24 permanecem incompletas. |
 
 | 079 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Afinar o contorno de seleção para visualizar os terminais dos jumpers. | concluído | Sugestão: conferir o resultado renderizado. Decisão: reduzir a linha de 2,5 para 1 pixel e inspecionar LED e ponta selecionados no navegador. Efeito: contorno mais discreto, conexão ao Ânodo + preservada; 12 testes existentes de fios/interação e build aprovados. Área de captura e dimensões da caixa preservadas. |
+
+| 080 | 05/11/2026 | Rafael | Matt Pocock | `writing-for-agents` | Tornar obrigatória a atualização das issues a cada entrega. | concluído | AGENTS.md aciona o rastreador antes de implementação, correção, revisão e PR. Procedimento único em docs/agents/issue-tracker.md define critérios parciais, evidências, espelhos e Closes no merge; template de PR reforça a verificação. Autorização recorrente do usuário registrada. |
+| 081 | 05/11/2026 | Rafael | pstack | `principle-sequence-verifiable-units` | Organizar o trabalho restante em entregas verificáveis. | concluído | Sugestão: ordenar unidades com resultado observável. Decisão: conferir main, auditar critérios por frente, atualizar pendências e verificar espelhos; #15 pode avançar com #12/#13, depois entradas, componentes, projetos e integração final conforme dependências. Efeito: 13 issues existentes cobrem o restante, sem duplicação ou aumento de escopo; prazo não reestimado. |
+| 082 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Conferir a conclusão real das issues e as atualizações do plano. | concluído | Sugestão: verificar artefatos e estado efetivo. Decisão: confrontar código/testes da main 0db0ca1, critérios e merges do GitHub; testar revisão e respostas de compilação substituídas. Efeito: três testes passam, um critério da #15 concluído; #12–#24 continuam abertas e #2/#3/#9–#11 já fechadas. Estados, checklists e totais conferidos após atualização. |

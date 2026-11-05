@@ -34,3 +34,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 ## Comments
 
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
+
+- 05/11/2026 — auditoria da main `0db0ca1`: **Parcial**. CI, prévias identificadas, documentação e testes de bancada/Blink/PWM existem. Faltam matriz de evidências das 34 histórias, fluxos integrados, medição de responsividade, compilação pública, ensaio em outra máquina e versão final estável. As bases atuais não encerram a validação da V1. Evidência: `.github/workflows/pr.yml`, `docs/FIRMWARE-REVIEW.md`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.
