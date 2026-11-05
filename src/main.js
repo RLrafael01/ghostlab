@@ -121,12 +121,14 @@ const electricalView = createElectricalView({
   wires: visualWires,
   status: document.querySelector("#electrical-status"),
   getFirmware: () => firmwareOutput ?? { pins: {} },
+  restartFirmware: () => firmwareSession.restart(),
 });
-setupFirmwarePanel({
+const firmwareSession = setupFirmwarePanel({
   editor: document.querySelector("#code-panel textarea"),
   container: document.querySelector("#firmware-controls"),
   status: document.querySelector("#firmware-status"),
   getTarget: () => items.find((item) => item.type === "uno")?.id,
+  onRestart: () => electricalView.restart(),
   onOutput: (output) => {
     firmwareOutput = output;
   },

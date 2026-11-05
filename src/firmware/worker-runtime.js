@@ -3,6 +3,7 @@ export function runFirmwareWorker(hex, send) {
   const simulation = new UnoSimulation(hex);
   const started = performance.now();
   let reportAt = 0;
+  let timer;
   function tick() {
     const elapsed = performance.now() - started;
     const current = simulation.snapshot().milliseconds;
@@ -13,7 +14,11 @@ export function runFirmwareWorker(hex, send) {
       send({ ...output, speed: elapsed ? output.milliseconds / elapsed : 1 });
       reportAt = elapsed + 30;
     }
-    setTimeout(tick, 0);
+    timer = setTimeout(tick, 0);
   }
   tick();
+  return {
+    setInputs: (inputs) => simulation.setInputs(inputs),
+    stop: () => clearTimeout(timer),
+  };
 }

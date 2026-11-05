@@ -4,6 +4,7 @@ export function createFirmwareSession({
   onChange = () => {},
 }) {
   let generation = 0,
+    inputs,
     request,
     runner,
     artifact,
@@ -54,6 +55,7 @@ export function createFirmwareSession({
         },
         fail,
       );
+      if (inputs) runner.setInputs?.(inputs);
       emit();
     } catch (error) {
       fail(error);
@@ -61,6 +63,10 @@ export function createFirmwareSession({
   }
   return {
     snapshot: () => ({ ...state }),
+    setInputs(next) {
+      inputs = next;
+      runner?.setInputs?.(next);
+    },
     edit(source) {
       if (source === state.source) return;
       state.source = source;

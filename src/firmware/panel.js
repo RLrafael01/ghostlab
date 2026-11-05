@@ -7,6 +7,7 @@ export function setupFirmwarePanel({
   status,
   getTarget = () => null,
   onOutput = () => {},
+  onRestart = () => {},
   base = "./",
 }) {
   const document = container.ownerDocument;
@@ -34,8 +35,11 @@ export function setupFirmwarePanel({
         data.error ? error(data.error) : output(data.output);
       worker.onerror = () =>
         error("Falha ao executar firmware. Pare e tente novamente.");
-      worker.postMessage({ hex });
-      return { terminate: () => worker.terminate() };
+      worker.postMessage({ type: "start", hex });
+      return {
+        terminate: () => worker.terminate(),
+        setInputs: (inputs) => worker.postMessage({ type: "inputs", inputs }),
+      };
     },
     onChange(state) {
       const dirty =
@@ -75,7 +79,10 @@ export function setupFirmwarePanel({
     session.execute();
   });
   stop.addEventListener("click", () => session.stop());
-  restart.addEventListener("click", () => session.restart());
+  restart.addEventListener("click", () => {
+    onRestart();
+    session.restart();
+  });
   window.addEventListener("pagehide", () => session.stop());
   return session;
 }

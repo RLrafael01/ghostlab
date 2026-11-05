@@ -1,4 +1,4 @@
-import { simulateCircuit } from "./electrical-simulation.js";
+import { createCircuitSimulation } from "./electrical-simulation.js";
 
 const reasons = {
   closed: "circuito fechado com resistor",
@@ -6,6 +6,8 @@ const reasons = {
   reversed: "polaridade invertida",
   unlimited: "sem resistor no caminho · fora deste modelo",
   unsupported: "ligações fora do modelo · confira 5 V e GND",
+  short: "fonte virtual em falha",
+  damaged: "dano virtual · substitua ou restaure",
 };
 
 export function createElectricalView({
@@ -13,9 +15,30 @@ export function createElectricalView({
   wires,
   status,
   getFirmware = () => null,
+  restartFirmware = () => {},
 }) {
+  const simulation = createCircuitSimulation();
+  const explanation = status.ownerDocument.createElement("details");
+  const summary = status.ownerDocument.createElement("summary");
+  summary.textContent = "Por que isso aconteceu?";
+  const messages = status.ownerDocument.createElement("ul");
+  const restore = status.ownerDocument.createElement("button");
+  restore.type = "button";
+  restore.textContent = "Restaurar simulação";
+  explanation.append(summary, messages, restore);
+  explanation.hidden = true;
+  status.after(explanation);
   let previous = "";
+  restore.onclick = () => {
+    simulation.restore();
+    previous = "";
+    restartFirmware();
+  };
   return {
+    restart() {
+      simulation.restart();
+      previous = "";
+    },
     update() {
       const project = {
         components: items.map(({ id, type, columns }) => ({
@@ -33,7 +56,27 @@ export function createElectricalView({
       ]);
       if (signature === previous) return;
       previous = signature;
-      const result = simulateCircuit(project, firmware);
+      const result = simulation.evaluate(project, firmware);
+      const highlighted = new Set(
+        result.faults.flatMap((fault) => fault.wireIds ?? []),
+      );
+      for (const mesh of wires.meshes) {
+        mesh.material.emissive.set("#ff3322");
+        mesh.material.emissiveIntensity = highlighted.has(mesh.userData.wireId)
+          ? 1.5
+          : 0;
+      }
+      explanation.hidden = result.faults.length === 0;
+      if (explanation.hidden) explanation.open = false;
+      const descriptions = result.faults.map((fault) => {
+        const entry = status.ownerDocument.createElement("li");
+        entry.textContent =
+          fault.kind === "short"
+            ? `Uno #${fault.id}: um caminho direto uniu 5 V a GND. Separe os contatos e reinicie para recuperar a fonte virtual.`
+            : `LED #${fault.id}: alimentação sem limitação provocou dano virtual. Coloque um resistor em série e substitua o LED ou restaure. O modelo não calcula corrente nem segurança da montagem física.`;
+        return entry;
+      });
+      messages.replaceChildren(...descriptions);
       status.replaceChildren();
       if (!result.leds.length)
         status.textContent = "Adicione um LED para testar o circuito.";

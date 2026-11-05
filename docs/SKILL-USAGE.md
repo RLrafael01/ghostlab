@@ -1,6 +1,6 @@
 # Uso de skills no GhostLab
 
-**71 aplicações registradas** · Matt Pocock: 61 · pstack: 10
+**75 aplicações registradas** · Matt Pocock: 65 · pstack: 10
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
@@ -12,13 +12,13 @@
 | Matt Pocock | `implement` | 10 | 3 | 13 |
 | Matt Pocock | `pr` | 9 | 4 | 13 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
-| Matt Pocock | `tdd` | 2 | 2 | 4 |
+| Matt Pocock | `tdd` | 2 | 6 | 8 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 2 | 0 | 2 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
 | pstack | `principle-prove-it-works` | 6 | 1 | 7 |
 | pstack | `principle-sequence-verifiable-units` | 2 | 1 | 3 |
-| **Total** | | **58** | **13** | **71** |
+| **Total** | | **58** | **17** | **75** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -106,3 +106,7 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 069 | 05/11/2026 | Enzo | Matt Pocock | `implement` | Concluir as subtarefas restantes da issue GitHub #8, V1 do GhostLab. | em andamento | Escopo confirmado pelo usuário: todas as subtarefas restantes, #12–#24. Base main atualizada para 6a1f31a; #9–#11 já integradas. Histórico consolidado preservado. |
 | 070 | 05/11/2026 | Enzo | pstack | `principle-sequence-verifiable-units` | Organizar a conclusão da V1 em unidades verificáveis e integrar suas dependências. | em andamento | Sugestão: verificar cada unidade antes de ampliar. Decisão: separar execução de periféricos, compilador e projetos; integrar circuito, falhas, exemplos e validação por etapas no PR da issue #8. Efeito: implementação em andamento, com revisão e evidências por unidade. |
 | 071 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Abrir e manter o PR das subtarefas restantes da issue #8. | em andamento | PR em rascunho antes da implementação; descrição final terá link de teste, limites, evidências e este histórico consolidado. Sem merge automático. |
+| 072 | 05/11/2026 | Enzo | Matt Pocock | `tdd` | Verificar entradas digitais/analógicas, serial e pulsos de sensor/servo no firmware real. | em andamento | Aplicação delegada no mesmo objetivo da V1. Fronteiras já aprovadas na spec: interface pública da simulação, compilação real e fluxo de usuário. Registro centralizado pelo agente principal; ciclos e evidências pendentes. |
+| 073 | 05/11/2026 | Enzo | Matt Pocock | `tdd` | Verificar compilação portátil, recuperação e contrato do serviço acessível na issue #15. | em andamento | Aplicação delegada; interface pública de compilação aprovada na spec. Verificar código válido/inválido, cancelamento, limites e seleção de endpoint sem apresentar artefato antigo como atual. |
+| 074 | 05/11/2026 | Enzo | Matt Pocock | `tdd` | Verificar projetos locais, importação/exportação e guia de montagem nas issues #20–#22. | em andamento | Aplicação delegada; fronteiras aprovadas: round-trip de projetos e rejeição sem substituir trabalho atual, conforme spec. Registro centralizado; evidências pendentes. |
+| 075 | 05/11/2026 | Enzo | Matt Pocock | `tdd` | Verificar conectividade de periféricos, falhas educativas e recuperação integradas. | em andamento | Fronteira pública da simulação já aprovada na spec: fios alteram entradas/saídas; curto, dano persistente, reinício e restauração. Ciclos red/green e validação de integração pendentes. |

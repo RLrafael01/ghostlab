@@ -73,7 +73,25 @@ export class UnoSimulation {
       pwm: false,
     }));
     this.nextWindow = WINDOW;
+    this.digitalInputs = {};
     for (const port of this.ports) port.addListener(() => this.capture(port));
+  }
+  setInputs({ digital = {} } = {}) {
+    for (const [name, value] of Object.entries(digital))
+      if (
+        !this.pins.some((pin) => pin.name === name) ||
+        ![0, 1, null].includes(value)
+      )
+        throw new Error("Entrada digital inválida.");
+    this.digitalInputs = { ...digital };
+    for (const pin of this.pins) this.applyInput(pin);
+  }
+  applyInput(pin) {
+    const value = this.digitalInputs[pin.name];
+    pin.port.setPin(
+      pin.bit,
+      value == null ? pin.state === PinState.InputPullUp : value === 1,
+    );
   }
   capture(port, cycle = this.cpu.cycles) {
     for (const pin of this.pins) {
@@ -83,6 +101,7 @@ export class UnoSimulation {
       if (pin.state !== state) pin.transitions++;
       pin.state = state;
       pin.last = cycle;
+      this.applyInput(pin);
     }
   }
   advance(milliseconds) {
@@ -120,6 +139,8 @@ export class UnoSimulation {
             level: pin.state === PinState.High ? 1 : 0,
             duty: pin.pwm ? pin.duty : pin.state === PinState.High ? 1 : 0,
             pwm: pin.pwm,
+            input: (this.cpu.data[pin.port.portConfig.PIN] >> pin.bit) & 1,
+            pullup: pin.state === PinState.InputPullUp,
           },
         ]),
       ),
