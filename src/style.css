@@ -1,6 +1,58 @@
 * {
   box-sizing: border-box;
 }
+.electrical-panel {
+  position: absolute;
+  bottom: 52px;
+  left: 20px;
+  z-index: 3;
+  width: min(270px, calc(100% - 40px));
+  max-height: calc(100% - 130px);
+  overflow-y: auto;
+  padding: 12px 14px;
+  border: 1px solid #394849;
+  border-radius: 10px;
+  background: #10191aeb;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.electrical-panel .eyebrow {
+  margin-bottom: 6px;
+}
+main:fullscreen .electrical-panel {
+  bottom: 150px;
+}
+.electrical-panel details {
+  margin-top: 10px;
+  color: #b7c9cd;
+}
+.electrical-panel summary {
+  cursor: pointer;
+}
+.electrical-led {
+  margin: 0 0 8px;
+}
+.electrical-led strong,
+.electrical-led span {
+  display: block;
+}
+.electrical-led strong::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 7px;
+  background: #667079;
+}
+.electrical-led[data-on="true"] strong::before {
+  background: #ff4254;
+  box-shadow: 0 0 8px #ff4254;
+}
+.electrical-led span {
+  color: #a6bac0;
+  font-size: 10px;
+}
 button.jumper-help {
   position: absolute;
   left: 20px;

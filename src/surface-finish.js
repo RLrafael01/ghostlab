@@ -111,6 +111,7 @@ export function finishSurface(scene, type, headers) {
     }
 
     if (type === "led" && mesh.name === "Funda") {
+      mesh.userData.ledLens = true;
       mesh.material = new T.MeshPhysicalMaterial({
         color: "#ca182c",
         roughness: 0.17,

@@ -25,7 +25,7 @@ export function terminalPosition(item, name, occurrence = 0) {
   return point;
 }
 
-// Visual jumpers only: no electrical connectivity or firmware behavior is inferred.
+// Owns jumper references and rendering; electrical behavior is evaluated separately.
 export function createVisualWires(scene) {
   const wires = [];
   let gesture = null,
@@ -36,6 +36,11 @@ export function createVisualWires(scene) {
       ? terminalPosition(end.item, end.pin, end.occurrence ?? 0)
       : end.position.clone();
   const cloneEnd = (end) => ({ ...end, position: end.position.clone() });
+  const endpointReference = (end) => ({
+    componentId: end.item?.id ?? null,
+    pin: end.item ? end.pin : null,
+    occurrence: end.item ? (end.occurrence ?? 0) : null,
+  });
   function dispose(wire) {
     if (gesture?.wire === wire) gesture = null;
     for (const handle of wire.handles) {
@@ -128,14 +133,18 @@ export function createVisualWires(scene) {
     get active() {
       return !!gesture;
     },
+    connections() {
+      return wires.map((wire) => ({
+        id: wire.id,
+        ends: wire.ends.map(endpointReference),
+      }));
+    },
     snapshot() {
       return wires.map((wire) => ({
         id: wire.id,
         color: "#" + wire.mesh.material.color.getHexString(),
         ends: wire.ends.map((end) => ({
-          componentId: end.item?.id ?? null,
-          pin: end.item ? end.pin : null,
-          occurrence: end.item ? (end.occurrence ?? 0) : null,
+          ...endpointReference(end),
           position: endPosition(end)?.toArray() ?? null,
         })),
       }));

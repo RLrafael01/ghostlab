@@ -1,23 +1,23 @@
 # Uso de skills no GhostLab
 
-**45 aplicações registradas** · Matt Pocock: 43 · pstack: 2
+**50 aplicações registradas** · Matt Pocock: 47 · pstack: 3
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
-| Matt Pocock | `code-review` | 9 | 1 | 10 |
+| Matt Pocock | `code-review` | 9 | 2 | 11 |
 | Matt Pocock | `diagnosing-bugs` | 1 | 0 | 1 |
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
-| Matt Pocock | `implement` | 9 | 1 | 10 |
-| Matt Pocock | `pr` | 5 | 2 | 7 |
+| Matt Pocock | `implement` | 9 | 2 | 11 |
+| Matt Pocock | `pr` | 5 | 3 | 8 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
-| Matt Pocock | `tdd` | 1 | 1 | 2 |
+| Matt Pocock | `tdd` | 1 | 2 | 3 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 1 | 0 | 1 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
-| pstack | `principle-prove-it-works` | 2 | 0 | 2 |
-| **Total** | | **40** | **5** | **45** |
+| pstack | `principle-prove-it-works` | 2 | 1 | 3 |
+| **Total** | | **40** | **10** | **50** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -76,5 +76,9 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 042 | 04/11/2026 | Rafael | Matt Pocock | `diagnosing-bugs` | Corrigir atraso dos jumpers e interação em tela cheia. | concluído | Teste de movimento com animações reproduziu o atraso e passou após sincronizar pontas conectadas. Chrome confirmou seleção pelo corpo do cabo e escala preservada na tela cheia. Retomada no PR #5: teste reproduziu ponta abaixo da superfície durante arraste; corrigidos plano fixo e atraso visual da ponta ativa. Contornos das pontas preservam a cor do cabo. Nova verificação reproduziu drop no plano da bancada e gesto diagonal preso em swipe; altura da superfície preservada na adição e gesto promovido a colocação quando sai do dock para cima. |
 | 043 | 04/11/2026 | Rafael | pstack | `principle-prove-it-works` | Validar inspetor, cores e remoção nos dois modos. | concluído | Sugestão aplicada: verificar o comportamento real. Chrome automatizado confirmou seleção, cores, recolher/reabrir, remoção de fio e peça, escala e retorno do editor, sem erros de página. Validação de layout realizada em 1440×900. Retomada: Chrome com modelos CAD confirmou bancada → a40 → bancada, dois contornos e cor preservada; card recolhível e seletor condicionado ao dock verificados em 1440×900 e 1024×768. Retomada: arraste real do dock (inclusive diagonal inicial) e catálogo para protoboard verificado, com pontas acima da superfície; contornos em 2,5 px e testes de regressão do gesto. |
 | 044 | 04/11/2026 | Rafael | Matt Pocock | `pr` | Preparar PR com prévia para Enzo. | concluído | PR #5 aberto com LINK TESTE no início, evidências e impacto. Publicação acompanhada pelo workflow do PR. Descrição atualizada com ajuda recolhível, seletor contextual, correção da altura das pontas e protoboard com quantidade variável de colunas e furos de passo fixo. |
-
 | 045 | 04/11/2026 | Rafael | pstack | `principle-prove-it-works` | Verificar redimensionamento da protoboard pelas extremidades. | concluído | Sugestão aplicada: validar interações reais. Chrome confirmou aumentar/reduzir em modo normal e fullscreen, canto oposto fixo, Escape/pointercancel/fullscreen restaurando, seleção, contatos e peças apoiadas; novo LED encaixa na placa redimensionada. 21 testes e build aprovados. Revisão solicitada pelo usuário substituiu escala visual por 10–126 colunas com passo fixo. Nova verificação: 25 testes e Chrome confirmaram 63→83→43 colunas, furos invariantes, conexão ao novo a80, retirada ao reduzir, Escape restaurando e crescimento posterior mantendo ponta solta. Novo LED encaixado na área ampliada após a coluna 63. Geometria com recessos reais verificada por raycast. npm test: 25/25; npm run build aprovado. |
+| 046 | 05/11/2026 | Enzo | Matt Pocock | `implement` | Implementar issue GitHub #3: conectividade, alimentação e LED. | concluído | Pull da main até a49f84e; implementação c5fbeba no [PR #6](https://github.com/RLrafael01/ghostlab/pull/6). Circuito 5 V → resistor → LED → GND, grupos internos da protoboard redimensionável, luz e painel por referências dos terminais. Retirada/reconexão, movimento e remoção verificados no navegador. 32 testes e build aprovados. Contrato, limites e imagens em [ELECTRICAL-MODEL.md](ELECTRICAL-MODEL.md); sem firmware ou dano. |
+| 047 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Abrir e manter o PR da issue #3 com prévia e evidências. | concluído | [PR #6](https://github.com/RLrafael01/ghostlab/pull/6) aberto em rascunho antes de implementar, na branch codex/electrical-led; atualizado com [link de teste](https://rlrafael01.github.io/ghostlab/pr-6/), imagens, verificações, limites e este histórico. Marcado pronto para revisão; sem merge. |
+| 048 | 05/11/2026 | Enzo | Matt Pocock | `tdd` | Verificar o circuito fechado/aberto e a conectividade pela interface pública da simulação. | concluído | Fronteiras já aprovadas na spec: simulação e fluxo no navegador. Ciclos red/green: módulo ausente; protoboard ainda isolada; ligação sem resistor incorretamente acesa; integração da luz/painel ausente. 7 testes novos (32 totais) passaram; 11 testes afetados passaram novamente após a melhoria de serialização. Ver tests/electrical-simulation.test.js e tests/electrical-workbench.test.js. Sem mocks de colaboradores internos. |
+| 049 | 05/11/2026 | Enzo | pstack | `principle-prove-it-works` | Verificar o LED e os jumpers na bancada real e a prévia publicada do PR #6. | concluído | Sugestão: observar o artefato real e manter evidência reproduzível. Decisão: testar no navegador retirada/reconexão em GND, movimento, remoção e tela cheia, além dos testes e do commit publicado. Efeito: luz e painel acompanharam o circuito, movimento preservou o estado; a inspeção revelou sobreposição do painel com a ajuda dos jumpers, corrigida. Capturas em docs/evidence/ e roteiro em [ELECTRICAL-MODEL.md](ELECTRICAL-MODEL.md). Prévia [pr-6](https://rlrafael01.github.io/ghostlab/pr-6/) publicada com revision.txt = c5fbeba; [CI 41964939438](https://github.com/RLrafael01/ghostlab/actions/runs/41964939438) aprovado. Limite: modelo digital, sem firmware/analógico/dano. |
+| 050 | 05/11/2026 | Enzo | Matt Pocock | `code-review` | Revisar a issue #3 contra a base atualizada a49f84e nos eixos Standards e Spec. | concluído | Dois revisores independentes em paralelo sobre a49f84e...c5fbeba. Standards: 0 bloqueios, 1 sugestão de compartilhar referências das pontas incorporada com endpointReference e revalidada; 0 pendências finais. Spec: 0 achados. Histórico auditado: 50 IDs únicos e totais por pessoa/skill conferem. Evidência no [PR #6](https://github.com/RLrafael01/ghostlab/pull/6). |
