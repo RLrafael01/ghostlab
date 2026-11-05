@@ -1,3 +1,4 @@
+import { mountPoint, placeComponent } from "./component-placement.js";
 import { createElectricalView } from "./electrical-view.js";
 import { setupBoardResize } from "./board-resize.js";
 import { createSelectionOutline } from "./selection-outline.js";
@@ -8,17 +9,13 @@ import {
   setupWorkspacePanels,
   makeCatalogDraggable,
 } from "./workspace-panels.js";
-import { BREADBOARD, breadboardLayout } from "./breadboard-layout.js";
+import { breadboardLayout } from "./breadboard-layout.js";
 import { setupJumperInteraction } from "./jumper-interaction.js";
 import * as T from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import "./style.css";
 import { lightWorkbench } from "./workbench-lighting.js";
-import {
-  createVisualWires,
-  terminalPosition,
-  leadTip,
-} from "./visual-wires.js";
+import { createVisualWires, terminalPosition } from "./visual-wires.js";
 import { createBenchNavigation } from "./bench-navigation.js";
 import { loadCAD, pinNameForHit, UNO_HEADERS } from "./cad-models.js";
 const catalog = {
@@ -335,53 +332,11 @@ function moveItem(item, position) {
   for (const child of items)
     if (child.mountedTo === item) child.group.position.add(delta);
 }
-function mountPoint(item) {
-  return item.type === "led"
-    ? leadTip(item, "Ânodo +")
-    : item.type === "button"
-      ? leadTip(item, "1")
-      : terminalPosition(item, "1");
-}
 function snapToBoard(item) {
-  if (!["led", "resistor", "button"].includes(item.type)) return;
-  item.mountedTo = null;
-  item.group.position.y = 0;
-  if (!document.querySelector("#snap").checked) return;
-  const board = items.find((candidate) => {
-    if (candidate.type !== "board") return false;
-    candidate.group.updateWorldMatrix(true, true);
-    const local = candidate.group.worldToLocal(item.group.position.clone());
-    const layout = breadboardLayout(candidate.columns);
-    return Math.abs(local.x) < layout.width / 2 && Math.abs(local.z) < 0.7;
-  });
-  if (!board) return;
-  const anchor = board.group.worldToLocal(terminalPosition(board, "a1"));
-  const reference = mountPoint(item) ?? item.group.position.clone();
-  const local = board.group.worldToLocal(reference.clone());
-  const pitch = BREADBOARD.pitch * BREADBOARD.sceneScale;
-  const column = T.MathUtils.clamp(
-    Math.round((local.x - anchor.x) / pitch),
-    0,
-    board.columns - 1,
-  );
-  const x = anchor.x + column * pitch;
-  const side = local.z < 0 ? -1 : 1;
-  const rows = Array.from(
-    { length: BREADBOARD.rowsPerSide },
-    (_, row) =>
-      side *
-      (BREADBOARD.outerRowZ - row * BREADBOARD.pitch) *
-      BREADBOARD.sceneScale,
-  );
-  const z = rows.reduce((a, b) =>
-    Math.abs(a - local.z) < Math.abs(b - local.z) ? a : b,
-  );
-  const target = board.group.localToWorld(new T.Vector3(x, anchor.y, z));
-  target.y -= 0.055;
-  item.group.position.add(target.sub(reference));
-  item.mountedTo = board;
+  placeComponent(item, items, document.querySelector("#snap").checked);
   outline?.update();
 }
+
 let drag = null;
 const dragPlane = new T.Plane(new T.Vector3(0, 1, 0), 0);
 function updateRay(event) {

@@ -1,11 +1,11 @@
 # Uso de skills no GhostLab
 
-**53 aplicações registradas** · Matt Pocock: 49 · pstack: 4
+**55 aplicações registradas** · Matt Pocock: 50 · pstack: 5
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
 | Matt Pocock | `code-review` | 9 | 2 | 11 |
-| Matt Pocock | `diagnosing-bugs` | 2 | 0 | 2 |
+| Matt Pocock | `diagnosing-bugs` | 3 | 0 | 3 |
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
@@ -16,8 +16,8 @@
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 1 | 0 | 1 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
-| pstack | `principle-prove-it-works` | 3 | 1 | 4 |
-| **Total** | | **43** | **10** | **53** |
+| pstack | `principle-prove-it-works` | 4 | 1 | 5 |
+| **Total** | | **45** | **10** | **55** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -85,4 +85,6 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 
 | 051 | 05/11/2026 | Rafael | Matt Pocock | `diagnosing-bugs` | Corrigir conectores escondidos no LED e dificuldade de captura. | concluído | Reproduzido com o GLB real: o conector intersectava a lente e o centro do terminal ficava dentro dela, independentemente da protoboard. Teste falhou antes da correção; alvos laterais +/− preservam os terminais elétricos e os pés de montagem. Segundo teste reproduziu clique próximo ignorado; captura em 12 px corrigida. Ver tests/led-connectors.test.js e tests/jumper-interaction.test.js. |
 | 052 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Verificar conexão acessível e comportamento elétrico do LED. | concluído | Sugestão aplicada: testar o gesto real. No navegador, ânodo retirado e reconectado em modo normal e cátodo em tela cheia: LED apagou/acendeu conforme o circuito. Conectores visíveis nas laterais e referência da outra ponta preservada. 34 testes e build aprovados. [Captura do teste](evidence/led-connectors.png). Modelo elétrico do Enzo reaproveitado; firmware permanece fora desta correção. |
-| 053 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Preparar PR da correção dos conectores sobre o trabalho do Enzo. | concluído | Descrição com LINK TESTE no início, causa, evidências e impacto da captura dos jumpers. Branch codex/accessible-led-connectors baseada no PR #6, sem merge ou alteração da branch do Enzo. |
+| 053 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Preparar PR da correção dos conectores sobre o trabalho do Enzo. | concluído | Descrição com LINK TESTE no início, causa, evidências e impacto da captura dos jumpers. Branch codex/accessible-led-connectors baseada no PR #6, sem merge ou alteração da branch do Enzo. Descrição do PR #7 atualizada também com apoio do LED nas bordas da protoboard e evidências da regressão. |
+| 054 | 05/11/2026 | Rafael | Matt Pocock | `diagnosing-bugs` | Impedir que o LED com cabos afunde ao sair da área central de furos. | concluído | Repro determinístico com GLB real: em Z=-0,71 a base da lente caía de 0,4401 para 0,0901, abaixo do topo 0,425. Causa: apoio dependia da região central do encaixe e zerava Y fora dela. Separados apoio e encaixe; apoio usa corpo físico e toda a área da protoboard, inclusive sobreposição parcial. Testes cobrem barramentos, quatro bordas, canto, 10/63/100 colunas, encaixe desligado, saída/retorno e fios no mesmo quadro. Ver tests/component-placement.test.js. |
+| 055 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Verificar a altura do LED nas extremidades com cabos conectados. | concluído | Sugestão aplicada: repetir o arraste real, além do teste de geometria. No navegador, LED arrastado de Z≈-0,40 até Z≈-1,26 permaneceu acima da borda e aceso, com cabos acompanhando; retorno com encaixe desligado também manteve apoio. 36 testes e build aprovados. A correção não cria contatos elétricos implícitos. |
