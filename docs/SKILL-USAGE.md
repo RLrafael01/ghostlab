@@ -1,24 +1,24 @@
 # Uso de skills no GhostLab
 
-**73 aplicações registradas** · Matt Pocock: 63 · pstack: 10
+**77 aplicações registradas** · Matt Pocock: 66 · pstack: 11
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
-| Matt Pocock | `code-review` | 12 | 2 | 14 |
-| Matt Pocock | `diagnosing-bugs` | 4 | 0 | 4 |
+| Matt Pocock | `code-review` | 13 | 2 | 15 |
+| Matt Pocock | `diagnosing-bugs` | 5 | 0 | 5 |
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
 | Matt Pocock | `implement` | 11 | 2 | 13 |
-| Matt Pocock | `pr` | 10 | 3 | 13 |
+| Matt Pocock | `pr` | 11 | 3 | 14 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
 | Matt Pocock | `tdd` | 3 | 2 | 5 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 2 | 0 | 2 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
-| pstack | `principle-prove-it-works` | 7 | 1 | 8 |
+| pstack | `principle-prove-it-works` | 8 | 1 | 9 |
 | pstack | `principle-sequence-verifiable-units` | 2 | 0 | 2 |
-| **Total** | | **63** | **10** | **73** |
+| **Total** | | **67** | **10** | **77** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -109,3 +109,8 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 071 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Verificar cards e janela no navegador real. | concluído | Sugestão: observar gestos e resultado renderizado. Decisão: testar em 1440×900 e 1024×768, arraste, resize, teclado, recolhimento, edição e execução local. Efeito: cards separados e janela preserva código/tamanho/posição; Blink 250 ms executado como Personalizado. 64 testes e build aprovados; [evidência](evidence/workbench-panels.png). |
 | 072 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar painéis contra padrões e pedido do usuário desde 6a1f31a. | concluído | Dois revisores independentes sobre 6a1f31a...30fe489: Standards 0 achados; Spec 0 achados. [Revisão e validação](WORKBENCH-PANELS-REVIEW.md). |
 | 073 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Publicar correções da interface com link de teste destacado. | concluído | [PR #28](https://github.com/RLrafael01/ghostlab/pull/28) publicado com LINK TESTE no início, captura, roteiro e limite da compilação pública. Histórico: 73 aplicações, Rafael 63 / Enzo 10. Sem merge na main. |
+
+| 074 | 05/11/2026 | Rafael | Matt Pocock | `diagnosing-bugs` | Corrigir LED sem resposta após retirar e reconectar o cabo amarelo. | concluído | Reproduzido por ponteiros DOM e navegador: LED+ → furo → símbolo + deixava a ponta livre; retorno ao centro funcionava. Causa: captura apenas a 14 px do centro, ignorando o símbolo visível. Guias +/− e círculos agora resolvem o terminal elétrico por raycast; referência e firmware preservados. Teste de regressão em tests/jumper-firmware-reconnect.test.js. |
+| 075 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Repetir o gesto real de reconexão com firmware. | concluído | Sugestão: repetir o cenário original, não apenas checar build. Decisão: LED ligado → c35 → símbolo + e Fade → e35 → símbolo + no navegador. Efeito: reconexão confirmada, LED volta a 100% e o PWM continua variando sem reiniciar. 73 testes e build aprovados; [captura](evidence/jumper-led-reconnect.png). |
+| 076 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar a correção de reconexão desde 0db0ca1. | em andamento | Revisão independente de Standards e Spec em preparação; escopo restrito à captura dos alvos visíveis do LED. |
+| 077 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Publicar correção de reconexão com prévia para testar. | em andamento | Branch codex/led-jumper-reconnect, baseada na main após merge do PR #28. LINK TESTE no início da descrição; sem merge automático. |
