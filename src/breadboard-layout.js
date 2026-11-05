@@ -30,6 +30,7 @@ export function breadboardLayout(requestedColumns = BREADBOARD.columns) {
       for (let column = 0; column < columns; column++)
         terminals.push({
           name: `${"abcdefghij"[side * 5 + row]}${column + 1}`,
+          electricalGroup: `strip:${side}:${column + 1}`,
           position: [
             firstColumnX + column * pitch,
             topY,
@@ -42,6 +43,7 @@ export function breadboardLayout(requestedColumns = BREADBOARD.columns) {
       for (let column = 0; column < railCount; column++)
         terminals.push({
           name: `${side ? "Inferior" : "Superior"} ${rail ? "−" : "+"} ${column + 1}`,
+          electricalGroup: `rail:${side}:${rail}`,
           position: [
             firstColumnX + (1.5 + column + Math.floor(column / 5)) * pitch,
             topY,

@@ -25,7 +25,7 @@ export function terminalPosition(item, name, occurrence = 0) {
   return point;
 }
 
-// Visual jumpers only: no electrical connectivity or firmware behavior is inferred.
+// Owns jumper references and rendering; electrical behavior is evaluated separately.
 export function createVisualWires(scene) {
   const wires = [];
   let gesture = null,
@@ -127,6 +127,16 @@ export function createVisualWires(scene) {
     },
     get active() {
       return !!gesture;
+    },
+    connections() {
+      return wires.map((wire) => ({
+        id: wire.id,
+        ends: wire.ends.map((end) => ({
+          componentId: end.item?.id ?? null,
+          pin: end.item ? end.pin : null,
+          occurrence: end.item ? (end.occurrence ?? 0) : null,
+        })),
+      }));
     },
     snapshot() {
       return wires.map((wire) => ({
