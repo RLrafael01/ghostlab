@@ -1,6 +1,6 @@
 # Uso de skills no GhostLab
 
-**88 aplicações registradas** · Matt Pocock: 72 · pstack: 16
+**90 aplicações registradas** · Matt Pocock: 74 · pstack: 16
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
@@ -9,8 +9,8 @@
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
-| Matt Pocock | `implement` | 12 | 2 | 14 |
-| Matt Pocock | `pr` | 12 | 3 | 15 |
+| Matt Pocock | `implement` | 12 | 3 | 15 |
+| Matt Pocock | `pr` | 12 | 4 | 16 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
 | Matt Pocock | `tdd` | 4 | 2 | 6 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
@@ -18,7 +18,7 @@
 | Matt Pocock | `writing-for-agents` | 5 | 0 | 5 |
 | pstack | `principle-prove-it-works` | 11 | 1 | 12 |
 | pstack | `principle-sequence-verifiable-units` | 4 | 0 | 4 |
-| **Total** | | **78** | **10** | **88** |
+| **Total** | | **78** | **12** | **90** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -130,3 +130,5 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 086 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Verificar entradas, servo e compilação pública no navegador e no isolamento real. | concluído | Sugestão: observar o fluxo inteiro e suas falhas. Decisão: testar gestos em tela normal/cheia, botão por mouse/teclado, pot, servo, código alterado pelo HTTPS, C++ inválido e serviço desligado/recuperado; executar suítes reais e sandbox. Efeito: ADC 0/512/1023, PWM 0/128/255, UART e três ângulos respondem; Blink 125 ms compila pelo link, erros preservam fonte, religar recupera execução. 119 testes aprovados e CI verde; build da base main validado. [Evidências e limites](PERIPHERALS-REVIEW.md). |
 | 087 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar #12–#16 nos eixos Standards e Spec desde 3137cad. | concluído | Dois revisores independentes: Standards sem violações obrigatórias, sugestão P3 de deduplicar preparação de pivôs aceita como pequena duplicação; Spec identificou alvo antigo ao reiniciar após remontagem e leitura ADC ausente no painel. Corrigidos em 63f83fc e rechecados com 7 testes UI e 2 ADC reais; nenhum bloqueador restante. [Relatório](PERIPHERALS-REVIEW.md). |
 | 088 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Publicar entradas, serial, servo e compilador de demonstração com prévia testável. | concluído | [PR #30](https://github.com/RLrafael01/ghostlab/pull/30) publicado com [LINK TESTE](https://rlrafael01.github.io/ghostlab/pr-30/), roteiro, contratos, evidências e histórico consolidado. #12–#16 concluídas na branch e aguardando merge; #8 permanece parcial. Serviço temporário disponível na verificação, main preservada e sem merge automático. |
+| 089 | 05/11/2026 | Enzo | Matt Pocock | `implement` | Implementar as issues #17 e #18. | em andamento | Base fd75dd3; reaproveitar a lógica de curto e ligar sensor ao firmware. |
+| 090 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR dedicado às issues #17 e #18. | em andamento | Branch isolada da main atualizada. |
