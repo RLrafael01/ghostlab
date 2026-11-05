@@ -1,10 +1,10 @@
 # Uso de skills no GhostLab
 
-**77 aplicações registradas** · Matt Pocock: 66 · pstack: 11
+**78 aplicações registradas** · Matt Pocock: 67 · pstack: 11
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
-| Matt Pocock | `code-review` | 13 | 2 | 15 |
+| Matt Pocock | `code-review` | 14 | 2 | 16 |
 | Matt Pocock | `diagnosing-bugs` | 5 | 0 | 5 |
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
@@ -18,7 +18,7 @@
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
 | pstack | `principle-prove-it-works` | 8 | 1 | 9 |
 | pstack | `principle-sequence-verifiable-units` | 2 | 0 | 2 |
-| **Total** | | **67** | **10** | **77** |
+| **Total** | | **68** | **10** | **78** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -114,3 +114,5 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 075 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Repetir o gesto real de reconexão com firmware. | concluído | Sugestão: repetir o cenário original, não apenas checar build. Decisão: LED ligado → c35 → símbolo + e Fade → e35 → símbolo + no navegador. Efeito: reconexão confirmada, LED volta a 100% e o PWM continua variando sem reiniciar. 73 testes e build aprovados; [captura](evidence/jumper-led-reconnect.png). |
 | 076 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar a correção de reconexão desde 0db0ca1. | concluído | Revisores independentes sobre 0db0ca1...66f2b39: Standards 0 achados; Spec 0 achados. Captura dos demais componentes, referências elétricas e execução preservadas; totais do histórico auditados. |
 | 077 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Publicar correção de reconexão com prévia para testar. | concluído | [PR #29](https://github.com/RLrafael01/ghostlab/pull/29) publicado com LINK TESTE no início, causa reproduzida, captura e roteiro. Branch codex/led-jumper-reconnect baseada na main após PR #28; sem merge automático. |
+
+| 078 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar PR #27 do Enzo e conferir quais issues podem ser encerradas. | concluído | Base main 0db0ca1, head 212d3d5; Standards: 3 P2, Spec: 2 P2 sobrepostos. Restauração com código editado não reinicia firmware, ajuda nega dano e IDs do histórico colidem. [Relatório](PR27-REVIEW.md). #2/#3/#9–#11 já integradas e encerradas; checklists/descrições e plano atualizados. #12–#24 permanecem incompletas. |
