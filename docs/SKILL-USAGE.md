@@ -1,6 +1,6 @@
 # Uso de skills no GhostLab
 
-**68 aplicações registradas** · Matt Pocock: 59 · pstack: 9
+**71 aplicações registradas** · Matt Pocock: 61 · pstack: 10
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
@@ -9,16 +9,16 @@
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
-| Matt Pocock | `implement` | 10 | 2 | 12 |
-| Matt Pocock | `pr` | 9 | 3 | 12 |
+| Matt Pocock | `implement` | 10 | 3 | 13 |
+| Matt Pocock | `pr` | 9 | 4 | 13 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
 | Matt Pocock | `tdd` | 2 | 2 | 4 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 2 | 0 | 2 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
 | pstack | `principle-prove-it-works` | 6 | 1 | 7 |
-| pstack | `principle-sequence-verifiable-units` | 2 | 0 | 2 |
-| **Total** | | **58** | **10** | **68** |
+| pstack | `principle-sequence-verifiable-units` | 2 | 1 | 3 |
+| **Total** | | **58** | **13** | **71** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -103,3 +103,6 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 066 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Conferir altura e movimento dos modelos reais. | concluído | Sugestão: verificar geometria e interação real. Decisão: testar os GLBs/glTF e colocar/arrastar os componentes no navegador. Efeito: 57 testes e build passam; servo, botão, sensor e potenciômetro visíveis acima da superfície. O apoio visual não cria conectividade elétrica. |
 | 067 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar correção de apoio desde 5f6d9b0. | concluído | Base 5f6d9b0. Standards: 0 achados. Spec: 1 P2, botão ainda afundava ao reduzir/crescer a base; corrigido e coberto por regressão real. Retorno dos dois revisores: 0 pendências. Sem atribuir polaridade a contatos não polarizados. |
 | 068 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Atualizar o PR #26 com correção de apoio e orientações dos terminais. | concluído | PR #26 atualizado via API, LINK TESTE confirmado no início, imagem da bancada, evidências dos testes e revisão e totais consolidados. Publicação automática acompanha o push; sem merge na main. |
+| 069 | 05/11/2026 | Enzo | Matt Pocock | `implement` | Concluir as subtarefas restantes da issue GitHub #8, V1 do GhostLab. | em andamento | Escopo confirmado pelo usuário: todas as subtarefas restantes, #12–#24. Base main atualizada para 6a1f31a; #9–#11 já integradas. Histórico consolidado preservado. |
+| 070 | 05/11/2026 | Enzo | pstack | `principle-sequence-verifiable-units` | Organizar a conclusão da V1 em unidades verificáveis e integrar suas dependências. | em andamento | Sugestão: verificar cada unidade antes de ampliar. Decisão: separar execução de periféricos, compilador e projetos; integrar circuito, falhas, exemplos e validação por etapas no PR da issue #8. Efeito: implementação em andamento, com revisão e evidências por unidade. |
+| 071 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Abrir e manter o PR das subtarefas restantes da issue #8. | em andamento | PR em rascunho antes da implementação; descrição final terá link de teste, limites, evidências e este histórico consolidado. Sem merge automático. |
