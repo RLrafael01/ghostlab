@@ -110,12 +110,16 @@ for (const name of ["blink", "fade"]) {
   });
 }
 
-for (const [landing, pin, rotation] of [
+for (const [landing, pin, rotation, cameraPosition = [1.3, 3, 3.6]] of [
   ["connector", "Ânodo +", 0],
   ["positive label", "Ânodo +", 0],
   ["negative label", "Cátodo −", 0],
   ["positive ring edge", "Ânodo +", 0],
+  ["positive ring interior and adjacent hole", "Ânodo +", 0],
+  ["positive ring interior close", "Ânodo +", 0, [1.3, 1.8, 2.2]],
+  ["positive ring interior steep", "Ânodo +", 0, [1.3, 4, 0.8]],
   ["negative ring edge", "Cátodo −", Math.PI / 3],
+  ["rotated negative ring interior", "Cátodo −", Math.PI / 3],
   ["rotated positive label", "Ânodo +", Math.PI / 2],
   ["rotated negative label", "Cátodo −", Math.PI / 2],
 ]) {
@@ -165,7 +169,7 @@ for (const [landing, pin, rotation] of [
       const items = [uno, board, led, resistor];
       scene.add(...items.map((i) => i.group));
       placeComponent(led, items);
-      camera.position.set(1.3, 3, 3.6);
+      camera.position.fromArray(cameraPosition);
       camera.lookAt(1.3, 0.4, -0.4);
       camera.updateMatrixWorld();
       const wires = createVisualWires(scene);
@@ -220,39 +224,81 @@ for (const [landing, pin, rotation] of [
       };
       settle();
       assert.match(status.textContent, /LED #3 · aceso/);
-      let target = terminalPosition(led, pin);
+      let targets = [terminalPosition(led, pin)];
       if (landing.includes("label")) {
         const symbol = led.group.children.find(
           (object) =>
             object.userData.pinName === pin &&
             object.geometry?.type === "BoxGeometry",
         );
-        target = symbol.getWorldPosition(new T.Vector3());
-      } else if (landing.includes("ring edge")) {
+        targets = [symbol.getWorldPosition(new T.Vector3())];
+      } else if (landing.includes("ring")) {
         const ring = led.group.children.find(
           (object) =>
             object.userData.pinName === pin &&
             object.geometry?.type === "TorusGeometry",
         );
-        // Pick the visible outer tube, away from the canonical central point.
-        target = ring.localToWorld(new T.Vector3(0.075, 0, 0.012));
+        // Exercise the visible tube or a grid strictly inside its opening.
+        targets = landing.includes("interior")
+          ? [-0.04, 0, 0.04].flatMap((x) =>
+              [-0.04, 0, 0.04].map((y) =>
+                ring.localToWorld(new T.Vector3(x, y, 0)),
+              ),
+            )
+          : [ring.localToWorld(new T.Vector3(0.075, 0, 0.012))];
       }
-      for (let round = 0; round < 2; round++) {
+      for (const target of targets) {
+        for (let round = 0; round < 2; round++) {
+          pointer("pointerdown", wire.handles[endIndex].position);
+          assert(wires.active);
+          const hole = terminalPosition(board, "a20");
+          pointer("pointermove", hole);
+          pointer("pointerup", hole);
+          settle();
+          assert.equal(
+            wires.connections()[wireIndex].ends[endIndex].pin,
+            "a20",
+          );
+          assert.match(status.textContent, /LED #3 · apagado/);
+          pointer("pointerdown", wire.handles[endIndex].position);
+          assert(wires.active);
+          pointer("pointermove", target);
+          pointer("pointerup", target);
+          settle();
+          assert.deepEqual(
+            wires.connections()[wireIndex].ends[endIndex],
+            {
+              componentId: 3,
+              pin,
+              occurrence: 0,
+            },
+            `drop at ${target.toArray().join(",")} must belong to the LED`,
+          );
+          assert.match(status.textContent, /LED #3 · aceso/);
+        }
+      }
+      if (landing.includes("adjacent hole")) {
+        // a31 lies behind this circle; the neighboring a32 remains outside it
+        // in this camera view and must still be independently connectable.
+        const adjacentHole = terminalPosition(board, "a32");
         pointer("pointerdown", wire.handles[endIndex].position);
         assert(wires.active);
-        const hole = terminalPosition(board, "a20");
-        pointer("pointermove", hole);
-        pointer("pointerup", hole);
+        pointer("pointermove", adjacentHole);
+        pointer("pointerup", adjacentHole);
         settle();
-        assert.equal(wires.connections()[wireIndex].ends[endIndex].pin, "a20");
+        assert.deepEqual(
+          wires.connections()[wireIndex].ends[endIndex],
+          { componentId: board.id, pin: "a32", occurrence: 0 },
+          "the LED circle must not steal a neighboring hole outside its boundary",
+        );
         assert.match(status.textContent, /LED #3 · apagado/);
+        const connector = terminalPosition(led, pin);
         pointer("pointerdown", wire.handles[endIndex].position);
-        assert(wires.active);
-        pointer("pointermove", target);
-        pointer("pointerup", target);
+        pointer("pointermove", connector);
+        pointer("pointerup", connector);
         settle();
         assert.deepEqual(wires.connections()[wireIndex].ends[endIndex], {
-          componentId: 3,
+          componentId: led.id,
           pin,
           occurrence: 0,
         });

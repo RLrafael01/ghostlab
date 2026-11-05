@@ -47,6 +47,16 @@ export function addLedConnectors(model) {
     target.rotation.x = Math.PI / 2;
     target.userData.pinName = pin;
     target.userData.connectionTarget = true;
+    // The ring denotes a filled drop target: rays through its opening must not
+    // fall through to a breadboard contact behind the LED connector.
+    const hitArea = new T.Mesh(
+      new T.CircleGeometry(0.075, 32),
+      new T.MeshBasicMaterial({ side: T.DoubleSide }),
+    );
+    hitArea.visible = false;
+    hitArea.userData.pinName = pin;
+    hitArea.userData.connectionTarget = true;
+    target.add(hitArea);
     model.add(guide, target);
     const material = new T.MeshBasicMaterial({ color });
     const minus = new T.Mesh(new T.BoxGeometry(0.065, 0.008, 0.014), material);
