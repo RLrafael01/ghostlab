@@ -3,13 +3,13 @@ const GPIO = Array.from({ length: 20 }, (_, i) =>
 );
 
 // Connectivity adapter for the supported peripherals, not an analog solver.
-export function simulatePeripherals({ components, firmware, pin, reachable }) {
+export function simulatePeripherals({ components, firmware, pin, reachable, disabledSources }) {
   const unos = components.filter((component) => component.type === "uno");
   const active =
     firmware?.unoId === undefined
       ? unos[0]
       : unos.find((component) => component.id === firmware.unoId);
-  const drivers = unos.flatMap((uno) => [
+  const drivers = unos.filter((uno) => !disabledSources?.has(uno.id)).flatMap((uno) => [
     { node: pin(uno, "5V"), unoId: uno.id, voltage: 5, kind: "power" },
     { node: pin(uno, "GND"), unoId: uno.id, voltage: 0, kind: "ground" },
     ...Object.entries(firmware?.unoId === uno.id ? (firmware.pins ?? {}) : {})

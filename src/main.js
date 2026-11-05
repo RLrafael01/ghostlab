@@ -141,6 +141,7 @@ const electricalView = createElectricalView({
   },
 });
 const firmwareSession = setupFirmwarePanel({
+  onRestart: () => electricalView.restart(),
   editor: document.querySelector("#code-panel textarea"),
   container: document.querySelector("#firmware-controls"),
   status: document.querySelector("#firmware-status"),

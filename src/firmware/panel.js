@@ -7,6 +7,7 @@ export function setupFirmwarePanel({
   container,
   status,
   getTarget = () => null,
+  onRestart = () => {},
   onOutput = () => {},
   onAssemble,
   base = "./",
@@ -150,7 +151,7 @@ export function setupFirmwarePanel({
   });
   stop.addEventListener("click", () => session.stop());
   restart.addEventListener("click", () => {
-    if (resolveTarget()) session.restart();
+    if (resolveTarget()) { onRestart(); session.restart(); }
   });
   window.addEventListener("pagehide", () => session.stop());
   return session;

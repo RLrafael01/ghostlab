@@ -1,6 +1,7 @@
-import { simulateCircuit } from "./electrical-simulation.js";
+import { createCircuitSimulation } from "./electrical-simulation.js";
 
 const reasons = {
+  short: "fonte em falha · corrija e reinicie",
   closed: "circuito fechado com resistor",
   open: "circuito aberto ou sem alimentação suportada",
   reversed: "polaridade invertida",
@@ -22,6 +23,14 @@ export function createElectricalView({
   onInputs = () => {},
   onState = () => {},
 }) {
+  const simulation = createCircuitSimulation();
+  const details = status.ownerDocument.createElement("details");
+  const summary = status.ownerDocument.createElement("summary");
+  summary.textContent = "Por que isso aconteceu?";
+  const explanation = status.ownerDocument.createElement("p");
+  details.append(summary, explanation);
+  details.hidden = true;
+  status.after(details);
   let previous = "",
     result;
   function peripheral(titleText, detailText) {
@@ -35,6 +44,7 @@ export function createElectricalView({
     status.append(row);
   }
   return {
+    restart() { simulation.restart(); previous = ""; },
     update() {
       const project = {
         components: items.map(({ id, type, columns, pressed, value }) => ({
@@ -55,7 +65,16 @@ export function createElectricalView({
       ]);
       if (signature === previous) return result;
       previous = signature;
-      result = simulateCircuit(project, firmware);
+      result = simulation.evaluate(project, firmware);
+      const wireIds = new Set(result.faults.flatMap((fault) => fault.wireIds));
+      for (const mesh of wires.meshes ?? []) {
+        mesh.material.emissive.set("#ff3322");
+        mesh.material.emissiveIntensity = wireIds.has(mesh.userData.wireId) ? 1.5 : 0;
+      }
+      details.hidden = result.faults.length === 0;
+      if (details.hidden) details.open = false;
+      const message = result.faults.map(({ id }) => `Uno #${id}: um caminho direto uniu 5 V a GND. Retire o jumper do caminho destacado e reinicie. O modelo não calcula corrente ou aquecimento.`).join(" ");
+      if (explanation.textContent !== message) explanation.textContent = message;
       onInputs(result.inputs);
       onState(result);
       status.replaceChildren();
