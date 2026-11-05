@@ -1,24 +1,24 @@
 # Uso de skills no GhostLab
 
-**68 aplicações registradas** · Matt Pocock: 59 · pstack: 9
+**73 aplicações registradas** · Matt Pocock: 63 · pstack: 10
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
-| Matt Pocock | `code-review` | 11 | 2 | 13 |
+| Matt Pocock | `code-review` | 12 | 2 | 14 |
 | Matt Pocock | `diagnosing-bugs` | 4 | 0 | 4 |
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
-| Matt Pocock | `implement` | 10 | 2 | 12 |
-| Matt Pocock | `pr` | 9 | 3 | 12 |
+| Matt Pocock | `implement` | 11 | 2 | 13 |
+| Matt Pocock | `pr` | 10 | 3 | 13 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
-| Matt Pocock | `tdd` | 2 | 2 | 4 |
+| Matt Pocock | `tdd` | 3 | 2 | 5 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 2 | 0 | 2 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
-| pstack | `principle-prove-it-works` | 6 | 1 | 7 |
+| pstack | `principle-prove-it-works` | 7 | 1 | 8 |
 | pstack | `principle-sequence-verifiable-units` | 2 | 0 | 2 |
-| **Total** | | **58** | **10** | **68** |
+| **Total** | | **63** | **10** | **73** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -103,3 +103,9 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 066 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Conferir altura e movimento dos modelos reais. | concluído | Sugestão: verificar geometria e interação real. Decisão: testar os GLBs/glTF e colocar/arrastar os componentes no navegador. Efeito: 57 testes e build passam; servo, botão, sensor e potenciômetro visíveis acima da superfície. O apoio visual não cria conectividade elétrica. |
 | 067 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar correção de apoio desde 5f6d9b0. | concluído | Base 5f6d9b0. Standards: 0 achados. Spec: 1 P2, botão ainda afundava ao reduzir/crescer a base; corrigido e coberto por regressão real. Retorno dos dois revisores: 0 pendências. Sem atribuir polaridade a contatos não polarizados. |
 | 068 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Atualizar o PR #26 com correção de apoio e orientações dos terminais. | concluído | PR #26 atualizado via API, LINK TESTE confirmado no início, imagem da bancada, evidências dos testes e revisão e totais consolidados. Publicação automática acompanha o push; sem merge na main. |
+
+| 069 | 05/11/2026 | Rafael | Matt Pocock | `implement` | Organizar cards e tornar o editor uma janela ajustável em tela cheia. | concluído | Cards de ajuda/estado em coluna, estado recolhível, editor com arraste e redimensionamento, código alterado identificado como Personalizado. Comportamento normal do editor preservado. |
+| 070 | 05/11/2026 | Rafael | Matt Pocock | `tdd` | Verificar os controles pela interação pública da interface. | concluído | Regressões reproduzidas antes da implementação: preset conservava Blink após editar delay; recolhimento e janela flutuante ausentes. Testes DOM cobrem controles, texto preservado, limites e cancelamento sem simular colaboradores internos. |
+| 071 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Verificar cards e janela no navegador real. | concluído | Sugestão: observar gestos e resultado renderizado. Decisão: testar em 1440×900 e 1024×768, arraste, resize, teclado, recolhimento, edição e execução local. Efeito: cards separados e janela preserva código/tamanho/posição; Blink 250 ms executado como Personalizado. 64 testes e build aprovados; [evidência](evidence/workbench-panels.png). |
+| 072 | 05/11/2026 | Rafael | Matt Pocock | `code-review` | Revisar painéis contra padrões e pedido do usuário desde 6a1f31a. | concluído | Dois revisores independentes sobre 6a1f31a...30fe489: Standards 0 achados; Spec 0 achados. [Revisão e validação](WORKBENCH-PANELS-REVIEW.md). |
+| 073 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Publicar correções da interface com link de teste destacado. | concluído | [PR #28](https://github.com/RLrafael01/ghostlab/pull/28) publicado com LINK TESTE no início, captura, roteiro e limite da compilação pública. Histórico: 73 aplicações, Rafael 63 / Enzo 10. Sem merge na main. |

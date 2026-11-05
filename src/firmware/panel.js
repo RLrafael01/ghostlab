@@ -16,7 +16,7 @@ export function setupFirmwarePanel({
     .map(([id, e]) => `<option value="${id}">${e.name}</option>`)
     .join(
       "",
-    )}</select></label><button data-action="run" class="run-firmware">▶ Compilar e executar</button><button data-action="stop">■ Parar</button><button data-action="restart">↻ Reiniciar</button></div><div class="firmware-state" role="status"></div><details class="firmware-diagnostics" hidden><summary>Diagnósticos de compilação</summary><pre></pre></details><p class="firmware-note">LED no D9 com resistor e GND. Os exemplos originais têm firmware pronto para testar; compilar alterações requer o servidor local.</p>`;
+    )}<option value="custom" disabled>Personalizado</option></select></label><button data-action="run" class="run-firmware">▶ Compilar e executar</button><button data-action="stop">■ Parar</button><button data-action="restart">↻ Reiniciar</button></div><div class="firmware-state" role="status"></div><details class="firmware-diagnostics" hidden><summary>Diagnósticos de compilação</summary><pre></pre></details><p class="firmware-note">LED no D9 com resistor e GND. Os exemplos originais têm firmware pronto para testar; compilar alterações requer o servidor local.</p>`;
   const select = container.querySelector("select"),
     run = container.querySelector('[data-action="run"]'),
     stop = container.querySelector('[data-action="stop"]'),
@@ -62,13 +62,25 @@ export function setupFirmwarePanel({
       onOutput(state.output ? { ...state.output, unoId: target } : null);
     },
   });
-  editor.value = examples.blink.source;
-  session.edit(editor.value);
-  editor.addEventListener("input", () => session.edit(editor.value));
-  select.addEventListener("change", () => {
-    session.stop();
-    editor.value = examples[select.value].source;
+  function editSource() {
+    const match = Object.entries(examples).find(
+      ([, example]) => example.source === editor.value,
+    );
+    select.value = match?.[0] ?? "custom";
     session.edit(editor.value);
+  }
+  editor.value = examples.blink.source;
+  editSource();
+  editor.addEventListener("input", editSource);
+  select.addEventListener("change", () => {
+    const example = examples[select.value];
+    if (!example) {
+      editSource();
+      return;
+    }
+    session.stop();
+    editor.value = example.source;
+    editSource();
   });
   run.addEventListener("click", () => {
     target = getTarget();

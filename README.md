@@ -84,6 +84,8 @@ Botão e resistor não têm polaridade: seus pinos são contatos, não positivo/
 
 O painel **Estado elétrico** mostra o LED aceso ou apagado, seu brilho e o motivo. Use **Como testar e limites** na cena para consultar as instruções. Na lista, foque o fio #5 para retirar/reconectar sua ponta em GND; selecione o LED e use **Focar peça** para observar a luz de perto. Mover peças preserva suas ligações.
 
+A dica dos jumpers e o estado elétrico ficam empilhados, com espaço entre os cards. Clique no estado elétrico para recolher ou reabrir; os sinais continuam atualizando enquanto ele está recolhido. Abrir **Como testar e limites** mantém o card aberto.
+
 A protoboard liga a–e e f–j em grupos separados por coluna, além de quatro barramentos contínuos e independentes. Os grupos acompanham a quantidade de colunas ao redimensionar. O encaixe visual das peças não cria contatos elétricos: use fios nos terminais do LED e resistor.
 
 O modelo de conectividade recebe GPIO/PWM do firmware real; o resistor precisa estar no caminho, mas seu valor não é calculado. Não há cálculo analógico geral ou dano; LEDs em série e fontes interligadas não são simulados. [Modelo inicial](docs/ELECTRICAL-MODEL.md) e [extensão para firmware](docs/FIRMWARE.md).
@@ -112,6 +114,10 @@ O workflow `.github/workflows/pr.yml` instala dependências, roda `npm test`, fa
 Os workflows passam a acompanhar as novas branches criadas da main depois que este PR de configuração for aprovado e mesclado. A prévia do Sites criada anteriormente é uma cópia manual separada.
 
 Fora da tela cheia, o editor permanece aberto na parte inferior da bancada. Em tela cheia começa recolhido e pode ser aberto pelo dock; sair restaura o editor sem perder texto.
+
+Em tela cheia, arraste a barra de título do editor para movê-lo e as bordas ou cantos para ajustar seu tamanho. Fechar e reabrir preserva a posição e o tamanho durante a sessão. **Restaurar janela** recupera a disposição inicial. Também é possível focar a barra ou uma borda e usar as setas; Shift aumenta o passo.
+
+Ao alterar o texto de um exemplo, o seletor passa a mostrar **Personalizado**. Restaurar exatamente o código original recupera o nome do exemplo; escolher outro exemplo carrega seu código.
 
 ## Site da main
 
