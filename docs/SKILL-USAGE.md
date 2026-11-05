@@ -1,6 +1,6 @@
 # Uso de skills no GhostLab
 
-**45 aplicações registradas** · Matt Pocock: 43 · pstack: 2
+**47 aplicações registradas** · Matt Pocock: 45 · pstack: 2
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
@@ -9,15 +9,15 @@
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
-| Matt Pocock | `implement` | 9 | 1 | 10 |
-| Matt Pocock | `pr` | 5 | 2 | 7 |
+| Matt Pocock | `implement` | 9 | 2 | 11 |
+| Matt Pocock | `pr` | 5 | 3 | 8 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
 | Matt Pocock | `tdd` | 1 | 1 | 2 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 1 | 0 | 1 |
 | Matt Pocock | `writing-for-agents` | 4 | 0 | 4 |
 | pstack | `principle-prove-it-works` | 2 | 0 | 2 |
-| **Total** | | **40** | **5** | **45** |
+| **Total** | | **40** | **7** | **47** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -78,3 +78,5 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 044 | 04/11/2026 | Rafael | Matt Pocock | `pr` | Preparar PR com prévia para Enzo. | concluído | PR #5 aberto com LINK TESTE no início, evidências e impacto. Publicação acompanhada pelo workflow do PR. Descrição atualizada com ajuda recolhível, seletor contextual, correção da altura das pontas e protoboard com quantidade variável de colunas e furos de passo fixo. |
 
 | 045 | 04/11/2026 | Rafael | pstack | `principle-prove-it-works` | Verificar redimensionamento da protoboard pelas extremidades. | concluído | Sugestão aplicada: validar interações reais. Chrome confirmou aumentar/reduzir em modo normal e fullscreen, canto oposto fixo, Escape/pointercancel/fullscreen restaurando, seleção, contatos e peças apoiadas; novo LED encaixa na placa redimensionada. 21 testes e build aprovados. Revisão solicitada pelo usuário substituiu escala visual por 10–126 colunas com passo fixo. Nova verificação: 25 testes e Chrome confirmaram 63→83→43 colunas, furos invariantes, conexão ao novo a80, retirada ao reduzir, Escape restaurando e crescimento posterior mantendo ponta solta. Novo LED encaixado na área ampliada após a coluna 63. Geometria com recessos reais verificada por raycast. npm test: 25/25; npm run build aprovado. |
+| 046 | 05/11/2026 | Enzo | Matt Pocock | `implement` | Implementar issue GitHub #3: conectividade, alimentação e LED. | em andamento | Base atualizada por git pull: a49f84e. Circuito de referência, grupos da protoboard e resposta a conexões, sem firmware ou dano. |
+| 047 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Abrir e manter o PR da issue #3 com prévia e evidências. | em andamento | Branch codex/electrical-led; PR em rascunho antes da implementação, com este histórico no mesmo PR. |
