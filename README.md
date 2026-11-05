@@ -53,16 +53,16 @@ npm run dev
 
 Abra o endereço mostrado no terminal (normalmente http://127.0.0.1:5173). Para gerar a versão de apresentação: `npm run build` e `npm run preview`.
 
-Clique no catálogo para adicionar; arraste diretamente as peças sobre a bancada para mover. Selecione na cena ou lista; ajuste X/Z no inspetor para posicionar a peça. Clique na bancada e mantenha WASD ou as setas pressionadas para navegar com a câmera sobre sua superfície; essas teclas não movem as peças. Delete remove a seleção. Arraste o fundo para orbitar e use o scroll para zoom; “Visão inicial” restaura a câmera. Código ainda não é executado; conexões são a tarefa 03.
+Clique no catálogo para adicionar; arraste diretamente as peças sobre a bancada para mover. Selecione na cena ou lista; ajuste X/Z no inspetor para posicionar a peça. Clique na bancada e mantenha WASD ou as setas pressionadas para navegar com a câmera sobre sua superfície; essas teclas não movem as peças. Delete remove a seleção. Arraste o fundo para orbitar e use o scroll para zoom; “Visão inicial” restaura a câmera. Código ainda não é executado; a conectividade e o LED usam o modelo elétrico simplificado descrito abaixo.
 
 Sete componentes usam modelos 3D importados, incluindo geometrias CAD convertidas de STEP. A protoboard usa geometria paramétrica com furos reais para permitir alterar a quantidade de colunas. Escala comum: 1 mm = 0,0445 unidade da cena. Materiais e alvos de interação são adaptações visuais; não há validação de tolerâncias para fabricação. Fontes, autores e licenças: [atribuições dos modelos](public/models/ATTRIBUTION.md). Para reproduzir as conversões: `node scripts/convert-cad.mjs`.
 
 
 ## Acabamento e montagem de apresentação
 
-A bancada abre com Uno, protoboard, LED, resistor e quatro jumpers **visuais**. Fios curvos acompanham os terminais ao mover as peças e desaparecem quando uma ponta é removida. Essa composição não é um circuito validado e ainda não executa firmware; novos fios podem ser adicionados pelo catálogo e removidos pela lista de fios. Os grupos elétricos da protoboard continuam nas próximas etapas.
+A bancada abre com Uno, protoboard, LED, resistor e cinco jumpers formando um circuito de referência: **5 V → resistor → LED → GND**. O LED acende pelo resultado das ligações. Retirar o retorno apaga a luz; reconectar a GND volta a acendê-la. Fios curvos acompanham os terminais ao mover as peças. Novos fios podem ser adicionados pelo catálogo e removidos pela lista.
 
-“Encaixe visual” aproxima LED, resistor e botão dos contatos da protoboard; é uma ajuda de posicionamento, não valida passo de todos os terminais, polaridade, colisões ou conectividade. Componentes apoiados acompanham a protoboard; removê-la os devolve à bancada. Desative a opção para posicionamento livre. No inspetor, “Focar peça” aproxima a câmera para examinar inscrições e materiais.
+“Encaixe visual” aproxima LED, resistor e botão dos contatos da protoboard; é uma ajuda de posicionamento, não valida passo de todos os terminais, polaridade, colisões ou conectividade. Componentes apoiados acompanham a protoboard; removê-la os devolve à bancada. Desative a opção para posicionamento livre. O apoio na protoboard continua ativo: o LED mantém a altura sobre os barramentos e enquanto seu corpo ainda sobrepõe uma borda; só retorna à altura da mesa ao sair completamente da placa. Os alvos laterais dos cabos não contam como corpo apoiado. No inspetor, “Focar peça” aproxima a câmera para examinar inscrições e materiais.
 
 Iluminação de estúdio, sombras de contato, materiais de plástico/metal/encapsulamento e serigrafia autoral melhoram a leitura. Inscrições do GhostLab não reproduzem o layout de fabricação do fabricante. A referência visual orienta o acabamento; a placa permanece Uno, sem adicionar Pico ou display OLED ao escopo.
 
@@ -72,8 +72,18 @@ Verificação de fios: `node --test tests/*.test.js`.
 
 Adicione **Fio jumper** pelo catálogo ou pelo dock em tela cheia: o novo cabo entra com duas pontas livres. Também é possível arrastar o item do catálogo para posicioná-lo na bancada. A lista **Fios jumper** permite focar e remover cada cabo e mostra os terminais conectados ou livres. Arraste um dos pequenos conectores coloridos nas pontas dos cabos. A ponta sai do contato e o cabo acompanha o cursor; a outra ponta continua presa. Aproxime a ponta de um pino ou furo da protoboard: o contato fica destacado e seu nome aparece no aviso sobre a cena. Solte para encaixar, ou solte longe dos contatos para deixar a ponta livre. Escape cancela e restaura o estado anterior, inclusive quando a ponta já estava desconectada. Para facilitar o gesto, selecione o Uno e use “Focar peça”.
 
-A retirada e o encaixe têm transição curta; a preferência de movimento reduzido usa posicionamento imediato. Ligações incorretas são permitidas: este gesto altera referências de terminais, sem simular eletricidade. Os contatos GND fisicamente distintos do Uno mantêm referências separadas. Os testes cobrem reconexão, ponta solta, cancelamento, limpeza ao remover peças e movimento reduzido.
+No LED, os alvos + e − nas laterais permitem conectar sem esconder as pontas dentro do plástico. As linhas pontilhadas são guias visuais para os terminais, não furos extras da protoboard. Os conectores podem ser agarrados a até 12 pixels do centro; quando há mais de um próximo, vence o mais perto.
 
+A retirada e o encaixe têm transição curta; a preferência de movimento reduzido usa posicionamento imediato. Ligações incorretas são permitidas: o gesto altera referências de terminais e atualiza o estado elétrico simplificado. Circuitos fora do modelo mantêm o LED apagado, sem simular dano. Os contatos GND fisicamente distintos do Uno mantêm referências separadas. Os testes cobrem reconexão, ponta solta, cancelamento, limpeza ao remover peças e movimento reduzido.
+
+
+## Primeiro circuito elétrico
+
+O painel **Estado elétrico** mostra o LED aceso ou apagado e o motivo. Use **Como testar e limites** na cena para consultar as instruções. Na lista, foque o fio #5 para retirar/reconectar sua ponta em GND; selecione o LED e use **Focar peça** para observar a luz de perto. Mover peças preserva suas ligações.
+
+A protoboard liga a–e e f–j em grupos separados por coluna, além de quatro barramentos contínuos e independentes. Os grupos acompanham a quantidade de colunas ao redimensionar. O encaixe visual das peças não cria contatos elétricos: use fios nos terminais do LED e resistor.
+
+Modelo digital de conectividade, sem firmware, cálculo analógico ou dano. O resistor precisa estar no caminho, mas nenhum valor é calculado. GPIO, LEDs em série e fontes interligadas não são simulados. Contrato, limites e evidências: [modelo elétrico da issue #3](docs/ELECTRICAL-MODEL.md).
 
 ## Tela cheia e catálogo
 

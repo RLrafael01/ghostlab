@@ -62,6 +62,29 @@ export function setupJumperInteraction({
         .filter((terminal) => terminal.position);
     });
   }
+  function handleAt(event, rect) {
+    let nearest = null;
+    let distance = 12;
+    for (const handle of wires.handles.children) {
+      if (!handle.visible) continue;
+      const screen = handle.getWorldPosition(new T.Vector3()).project(camera);
+      if (screen.z < -1 || screen.z > 1) continue;
+      const d = Math.hypot(
+        rect.left + ((screen.x + 1) * rect.width) / 2 - event.clientX,
+        rect.top + ((1 - screen.y) * rect.height) / 2 - event.clientY,
+      );
+      if (d < distance) {
+        nearest = handle;
+        distance = d;
+      }
+    }
+    return (
+      nearest ??
+      ray
+        .intersectObjects(wires.handles.children, false)
+        .find((hit) => hit.object.visible)?.object
+    );
+  }
   function targetAt(event, rect) {
     if (
       event.clientX < rect.left ||
@@ -113,11 +136,10 @@ export function setupJumperInteraction({
         return;
       }
       if (event.button !== 0 || isComponentDragging()) return;
-      updateRay(event);
-      // Handles are deliberately larger than the cable; a cable body never starts a component drag.
-      const hit = ray.intersectObjects(wires.handles.children, false)[0];
-      if (!hit || !hit.object.visible) return;
-      const { wire, index } = hit.object.userData.jumper;
+      const rect = updateRay(event);
+      const handle = handleAt(event, rect);
+      if (!handle) return;
+      const { wire, index } = handle.userData.jumper;
       onSelect(wire.id);
       if (!wires.begin(wire, index)) return;
       event.preventDefault();
