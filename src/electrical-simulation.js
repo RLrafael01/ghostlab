@@ -174,6 +174,15 @@ export function simulateCircuit({ components, wires }, firmware = null, state) {
           )
         )
           reason = "reversed";
+        if (state && reason === "open") {
+          if (!sources.some((source) => source.low.has(cathode)))
+            reason = "unpowered";
+          else if (
+            firmware?.unoId != null &&
+            !sources.some((source) => source.high.has(anode))
+          )
+            reason = "signal-open";
+        }
       }
       if (reason !== "closed") brightness = 0;
       const result = {

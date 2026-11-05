@@ -4,6 +4,8 @@ const reasons = {
   short: "fonte em falha · corrija e reinicie",
   closed: "circuito fechado com resistor",
   open: "circuito aberto ou sem alimentação suportada",
+  unpowered: "circuito aberto · sem retorno GND",
+  "signal-open": "sem sinal de alimentação no ânodo",
   reversed: "polaridade invertida",
   unlimited: "sem resistor no caminho · fora deste modelo",
   unsupported: "ligações fora do modelo · confira 5 V e GND",
@@ -28,7 +30,15 @@ export function createElectricalView({
   const summary = status.ownerDocument.createElement("summary");
   summary.textContent = "Por que isso aconteceu?";
   const explanation = status.ownerDocument.createElement("p");
-  details.append(summary, explanation);
+  const restart = status.ownerDocument.createElement("button");
+  restart.type = "button";
+  restart.textContent = "Reiniciar fonte virtual";
+  details.append(summary, explanation, restart);
+  restart.onclick = () => {
+    simulation.restart();
+    previous = "";
+    view.update();
+  };
   details.hidden = true;
   status.after(details);
   let previous = "",
@@ -43,7 +53,7 @@ export function createElectricalView({
     row.append(title, detail);
     status.append(row);
   }
-  return {
+  const view = {
     restart() {
       simulation.restart();
       previous = "";
@@ -80,12 +90,23 @@ export function createElectricalView({
           ? 1.5
           : 0;
       }
-      details.hidden = result.faults.length === 0;
+      const disconnected = result.leds.filter(
+        ({ reason }) => reason === "unpowered" || reason === "signal-open",
+      );
+      details.hidden = result.faults.length === 0 && disconnected.length === 0;
+      restart.hidden = result.faults.length === 0;
       if (details.hidden) details.open = false;
       const message = result.faults
         .map(
           ({ id }) =>
             `Uno #${id}: um caminho direto uniu 5 V a GND. Retire o jumper do caminho destacado e reinicie. O modelo não calcula corrente ou aquecimento.`,
+        )
+        .concat(
+          disconnected.map(({ id, reason }) =>
+            reason === "unpowered"
+              ? `LED #${id}: o cátodo está sem retorno. Reconecte o caminho até GND.`
+              : `LED #${id}: o ânodo não recebe 5 V nem sinal de uma saída GPIO. Confira o fio e o pino configurado no sketch.`,
+          ),
         )
         .join(" ");
       if (explanation.textContent !== message)
@@ -209,4 +230,5 @@ export function createElectricalView({
       return result;
     },
   };
+  return view;
 }

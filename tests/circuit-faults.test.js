@@ -35,3 +35,25 @@ test("curto direto identifica o fio e exige reinício após correção", () => {
   simulation.restart();
   assert.equal(simulation.evaluate(project).leds[0].on, true);
 });
+
+test("perda de GND e perda de sinal têm motivos distintos e reconexão recupera", () => {
+  const simulation = createCircuitSimulation();
+  const project = circuit();
+  project.wires[0].ends[0].pin = "D9";
+  const firmware = {
+    unoId: 1,
+    pins: { D9: { output: true, level: 1, duty: 1 } },
+  };
+  const led = () => simulation.evaluate(project, firmware).leds[0];
+  assert.equal(led().on, true);
+  const ground = project.wires.pop();
+  assert.equal(led().reason, "unpowered");
+  project.wires.push(ground);
+  assert.equal(led().on, true);
+  const [signal] = project.wires.splice(0, 1);
+  assert.equal(led().reason, "signal-open");
+  project.wires.unshift(signal);
+  assert.equal(led().on, true);
+  project.wires.push(wire(4, 1, "5V", 3, "1"), wire(5, 3, "2", 1, "GND"));
+  assert.deepEqual(simulation.evaluate(project, firmware).faults, []);
+});
