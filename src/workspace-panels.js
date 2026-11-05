@@ -1,8 +1,11 @@
+import { setupFloatingCodeWindow } from "./floating-code-window.js";
+
 export function setupWorkspacePanels() {
   const shell = document.querySelector("main");
   const fullscreen = document.querySelector("#fullscreen");
   const codeButton = document.querySelector("#code-toggle");
   const editor = document.querySelector("#code-panel");
+  const floatingEditor = setupFloatingCodeWindow({ shell, editor });
   const inspector = document.querySelector("#inspector");
   const inspectorButton = document.querySelector("#inspector-toggle");
   function setInspectorOpen(open) {
@@ -19,6 +22,7 @@ export function setupWorkspacePanels() {
   setCodeOpen(true);
   function showExpanded(value) {
     shell.classList.toggle("expanded-workbench", value);
+    floatingEditor?.setExpanded(value);
     fullscreen.textContent = value ? "⤢ Sair da tela cheia" : "⤢ Tela cheia";
     fullscreen.setAttribute("aria-pressed", String(value));
   }
@@ -49,6 +53,7 @@ export function setupWorkspacePanels() {
   });
   function setCodeOpen(open) {
     editor.hidden = !open;
+    floatingEditor?.setOpen(open);
     codeButton.setAttribute("aria-expanded", String(open));
     codeButton.textContent = open ? "⌄ Recolher código" : "〈/〉 Código";
     document

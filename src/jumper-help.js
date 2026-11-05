@@ -11,7 +11,8 @@ export function createJumperHelp(host) {
   status.setAttribute("role", "status");
   status.textContent = "Cabos: arraste uma ponta colorida para outro contato";
   button.append(status);
-  host.append(button);
+  const stack = host.querySelector(".scene-overlays");
+  (stack ?? host).prepend(button);
   const shell = host.closest("main");
   const toolbar = shell?.querySelector(".toolbar");
   const tag = host.querySelector(".scene-tag");
@@ -27,7 +28,14 @@ export function createJumperHelp(host) {
         top,
         toolbar.getBoundingClientRect().bottom - bounds.top + 12,
       );
-    button.style.top = `${top}px`;
+    if (stack) {
+      stack.style.top = `${top}px`;
+      const dock = shell?.querySelector(".immersive-dock");
+      const dockTop = fullscreen && dock ? dock.getBoundingClientRect().top : 0;
+      const bottom =
+        dockTop > bounds.top ? dockTop - bounds.top - 12 : bounds.height - 36;
+      stack.style.maxHeight = `${Math.max(0, bottom - top)}px`;
+    } else button.style.top = `${top}px`;
     let available = bounds.width - 40;
     if (fullscreen && inspector && !inspector.hidden) {
       const panel = inspector.getBoundingClientRect();
@@ -39,6 +47,7 @@ export function createJumperHelp(host) {
       ? Math.min(available, status.getBoundingClientRect().width + 54)
       : 42;
     button.style.width = `${Math.max(42, width)}px`;
+    if (stack) stack.style.width = `${Math.max(42, available)}px`;
   }
   button.addEventListener("click", () => {
     expanded = !expanded;
