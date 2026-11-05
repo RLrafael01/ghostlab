@@ -111,12 +111,18 @@ test("potentiometer position updates modeled voltage and disconnecting power rel
     /ADC|512|1023/,
     "the circuit model cannot claim the program's ADC reading",
   );
+  firmware.analogReadings = { A0: { value: 321, milliseconds: 150 } };
+  view.update();
+  assert.match(status.textContent, /Última conversão ADC/);
+  assert.match(status.textContent, /A0: 321\/1023.*0,150 s/);
+  assert.doesNotMatch(status.textContent, /512\/1023/);
   wires.begin(ground, 1);
   wires.finish();
   view.update();
   assert.equal(observed.analog.A0, null);
   assert.match(status.textContent, /sem alimentação suportada/);
   assert.doesNotMatch(status.textContent, /2,50 V|A0: LOW/);
+  assert.match(status.textContent, /sem tensão válida/);
 });
 
 test("servo status explains inactive pulses and conflicting GPIO inputs never appear as valid readings", () => {

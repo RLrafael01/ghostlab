@@ -136,17 +136,22 @@ export function setupFirmwarePanel({
     editor.value = example.source;
     editSource();
   });
-  run.addEventListener("click", () => {
+  function resolveTarget() {
     target = getTarget();
     if (target === null || target === undefined) {
       message.textContent =
         "Adicione um Arduino Uno à bancada antes de executar.";
-      return;
+      return false;
     }
-    session.execute();
+    return true;
+  }
+  run.addEventListener("click", () => {
+    if (resolveTarget()) session.execute();
   });
   stop.addEventListener("click", () => session.stop());
-  restart.addEventListener("click", () => session.restart());
+  restart.addEventListener("click", () => {
+    if (resolveTarget()) session.restart();
+  });
   window.addEventListener("pagehide", () => session.stop());
   return session;
 }

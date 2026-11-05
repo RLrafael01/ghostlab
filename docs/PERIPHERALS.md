@@ -32,7 +32,7 @@ O componente usa **VCC, GND e Sinal** como divisor de tensão orientado entre 5 
 
 Arraste a haste para os lados na cena ou ajuste o controle deslizante, as setas e o campo numérico do inspetor. O intervalo completo do gesto tem 180 pixels; a animação da haste corresponde à posição ajustada. Escape/cancelamento restaura a posição inicial do gesto.
 
-Com alimentação válida, Sinal fornece de 0 a 5 V ao pino analógico conectado. O ADC de 10 bits do ATmega328P executa `analogRead`; o exemplo transforma a leitura por divisão inteira por quatro e executa `analogWrite(9, brilho)`. A tensão mostrada no painel é a **entrada modelada**; a leitura ADC efetivamente executada e o valor PWM estão nas mensagens do programa.
+Com alimentação válida, Sinal fornece de 0 a 5 V ao pino analógico conectado. O ADC de 10 bits do ATmega328P executa `analogRead`; o exemplo transforma a leitura por divisão inteira por quatro e executa `analogWrite(9, brilho)`. O painel distingue **Tensão modelada** de **Última conversão ADC · firmware**: esta última só aparece após uma conversão real, com canal, valor e instante virtual. Não é inferida da posição do controle. A leitura e o PWM também aparecem nas mensagens do exemplo. Um canal sem conversões novas conserva sua última leitura com o instante antigo; uma nova execução limpa as leituras.
 
 Trocar A0 por A1 no código sem mover o fio deixa o novo canal sem entrada. Sinal solto, falta de 5 V/GND ou ligações conflitantes não recebem tensão válida do potenciômetro. O emulador usa **0 V como fallback de canal analógico liberado**, sem ruído ou memória de carga; o painel informa a falta de alimentação/conexão. Não há solver analógico geral, impedância, variação de referência ou simulação de um potenciômetro com qualquer topologia.
 
@@ -58,7 +58,7 @@ Ao retirar sinal ou alimentação, a peça fica inativa e conserva a última pos
 
 **Servo usa Timer1 no Uno e interfere no PWM de D9/D10 enquanto está ativo**, mesmo com o sinal do servo em D6. Não se produz PWM artificial nesses pinos para esconder essa limitação. Para combinar servo e dimmer, use outro pino PWM, como D3/D11 do Timer2, e altere também o fio do LED. O exemplo do servo mantém o LED sem uso para tornar essa separação explícita.
 
-GPIO/PWM, ADC, UART e pulsos usam tempo virtual de CPU a 16 MHz. O worker avança em blocos de até 20 ms e entrega estados aproximadamente a cada 30 ms de tempo de parede; o navegador desenha no próximo quadro. Carga da máquina, aba em segundo plano e compilação podem aumentar a latência ou deixar o tempo virtual mais lento que o real. O valor de velocidade no editor permite observar essa diferença; não há promessa de latência física ou de tempo real.
+GPIO/PWM, ADC, UART e pulsos usam tempo virtual de CPU a 16 MHz. O worker avança em blocos de até 20 ms e entrega estados aproximadamente a cada 30 ms de tempo de parede; o navegador desenha no próximo quadro. Carga da máquina, aba em segundo plano e compilação podem aumentar a latência ou deixar o tempo virtual mais lento que o real. O instante das conversões ADC é virtual; não há promessa de latência física ou de tempo real.
 
 ## Evidências e pendências
 

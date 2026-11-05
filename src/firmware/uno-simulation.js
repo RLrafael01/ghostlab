@@ -4,6 +4,7 @@ import {
   AVRIOPort,
   AVRTimer,
   AVRADC,
+  ADCMuxInputType,
   adcConfig,
   AVRUSART,
   usart0Config,
@@ -67,6 +68,28 @@ export class UnoSimulation {
       (config) => new AVRTimer(this.cpu, config),
     );
     this.adc = new AVRADC(this.cpu, adcConfig);
+    this.analogReadings = {};
+    let pendingADCChannel = null;
+    const readADC = this.adc.onADCRead;
+    const completeADC = this.adc.completeADCRead.bind(this.adc);
+    this.adc.onADCRead = (input) => {
+      pendingADCChannel =
+        input.type === ADCMuxInputType.SingleEnded && input.channel < 6
+          ? `A${input.channel}`
+          : null;
+      readADC(input);
+    };
+    this.adc.completeADCRead = (value) => {
+      // Disabled ADC reads complete with zero without calling onADCRead.
+      const channel = pendingADCChannel;
+      pendingADCChannel = null;
+      completeADC(value);
+      if (channel !== null)
+        this.analogReadings[channel] = {
+          value,
+          milliseconds: (this.cpu.cycles / HZ) * 1000,
+        };
+    };
     this.usart = new AVRUSART(this.cpu, usart0Config, HZ);
     this.serialBytes = new Uint8Array(SERIAL_CAPACITY);
     this.serialStart = 0;
@@ -202,6 +225,12 @@ export class UnoSimulation {
   snapshot() {
     return {
       milliseconds: (this.cpu.cycles / HZ) * 1000,
+      analogReadings: Object.fromEntries(
+        Object.entries(this.analogReadings).map(([name, reading]) => [
+          name,
+          { ...reading },
+        ]),
+      ),
       serial: {
         text: "",
         dropped: 0,

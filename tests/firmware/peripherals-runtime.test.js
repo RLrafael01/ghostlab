@@ -76,6 +76,72 @@ test("analogRead uses the connected ADC voltage for PWM, including endpoints, in
   }
 });
 
+test("ADC snapshots expose only completed firmware conversions, with independent channels and immutable snapshots", async () => {
+  const { hex } = await compileSketch(`
+    void setup() { pinMode(2, INPUT_PULLUP); delay(20); }
+    void loop() { analogRead(digitalRead(2) ? A0 : A1); delay(10); }
+  `);
+  const sim = new UnoSimulation(hex);
+  sim.setInputs({ analog: { A0: 2.5 } });
+  assert.deepEqual(sim.snapshot().analogReadings, {});
+  assert.deepEqual(
+    sim.advance(5).analogReadings,
+    {},
+    "voltage alone does not imply a firmware read",
+  );
+  let output;
+  for (const [voltage, value] of [
+    [0, 0],
+    [2.5, 512],
+    [5, 1023],
+  ]) {
+    sim.setInputs({ analog: { A0: voltage, A1: 1.25 } });
+    output = sim.advance(25);
+    assert.equal(output.analogReadings.A0.value, value);
+    assert.ok(output.analogReadings.A0.milliseconds > 20);
+    assert.ok(output.analogReadings.A0.milliseconds <= output.milliseconds);
+    assert.equal(output.analogReadings.A1, undefined);
+  }
+  output.analogReadings.A0.value = -1;
+  assert.equal(
+    sim.snapshot().analogReadings.A0.value,
+    1023,
+    "caller cannot change saved ADC readings",
+  );
+  sim.setInputs({ digital: { D2: 0 }, analog: { A0: 5, A1: 1.25 } });
+  const switched = sim.advance(25);
+  assert.equal(switched.analogReadings.A1.value, 256);
+  const later = sim.advance(25);
+  assert.deepEqual(
+    later.analogReadings.A0,
+    switched.analogReadings.A0,
+    "the last A0 sample is not relabeled as a new A1 read",
+  );
+  assert.ok(
+    later.analogReadings.A1.milliseconds >
+      switched.analogReadings.A1.milliseconds,
+  );
+  assert.deepEqual(new UnoSimulation(hex).snapshot().analogReadings, {});
+});
+
+test("a disabled ADC completion cannot overwrite the previous channel with its fallback zero", async () => {
+  const { hex } = await compileSketch(`
+    void setup() {
+      analogRead(A0); delay(20);
+      ADCSRA &= ~_BV(ADEN);
+      ADMUX = _BV(REFS0) | 1;
+      ADCSRA |= _BV(ADSC);
+      while (ADCSRA & _BV(ADSC)) {}
+    }
+    void loop() {}
+  `);
+  const sim = new UnoSimulation(hex);
+  sim.setInputs({ analog: { A0: 2.5, A1: 5 } });
+  const before = sim.advance(5);
+  assert.equal(before.analogReadings.A0.value, 512);
+  assert.deepEqual(sim.advance(30).analogReadings, before.analogReadings);
+});
+
 test("compiled Servo library produces three pulse widths at CPU timing and preserves PWM on timer 2", async () => {
   const { hex } = await compileSketch(`
     #include <Servo.h>

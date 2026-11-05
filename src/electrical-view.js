@@ -51,6 +51,7 @@ export function createElectricalView({
         project,
         firmware?.unoId,
         firmware?.pins,
+        firmware?.analogReadings,
       ]);
       if (signature === previous) return result;
       previous = signature;
@@ -135,6 +136,18 @@ export function createElectricalView({
                 `${name}: ${pin.input ? "HIGH" : "LOW"}${pin.pullup ? " (INPUT_PULLUP)" : ""}`,
             )
             .join(" · "),
+        );
+      }
+      for (const [name, reading] of Object.entries(
+        firmware?.analogReadings ?? {},
+      )) {
+        const time = (reading.milliseconds / 1000).toLocaleString("pt-BR", {
+          minimumFractionDigits: 3,
+          maximumFractionDigits: 3,
+        });
+        peripheral(
+          "Última conversão ADC · firmware",
+          `${name}: ${reading.value}/1023 · t=${time} s${result.inputs?.analog?.[name] == null ? " · entrada sem tensão válida; fallback 0 V" : ""}`,
         );
       }
       return result;
