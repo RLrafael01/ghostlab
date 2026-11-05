@@ -1,4 +1,5 @@
 import { createBreadboard } from "./parametric-board.js";
+import { addLedConnectors } from "./led-connectors.js";
 import * as T from "three";
 import { finishSurface } from "./surface-finish.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -112,6 +113,7 @@ export async function loadCAD(type) {
         const center = bounds.getCenter(new T.Vector3()).multiplyScalar(scale);
         scene.position.set(-center.x, -bounds.min.y * scale + 0.02, -center.z);
         oriented.updateMatrixWorld(true);
+        if (type === "led") addLedConnectors(oriented);
         return oriented;
       })
       .catch((error) => {
@@ -124,11 +126,12 @@ export async function loadCAD(type) {
   const model = template.clone(true);
   // Each instance owns disposable render resources, including embedded textures.
   model.traverse((object) => {
-    if (!object.isMesh) return;
+    if (!object.isMesh && !object.isLine) return;
     object.geometry = object.geometry.clone();
     object.material = object.material.clone();
     if (object.material.map) object.material.map = object.material.map.clone();
     if (object.userData.surfaceDecal) object.raycast = () => {};
+    if (object.userData.connectionGuide) object.raycast = () => {};
     object.castShadow =
       !object.isInstancedMesh && !object.userData.surfaceDecal;
     object.receiveShadow = !object.isInstancedMesh;

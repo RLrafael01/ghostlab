@@ -70,6 +70,8 @@ Verificação de fios: `node --test tests/*.test.js`.
 
 Adicione **Fio jumper** pelo catálogo ou pelo dock em tela cheia: o novo cabo entra com duas pontas livres. Também é possível arrastar o item do catálogo para posicioná-lo na bancada. A lista **Fios jumper** permite focar e remover cada cabo e mostra os terminais conectados ou livres. Arraste um dos pequenos conectores coloridos nas pontas dos cabos. A ponta sai do contato e o cabo acompanha o cursor; a outra ponta continua presa. Aproxime a ponta de um pino ou furo da protoboard: o contato fica destacado e seu nome aparece no aviso sobre a cena. Solte para encaixar, ou solte longe dos contatos para deixar a ponta livre. Escape cancela e restaura o estado anterior, inclusive quando a ponta já estava desconectada. Para facilitar o gesto, selecione o Uno e use “Focar peça”.
 
+No LED, os alvos + e − nas laterais permitem conectar sem esconder as pontas dentro do plástico. As linhas pontilhadas são guias visuais para os terminais, não furos extras da protoboard. Os conectores podem ser agarrados a até 12 pixels do centro; quando há mais de um próximo, vence o mais perto.
+
 A retirada e o encaixe têm transição curta; a preferência de movimento reduzido usa posicionamento imediato. Ligações incorretas são permitidas: o gesto altera referências de terminais e atualiza o estado elétrico simplificado. Circuitos fora do modelo mantêm o LED apagado, sem simular dano. Os contatos GND fisicamente distintos do Uno mantêm referências separadas. Os testes cobrem reconexão, ponta solta, cancelamento, limpeza ao remover peças e movimento reduzido.
 
 

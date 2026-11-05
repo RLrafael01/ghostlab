@@ -66,7 +66,7 @@ test("only the owning pointer controls a jumper and Escape restores its terminal
       isComponentDragging: () => dragging,
     });
     canvas.addEventListener("pointerdown", () => downstream++, true);
-    function pointer(type, id) {
+    function pointer(type, id, offsetX = 0) {
       const event = new dom.window.Event(type, {
         bubbles: true,
         cancelable: true,
@@ -74,7 +74,7 @@ test("only the owning pointer controls a jumper and Escape restores its terminal
       Object.assign(event, {
         button: 0,
         pointerId: id,
-        clientX: 50,
+        clientX: 50 + offsetX,
         clientY: 50,
       });
       canvas.dispatchEvent(event);
@@ -100,6 +100,15 @@ test("only the owning pointer controls a jumper and Escape restores its terminal
     assert.match(
       host.querySelector('[role="status"]').textContent,
       /restaurada/,
+    );
+    pointer("pointerdown", 3, 8);
+    assert.equal(
+      wires.active,
+      true,
+      "a nearby click can grab a small connector",
+    );
+    host.dispatchEvent(
+      new dom.window.KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
     );
     dragging = true;
     pointer("pointerdown", 3);

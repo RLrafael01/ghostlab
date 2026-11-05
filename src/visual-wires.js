@@ -18,7 +18,9 @@ export function terminalPosition(item, name, occurrence = 0) {
       object.localToWorld(point);
     } else if (object.userData.pinName === name && seen++ === occurrence) {
       object.geometry.computeBoundingBox();
-      point = object.geometry.boundingBox.getCenter(new T.Vector3());
+      point = object.userData.connectionPoint
+        ? new T.Vector3().fromArray(object.userData.connectionPoint)
+        : object.geometry.boundingBox.getCenter(new T.Vector3());
       object.localToWorld(point);
     }
   });
