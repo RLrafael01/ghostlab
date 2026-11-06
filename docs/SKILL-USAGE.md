@@ -1,24 +1,24 @@
 # Uso de skills no GhostLab
 
-**96 aplicações registradas** · Matt Pocock: 80 · pstack: 16
+**100 aplicações registradas** · Matt Pocock: 83 · pstack: 17
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
 | Matt Pocock | `code-review` | 15 | 2 | 17 |
-| Matt Pocock | `diagnosing-bugs` | 5 | 0 | 5 |
+| Matt Pocock | `diagnosing-bugs` | 5 | 1 | 6 |
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
-| Matt Pocock | `implement` | 12 | 6 | 18 |
-| Matt Pocock | `pr` | 12 | 7 | 19 |
+| Matt Pocock | `implement` | 12 | 7 | 19 |
+| Matt Pocock | `pr` | 12 | 8 | 20 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
 | Matt Pocock | `tdd` | 4 | 2 | 6 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 2 | 0 | 2 |
 | Matt Pocock | `writing-for-agents` | 5 | 0 | 5 |
-| pstack | `principle-prove-it-works` | 11 | 1 | 12 |
+| pstack | `principle-prove-it-works` | 11 | 2 | 13 |
 | pstack | `principle-sequence-verifiable-units` | 4 | 0 | 4 |
-| **Total** | | **78** | **18** | **96** |
+| **Total** | | **78** | **22** | **100** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -138,3 +138,7 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 094 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR de arquivos e guia. | concluído | PR #33 com roteiro, link da prévia e fechamento de #21 e #22 no merge. |
 | 095 | 05/11/2026 | Enzo | Matt Pocock | `implement` | Implementar cancela e exemplos editáveis (#23). | concluído | Cancela com HC-SR04, botão, LED e servo, sketch editável e estado salvo. 110 testes locais aprovados e build aprovado. CI 42143541418 compilou original e variante, testou distância, botão, ângulo e sinal solto. |
 | 096 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR da cancela. | concluído | PR #34 com roteiro em docs/GATE-EXAMPLE.md, prévia publicada e fechamento da #23 no merge. |
+| 097 | 05/11/2026 | Enzo | Matt Pocock | `implement` | Validar e preparar a entrega V1 (#24). | em andamento | PR #35: matriz de 34 histórias + PWM, roteiro, correção do controle de distância e execução explícita do exemplo pré-compilado. 112 testes locais aprovados, 3 ignorados; build aprovado. Medição Chromium/Windows 1280×720: 376 quadros, p95 26,9 ms. Pendentes: compilador HTTPS ativo, segundo computador e validação após merge. |
+| 098 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR da validação final. | concluído | PR #35 com link de prévia, medições, roteiro e pendências. Referencia #24 sem fechamento automático. |
+| 099 | 05/11/2026 | Enzo | Matt Pocock | `diagnosing-bugs` | Reproduzir e corrigir a sessão NaN e investigar montagem repetida (#24). | concluído | Teste reproduziu NaN !== 1 após reset; preservar o contador corrigiu o ciclo e rejeitou saída atrasada. Timeout na confirmação dupla reproduzido antes; após confirmação única, montar, cancelar, remontar e executar funcionaram no navegador. 114 testes locais aprovados. |
+| 100 | 05/11/2026 | Enzo | pstack | `principle-prove-it-works` | Conferir a revisão publicada e os fluxos de validação (#24). | concluído | Sugestão: verificar artefato real. Decisão: rodar a cancela em Chromium/Windows, conferir sessão 1–3, remontagem, tela cheia, serial e arquivo exportado/reimportado. Efeito: 7 peças e 14 fios após importação, console sem erros; DNS do compilador indisponível. CI e SHA publicados conferidos na entrega do PR #35. |

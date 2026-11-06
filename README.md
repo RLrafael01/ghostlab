@@ -4,7 +4,7 @@ Monte circuitos, programe um microcontrolador e experimente seu funcionamento no
 
 ## Estado do projeto
 
-A bancada executa firmware real do Uno, com Blink, fade/PWM, botão, potenciômetro, monitor serial e servo seguindo as ligações. O editor oferece oito exemplos e montagem dos circuitos correspondentes. A compilação própria funciona localmente e pode ser configurada na prévia por um serviço de demonstração isolado, acessível por túnel HTTPS temporário; sua disponibilidade depende do computador hospedeiro. Sem esse serviço configurado, a página estática executa os exemplos originais pré-compilados. [Firmware](docs/FIRMWARE.md), [entradas, serial e servo](docs/PERIPHERALS.md) e [compilação pública](docs/PUBLIC-COMPILER.md). As issues #12–#16 foram verificadas no [PR #30, com link de teste e roteiro](docs/PERIPHERALS-REVIEW.md), aguardando merge. O restante da V1 continua no [plano de implementação](.scratch/v1-completion/README.md).
+A bancada executa firmware real do Uno em dez exemplos, incluindo Blink, Fade/PWM, botão, potenciômetro, sensor de distância, servo e cancela automática. O painel de projetos salva, importa e exporta montagens, sketches e guias. A compilação de código editado funciona localmente ou via serviço HTTPS de demonstração. Use **Executar exemplo pré-compilado** para os sketches originais com artefato disponível. Consulte [Firmware](docs/FIRMWARE.md), [compilação pública](docs/PUBLIC-COMPILER.md) e [validação da V1](docs/V1-FINAL-VALIDATION.md).
 
 Metas originais: **30/10/2026**, interface interativa; **06/11/2026**, V1 funcional. O plano atualizado em 05/11 registra o risco do prazo e organiza a entrega por resultados verificáveis.
 
@@ -59,7 +59,7 @@ Clique no catálogo para adicionar; arraste diretamente as peças sobre a bancad
 ### Testar botão, dimmer, serial e servo
 
 1. No editor, escolha **Botão · entrada digital**, **Potenciômetro · dimmer**, **Serial · contador e LED** ou **Servo · 0°, 90° e 180°**.
-2. Clique em **Montar circuito** e confirme a substituição da bancada; depois, **Compilar e executar**. Trocar apenas o exemplo muda o código, sem substituir sua montagem.
+2. Clique em **Montar circuito** e confirme a substituição da bancada; depois, **Compilar e executar**. A seleção prepara o exemplo. A confirmação substitui montagem e sketch; cancele para salvar primeiro.
 3. No botão, segure o topo da peça ou o controle do inspetor com mouse/Espaço/Enter. No potenciômetro, arraste a haste ou ajuste a porcentagem no inspetor. Observe LED e **Estado elétrico**.
 4. Abra **Monitor serial** no editor para acompanhar leituras e comandos do firmware. Recolher ou limpar o monitor não reinicia o programa.
 5. Em tela cheia, abra **Código** pelo dock e **Inspetor** para acessar os mesmos controles. Desconecte e reconecte um sinal para conferir que a resposta depende dos fios.
@@ -85,10 +85,10 @@ Adicione **Fio jumper** pelo catálogo ou pelo dock em tela cheia: o novo cabo e
 
 No LED, os alvos + e − nas laterais permitem conectar sem esconder as pontas dentro do plástico. Solte sobre o círculo ou o símbolo +/−: ambos conectam ao mesmo terminal; reconectar recupera a resposta ao firmware em execução. As linhas pontilhadas são guias visuais para os terminais, não furos extras da protoboard. Os conectores podem ser agarrados a até 12 pixels do centro; quando há mais de um próximo, vence o mais perto.
 
-A retirada e o encaixe têm transição curta; a preferência de movimento reduzido usa posicionamento imediato. Ligações incorretas são permitidas: o gesto altera referências de terminais e atualiza o estado elétrico simplificado. Circuitos fora do modelo mantêm o LED apagado, sem simular dano. Os contatos GND fisicamente distintos do Uno mantêm referências separadas. Os testes cobrem reconexão, ponta solta, cancelamento, limpeza ao remover peças e movimento reduzido.
+A retirada e o encaixe têm transição curta; a preferência de movimento reduzido usa posicionamento imediato. Ligações incorretas são permitidas: o gesto altera referências de terminais e atualiza o estado elétrico simplificado. Ligações fora do modelo mantêm o LED apagado; um caminho energizado sem resistor pode causar dano virtual. Os contatos GND fisicamente distintos do Uno mantêm referências separadas. Os testes cobrem reconexão, ponta solta, cancelamento, limpeza ao remover peças e movimento reduzido.
 
 
-Botão e resistor não têm polaridade: seus pinos são contatos, não positivo/negativo. O botão une os pares 1–3 e 2–4 ao pressionar. O potenciômetro tem duas extremidades resistivas e um cursor; VCC/GND no inspetor indicam a ligação suportada como divisor de tensão. Servo e sensor usam alimentação, GND e sinais; o sensor de distância ainda está pendente na #17. [Contratos dos componentes funcionais](docs/PERIPHERALS.md). Referências: [botões](https://learn.adafruit.com/make-it-switch/what-about-breadboard-switches), [resistores](https://learn.adafruit.com/adafruit-arduino-lesson-2-leds/leds?view=all) e [potenciômetro](https://docs.arduino.cc/built-in-examples/analog/AnalogInput/).
+Botão e resistor não têm polaridade: seus pinos são contatos, não positivo/negativo. O botão une os pares 1–3 e 2–4 ao pressionar. O potenciômetro tem duas extremidades resistivas e um cursor; VCC/GND no inspetor indicam a ligação suportada como divisor de tensão. Servo e sensor usam alimentação, GND e sinais. O sensor usa Trig/Echo e um alvo movível. [Contratos dos componentes funcionais](docs/PERIPHERALS.md). Referências: [botões](https://learn.adafruit.com/make-it-switch/what-about-breadboard-switches), [resistores](https://learn.adafruit.com/adafruit-arduino-lesson-2-leds/leds?view=all) e [potenciômetro](https://docs.arduino.cc/built-in-examples/analog/AnalogInput/).
 
 ## Primeiro circuito elétrico
 
@@ -98,7 +98,7 @@ A dica dos jumpers e o estado elétrico ficam empilhados, com espaço entre os c
 
 A protoboard liga a–e e f–j em grupos separados por coluna, além de quatro barramentos contínuos e independentes. Os grupos acompanham a quantidade de colunas ao redimensionar. O encaixe visual das peças não cria contatos elétricos: use fios nos terminais do LED e resistor.
 
-O modelo de conectividade recebe GPIO/PWM do firmware real; o resistor precisa estar no caminho, mas seu valor não é calculado. Não há cálculo analógico geral ou dano; LEDs em série e fontes interligadas não são simulados. [Modelo inicial](docs/ELECTRICAL-MODEL.md) e [extensão para firmware](docs/FIRMWARE.md).
+O modelo de conectividade recebe GPIO/PWM do firmware real; o resistor precisa estar no caminho, mas seu valor não é calculado. Curto e dano virtual seguem regras educativas. LEDs em série, fontes interligadas e cálculo analógico geral ficam fora do modelo. [Modelo inicial](docs/ELECTRICAL-MODEL.md) e [extensão para firmware](docs/FIRMWARE.md).
 
 ## Tela cheia e catálogo
 
@@ -127,7 +127,7 @@ Fora da tela cheia, o editor permanece aberto na parte inferior da bancada. Em t
 
 Em tela cheia, arraste a barra de título do editor para movê-lo e as bordas ou cantos para ajustar seu tamanho. Fechar e reabrir preserva a posição e o tamanho durante a sessão. **Restaurar janela** recupera a disposição inicial. Também é possível focar a barra ou uma borda e usar as setas; Shift aumenta o passo.
 
-Ao alterar o texto de um exemplo, o seletor passa a mostrar **Personalizado**. Restaurar exatamente o código original recupera o nome do exemplo; escolher outro exemplo carrega seu código.
+Ao alterar o texto de um exemplo, o seletor passa a mostrar **Personalizado**. Restaurar exatamente o código original recupera o nome do exemplo; escolher outro exemplo carrega seu código ao confirmar a montagem.
 
 ## Site da main
 

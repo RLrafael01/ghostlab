@@ -190,3 +190,24 @@ test("salvamento preserva o braço da cancela sem guardar ângulo transitório",
   assert.deepEqual(restored.components.at(-1).parameters, { gate: true });
   assert.equal(restored.components.at(-1).angle, undefined);
 });
+
+test("round-trip reúne parâmetros de sensor, servo e potenciômetro e protoboard redimensionada", () => {
+  const original = project();
+  original.components.push(
+    {
+      id: 14,
+      type: "sensor",
+      position: [1, 0, 1],
+      rotationY: 0,
+      parameters: { distanceCm: 20 },
+    },
+    {
+      id: 15,
+      type: "servo",
+      position: [2, 0, 2],
+      rotationY: 0,
+      parameters: { gate: true },
+    },
+  );
+  assert.deepEqual(parseProject(serializeProject(original)), original);
+});
