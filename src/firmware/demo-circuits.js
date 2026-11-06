@@ -23,6 +23,14 @@ export async function createDemoCircuit(id, { add, connect }) {
       throw new Error("Não foi possível carregar o potenciômetro.");
     peripheral.value = 0.5;
   }
+  if (id === "distance") {
+    peripheral = await add("sensor", 3.2, 1.5);
+    if (!peripheral) throw new Error("Não foi possível carregar o sensor.");
+    connect(uno, "5V", peripheral, "VCC", "#c43c34");
+    connect(uno, "GND", peripheral, "GND", "#4c5360");
+    connect(uno, "D7", peripheral, "Trig", "#e9b640");
+    connect(peripheral, "Echo", uno, "D6", "#20a79a");
+  }
   if (id === "servo") {
     peripheral = await add("servo", 3.2, 1.5);
     if (!peripheral) throw new Error("Não foi possível carregar o servo.");

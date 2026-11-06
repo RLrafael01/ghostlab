@@ -1,7 +1,18 @@
 import { breadboardLayout } from "./breadboard-layout.js";
 import { simulatePeripherals } from "./peripheral-circuit.js";
 
-export function simulateCircuit({ components, wires }, firmware = null) {
+export function createCircuitSimulation() {
+  const state = { shorts: new Map() };
+  return {
+    evaluate: (project, firmware) => simulateCircuit(project, firmware, state),
+    restart: () => state.shorts.clear(),
+    restore() {
+      state.shorts.clear();
+    },
+  };
+}
+
+export function simulateCircuit({ components, wires }, firmware = null, state) {
   const byId = new Map(
     components.map((component) => [component.id, component]),
   );
@@ -29,14 +40,14 @@ export function simulateCircuit({ components, wires }, firmware = null) {
     if (!contact) return null;
     return JSON.stringify([end.componentId, contact]);
   }
-  function connect(a, b, resistor = false) {
+  function connect(a, b, resistor = false, wireId) {
     if (a === null || b === null) return;
     for (const [from, to] of [
       [a, b],
       [b, a],
     ]) {
       if (!graph.has(from)) graph.set(from, []);
-      graph.get(from).push({ to, resistor });
+      graph.get(from).push({ to, resistor, wireId });
     }
   }
   function reachable(start, throughResistors = true) {
@@ -48,7 +59,7 @@ export function simulateCircuit({ components, wires }, firmware = null) {
   }
   const pin = (component, name) =>
     node({ componentId: component.id, pin: name });
-  for (const wire of wires) connect(...wire.ends.map(node));
+  for (const wire of wires) connect(...wire.ends.map(node), false, wire.id);
   for (const component of components)
     if (component.type === "resistor")
       connect(pin(component, "1"), pin(component, "2"), true);
@@ -58,6 +69,32 @@ export function simulateCircuit({ components, wires }, firmware = null) {
       connect(pin(component, "2"), pin(component, "4"));
       if (component.pressed) connect(pin(component, "1"), pin(component, "2"));
     }
+  if (state) {
+    for (const id of state.shorts.keys())
+      if (!byId.has(id)) state.shorts.delete(id);
+    for (const uno of components.filter(
+      (component) => component.type === "uno",
+    )) {
+      const start = pin(uno, "5V");
+      const ground = pin(uno, "GND");
+      const parents = new Map([[start, null]]);
+      for (const [current] of parents) {
+        if (current === ground) break;
+        for (const edge of graph.get(current) ?? []) {
+          if (!edge.resistor && !parents.has(edge.to))
+            parents.set(edge.to, { from: current, wireId: edge.wireId });
+        }
+      }
+      if (!parents.has(ground)) continue;
+      const wireIds = [];
+      for (let current = ground; current !== start;) {
+        const edge = parents.get(current);
+        if (edge.wireId !== undefined) wireIds.unshift(edge.wireId);
+        current = edge.from;
+      }
+      state.shorts.set(uno.id, wireIds);
+    }
+  }
   const sources = components
     .filter((component) => component.type === "uno")
     .flatMap((component) => {
@@ -103,6 +140,17 @@ export function simulateCircuit({ components, wires }, firmware = null) {
       if (
         sources.some(
           (source) =>
+            state?.shorts.has(source.id) &&
+            [anode, cathode].some(
+              (terminal) =>
+                source.high.has(terminal) || source.low.has(terminal),
+            ),
+        )
+      ) {
+        reason = "short";
+      } else if (
+        sources.some(
+          (source) =>
             source.unsupported &&
             [anode, cathode].some(
               (node) => source.high.has(node) || source.low.has(node),
@@ -126,6 +174,15 @@ export function simulateCircuit({ components, wires }, firmware = null) {
           )
         )
           reason = "reversed";
+        if (state && reason === "open") {
+          if (!sources.some((source) => source.low.has(cathode)))
+            reason = "unpowered";
+          else if (
+            firmware?.unoId != null &&
+            !sources.some((source) => source.high.has(anode))
+          )
+            reason = "signal-open";
+        }
       }
       if (reason !== "closed") brightness = 0;
       const result = {
@@ -136,12 +193,26 @@ export function simulateCircuit({ components, wires }, firmware = null) {
       return firmware ? { ...result, brightness } : result;
     });
   return {
-    ...simulatePeripherals({ components, firmware, pin, reachable }),
+    ...simulatePeripherals({
+      components,
+      firmware,
+      pin,
+      reachable,
+      disabledSources: state?.shorts,
+    }),
     leds,
+    ...(state && {
+      faults: Array.from(state.shorts, ([id, wireIds]) => ({
+        id,
+        kind: "short",
+        wireIds,
+      })),
+    }),
     sources: [...new Set(sources.map((source) => source.id))].map((id) => ({
       id,
       supported: !sources.some(
-        (source) => source.id === id && source.unsupported,
+        (source) =>
+          source.id === id && (source.unsupported || state?.shorts.has(id)),
       ),
     })),
   };

@@ -168,7 +168,7 @@ test("servo status explains inactive pulses and conflicting GPIO inputs never ap
   wires.connect(uno, "D2", uno, "5V", "red");
   wires.connect(uno, "D2", uno, "GND", "black");
   view.update();
-  assert.match(status.textContent, /Entradas em conflito.*D2/);
-  assert.match(status.textContent, /fora do modelo/);
+  assert.match(status.textContent, /fonte em falha/);
+  assert.match(status.textContent, /Corrija o curto e reinicie/);
   assert.doesNotMatch(status.textContent, /D2: HIGH|D2: LOW/);
 });

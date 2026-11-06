@@ -123,9 +123,12 @@ export class UnoSimulation {
     }));
     this.nextWindow = WINDOW;
     this.digitalInputs = {};
+    this.sensors = new Map();
+    this.echoLevels = new Map();
+    this.echoReadings = {};
     for (const port of this.ports) port.addListener(() => this.capture(port));
   }
-  setInputs({ digital = {}, analog = {} } = {}) {
+  setInputs({ digital = {}, analog = {}, sensors = [] } = {}) {
     if (!digital || typeof digital !== "object" || Array.isArray(digital))
       throw new Error("Entradas digitais inválidas.");
     if (!analog || typeof analog !== "object" || Array.isArray(analog))
@@ -142,13 +145,39 @@ export class UnoSimulation {
         (value !== null && (!Number.isFinite(value) || value < 0 || value > 5))
       )
         throw new Error("Entrada analógica inválida.");
+    const next = new Map();
+    for (const sensor of sensors) {
+      if (
+        !this.pins.some(({ name }) => name === sensor.triggerPin) ||
+        !this.pins.some(({ name }) => name === sensor.echoPin) ||
+        sensor.triggerPin === sensor.echoPin
+      )
+        continue;
+      const previous = this.sensors.get(sensor.id);
+      next.set(
+        sensor.id,
+        previous &&
+          previous.triggerPin === sensor.triggerPin &&
+          previous.echoPin === sensor.echoPin
+          ? Object.assign(previous, sensor)
+          : { ...sensor },
+      );
+    }
+    for (const [id, previous] of this.sensors) {
+      if (next.get(id) !== previous || next.get(id).distanceCm == null) {
+        previous.pulse = null;
+        this.echoLevels.delete(previous.echoPin);
+        delete this.echoReadings[id];
+      }
+    }
+    this.sensors = next;
     this.digitalInputs = { ...digital };
     for (const pin of this.pins) this.applyInput(pin);
     for (let channel = 0; channel < 6; channel++)
       this.adc.channelValues[channel] = analog[`A${channel}`] ?? 0;
   }
   applyInput(pin) {
-    const value = this.digitalInputs[pin.name];
+    const value = this.echoLevels.get(pin.name) ?? this.digitalInputs[pin.name];
     pin.port.setPin(
       pin.bit,
       value == null ? pin.state === PinState.InputPullUp : value === 1,
@@ -169,6 +198,7 @@ export class UnoSimulation {
           pin.risingCycle = pin.previousRisingCycle = cycle;
         } else if (state === PinState.Low && pin.risingCycle !== null) {
           pin.pulseWidthUs = (cycle - pin.risingCycle) / (HZ / 1_000_000);
+          this.triggerEcho(pin);
           pin.fallingCycle = cycle;
           pin.risingCycle = null;
         } else if (state === PinState.Input || state === PinState.InputPullUp) {
@@ -179,6 +209,34 @@ export class UnoSimulation {
       pin.state = state;
       pin.last = cycle;
       this.applyInput(pin);
+    }
+  }
+  triggerEcho(trigger) {
+    if (trigger.pulseWidthUs < 10) return;
+    for (const sensor of this.sensors.values()) {
+      if (
+        sensor.triggerPin !== trigger.name ||
+        sensor.pulse ||
+        !(sensor.distanceCm >= 2 && sensor.distanceCm <= 400)
+      )
+        continue;
+      const echo = this.pins.find(({ name }) => name === sensor.echoPin);
+      if (echo.state === PinState.High || echo.state === PinState.Low) continue;
+      const pulse = {};
+      sensor.pulse = pulse;
+      const width = Math.round((sensor.distanceCm * 58 * HZ) / 1_000_000);
+      this.cpu.addClockEvent(() => {
+        if (sensor.pulse !== pulse) return;
+        this.echoLevels.set(echo.name, 1);
+        this.applyInput(echo);
+        this.cpu.addClockEvent(() => {
+          if (sensor.pulse !== pulse) return;
+          sensor.pulse = null;
+          this.echoLevels.delete(echo.name);
+          this.applyInput(echo);
+          this.echoReadings[sensor.id] = width / (HZ / 1_000_000) / 58;
+        }, width);
+      }, HZ / 5000);
     }
   }
   advance(milliseconds, { drainSerial = true } = {}) {
@@ -225,6 +283,7 @@ export class UnoSimulation {
   snapshot() {
     return {
       milliseconds: (this.cpu.cycles / HZ) * 1000,
+      echoReadings: { ...this.echoReadings },
       analogReadings: Object.fromEntries(
         Object.entries(this.analogReadings).map(([name, reading]) => [
           name,

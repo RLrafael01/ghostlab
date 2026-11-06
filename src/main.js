@@ -124,6 +124,92 @@ home();
 const ray = new T.Raycaster(),
   pointer = new T.Vector2();
 const items = [];
+const targetObject = new T.Mesh(
+  new T.BoxGeometry(0.55, 0.65, 0.55),
+  new T.MeshStandardMaterial({ color: "#eab64b" }),
+);
+targetObject.visible = false;
+scene.add(targetObject);
+const distanceControl = document.createElement("label");
+distanceControl.hidden = true;
+distanceControl.textContent = "Objeto do sensor ";
+const distanceSlider = document.createElement("input");
+distanceSlider.type = "range";
+distanceSlider.min = "0";
+distanceSlider.max = "450";
+distanceSlider.setAttribute("aria-label", "Distância do objeto em centímetros");
+distanceControl.append(distanceSlider);
+document.querySelector("#electrical-body").prepend(distanceControl);
+const activeSensor = () =>
+  selected?.type === "sensor"
+    ? selected
+    : items.find(({ type }) => type === "sensor");
+distanceSlider.oninput = () => {
+  const sensor = activeSensor();
+  if (sensor) sensor.distanceCm = Number(distanceSlider.value);
+};
+let targetPointer = null;
+const targetRay = new T.Raycaster();
+const targetPoint = new T.Vector3();
+const targetPlane = new T.Plane(new T.Vector3(0, 1, 0), -0.325);
+const aimAtTarget = (event) => {
+  const bounds = renderer.domElement.getBoundingClientRect();
+  targetRay.setFromCamera(
+    new T.Vector2(
+      ((event.clientX - bounds.left) / bounds.width) * 2 - 1,
+      1 - ((event.clientY - bounds.top) / bounds.height) * 2,
+    ),
+    camera,
+  );
+};
+host.addEventListener(
+  "pointerdown",
+  (event) => {
+    if (
+      event.button !== 0 ||
+      event.target !== renderer.domElement ||
+      !targetObject.visible ||
+      targetPointer
+    )
+      return;
+    aimAtTarget(event);
+    if (!targetRay.intersectObject(targetObject).length) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    targetPointer = { id: event.pointerId, sensor: activeSensor() };
+    renderer.domElement.setPointerCapture(event.pointerId);
+  },
+  true,
+);
+host.addEventListener(
+  "pointermove",
+  (event) => {
+    if (targetPointer?.id !== event.pointerId) return;
+    event.stopImmediatePropagation();
+    aimAtTarget(event);
+    if (targetRay.ray.intersectPlane(targetPlane, targetPoint)) {
+      const sensor = targetPointer.sensor;
+      sensor.distanceCm = Math.round(
+        T.MathUtils.clamp(
+          (targetPoint.z - sensor.group.position.z) * 50,
+          0,
+          450,
+        ),
+      );
+    }
+  },
+  true,
+);
+for (const name of ["pointerup", "pointercancel", "lostpointercapture"])
+  host.addEventListener(
+    name,
+    (event) => {
+      if (targetPointer?.id !== event.pointerId) return;
+      targetPointer = null;
+      event.stopImmediatePropagation();
+    },
+    true,
+  );
 let firmwareOutput = null;
 let latestCircuit = null;
 let peripheralInspector = null;
@@ -141,6 +227,7 @@ const electricalView = createElectricalView({
   },
 });
 const firmwareSession = setupFirmwarePanel({
+  onRestart: () => electricalView.restart(),
   editor: document.querySelector("#code-panel textarea"),
   container: document.querySelector("#firmware-controls"),
   status: document.querySelector("#firmware-status"),
@@ -452,6 +539,18 @@ peripheralInteraction = setupScenePeripheralControls({
   onSelect: select,
   onChange: () => {
     electricalView.update();
+    const sensor = activeSensor();
+    targetObject.visible = !!sensor;
+    distanceControl.hidden = !sensor;
+    if (sensor) {
+      const cm = sensor.distanceCm ?? 50;
+      distanceSlider.value = String(cm);
+      targetObject.position.set(
+        sensor.group.position.x,
+        0.325,
+        sensor.group.position.z + cm / 50,
+      );
+    }
     peripheralInspector?.refresh();
   },
   isBusy: () =>

@@ -1,8 +1,11 @@
-import { simulateCircuit } from "./electrical-simulation.js";
+import { createCircuitSimulation } from "./electrical-simulation.js";
 
 const reasons = {
+  short: "fonte em falha · corrija e reinicie",
   closed: "circuito fechado com resistor",
   open: "circuito aberto ou sem alimentação suportada",
+  unpowered: "circuito aberto · sem retorno GND",
+  "signal-open": "sem sinal de alimentação no ânodo",
   reversed: "polaridade invertida",
   unlimited: "sem resistor no caminho · fora deste modelo",
   unsupported: "ligações fora do modelo · confira 5 V e GND",
@@ -22,6 +25,22 @@ export function createElectricalView({
   onInputs = () => {},
   onState = () => {},
 }) {
+  const simulation = createCircuitSimulation();
+  const details = status.ownerDocument.createElement("details");
+  const summary = status.ownerDocument.createElement("summary");
+  summary.textContent = "Por que isso aconteceu?";
+  const explanation = status.ownerDocument.createElement("p");
+  const restart = status.ownerDocument.createElement("button");
+  restart.type = "button";
+  restart.textContent = "Reiniciar fonte virtual";
+  details.append(summary, explanation, restart);
+  restart.onclick = () => {
+    simulation.restart();
+    previous = "";
+    view.update();
+  };
+  details.hidden = true;
+  status.after(details);
   let previous = "",
     result;
   function peripheral(titleText, detailText) {
@@ -34,16 +53,23 @@ export function createElectricalView({
     row.append(title, detail);
     status.append(row);
   }
-  return {
+  const view = {
+    restart() {
+      simulation.restart();
+      previous = "";
+    },
     update() {
       const project = {
-        components: items.map(({ id, type, columns, pressed, value }) => ({
-          id,
-          type,
-          columns,
-          pressed,
-          value,
-        })),
+        components: items.map(
+          ({ id, type, columns, pressed, value, distanceCm }) => ({
+            id,
+            type,
+            columns,
+            pressed,
+            value,
+            distanceCm,
+          }),
+        ),
         wires: wires.connections(),
       };
       const firmware = getFirmware();
@@ -52,10 +78,39 @@ export function createElectricalView({
         firmware?.unoId,
         firmware?.pins,
         firmware?.analogReadings,
+        firmware?.echoReadings,
       ]);
       if (signature === previous) return result;
       previous = signature;
-      result = simulateCircuit(project, firmware);
+      result = simulation.evaluate(project, firmware);
+      const wireIds = new Set(result.faults.flatMap((fault) => fault.wireIds));
+      for (const mesh of wires.meshes ?? []) {
+        mesh.material.emissive.set("#ff3322");
+        mesh.material.emissiveIntensity = wireIds.has(mesh.userData.wireId)
+          ? 1.5
+          : 0;
+      }
+      const disconnected = result.leds.filter(
+        ({ reason }) => reason === "unpowered" || reason === "signal-open",
+      );
+      details.hidden = result.faults.length === 0 && disconnected.length === 0;
+      restart.hidden = result.faults.length === 0;
+      if (details.hidden) details.open = false;
+      const message = result.faults
+        .map(
+          ({ id }) =>
+            `Uno #${id}: um caminho direto uniu 5 V a GND. Retire o jumper do caminho destacado e reinicie. O modelo não calcula corrente ou aquecimento.`,
+        )
+        .concat(
+          disconnected.map(({ id, reason }) =>
+            reason === "unpowered"
+              ? `LED #${id}: o cátodo está sem retorno. Reconecte o caminho até GND.`
+              : `LED #${id}: o ânodo não recebe 5 V nem sinal de uma saída GPIO. Confira o fio e o pino configurado no sketch.`,
+          ),
+        )
+        .join(" ");
+      if (explanation.textContent !== message)
+        explanation.textContent = message;
       onInputs(result.inputs);
       onState(result);
       status.replaceChildren();
@@ -63,9 +118,15 @@ export function createElectricalView({
         result.leds?.length ||
         result.buttons?.length ||
         result.pots?.length ||
-        result.servos?.length
+        result.servos?.length ||
+        result.sensors?.length
       ))
         status.textContent = "Adicione um LED para testar o circuito.";
+      for (const fault of result.faults)
+        peripheral(
+          `Uno #${fault.id} · fonte em falha`,
+          "Corrija o curto e reinicie.",
+        );
       for (const led of result.leds ?? []) {
         const item = items.find((item) => item.id === led.id);
         item.group.traverse((object) => {
@@ -104,6 +165,21 @@ export function createElectricalView({
           `Tensão modelada: ${voltage}`,
         );
       }
+      for (const sensor of result.sensors ?? []) {
+        const reading = firmware?.echoReadings?.[sensor.id];
+        const state = {
+          ready: "aguardando pulso",
+          open: "Trig/Echo desconectado",
+          unpowered: "sem alimentação",
+          "out-of-range": "fora da faixa",
+        }[sensor.reason];
+        peripheral(
+          `Sensor #${sensor.id} · objeto a ${sensor.distanceCm} cm`,
+          sensor.reason === "ready" && reading != null
+            ? `Eco: ${reading.toFixed(1)} cm`
+            : state,
+        );
+      }
       for (const servo of result.servos ?? []) {
         peripheral(
           `Servo #${servo.id} · ${servo.active ? "ativo" : "inativo"}`,
@@ -120,6 +196,7 @@ export function createElectricalView({
       }
       const inputs = Object.entries(firmware?.pins ?? {}).filter(
         ([name, pin]) =>
+          !result.faults.some(({ id }) => id === firmware?.unoId) &&
           !pin.output &&
           (pin.input === 0 || pin.input === 1) &&
           !result.unsupportedInputs?.includes(name) &&
@@ -153,4 +230,5 @@ export function createElectricalView({
       return result;
     },
   };
+  return view;
 }

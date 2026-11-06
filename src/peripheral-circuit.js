@@ -3,25 +3,33 @@ const GPIO = Array.from({ length: 20 }, (_, i) =>
 );
 
 // Connectivity adapter for the supported peripherals, not an analog solver.
-export function simulatePeripherals({ components, firmware, pin, reachable }) {
+export function simulatePeripherals({
+  components,
+  firmware,
+  pin,
+  reachable,
+  disabledSources,
+}) {
   const unos = components.filter((component) => component.type === "uno");
   const active =
     firmware?.unoId === undefined
       ? unos[0]
       : unos.find((component) => component.id === firmware.unoId);
-  const drivers = unos.flatMap((uno) => [
-    { node: pin(uno, "5V"), unoId: uno.id, voltage: 5, kind: "power" },
-    { node: pin(uno, "GND"), unoId: uno.id, voltage: 0, kind: "ground" },
-    ...Object.entries(firmware?.unoId === uno.id ? (firmware.pins ?? {}) : {})
-      .filter(([name, value]) => GPIO.includes(name) && value.output)
-      .map(([name, value]) => ({
-        node: pin(uno, name),
-        unoId: uno.id,
-        voltage: value.level * 5,
-        kind: "gpio",
-        name,
-      })),
-  ]);
+  const drivers = unos
+    .filter((uno) => !disabledSources?.has(uno.id))
+    .flatMap((uno) => [
+      { node: pin(uno, "5V"), unoId: uno.id, voltage: 5, kind: "power" },
+      { node: pin(uno, "GND"), unoId: uno.id, voltage: 0, kind: "ground" },
+      ...Object.entries(firmware?.unoId === uno.id ? (firmware.pins ?? {}) : {})
+        .filter(([name, value]) => GPIO.includes(name) && value.output)
+        .map(([name, value]) => ({
+          node: pin(uno, name),
+          unoId: uno.id,
+          voltage: value.level * 5,
+          kind: "gpio",
+          name,
+        })),
+    ]);
   function signal(node, direct = false) {
     const connected = reachable(node, !direct);
     const references = drivers.filter((driver) => connected.has(driver.node));
@@ -147,8 +155,45 @@ export function simulatePeripherals({ components, firmware, pin, reachable }) {
                 : "active",
       };
     });
+  const sensors = components
+    .filter(({ type }) => type === "sensor")
+    .map((sensor) => {
+      const supply = power(sensor, "VCC");
+      const findPin = (terminal) => {
+        const net = reachable(pin(sensor, terminal), false);
+        const names = active
+          ? GPIO.filter((name) => net.has(pin(active, name)))
+          : [];
+        return names.length === 1 ? names[0] : null;
+      };
+      const triggerPin = findPin("Trig");
+      const echoPin = findPin("Echo");
+      const distanceCm = sensor.distanceCm ?? 50;
+      const reason = !supply.powered
+        ? "unpowered"
+        : !triggerPin || !echoPin || triggerPin === echoPin
+          ? "open"
+          : distanceCm < 2 || distanceCm > 400
+            ? "out-of-range"
+            : "ready";
+      return { id: sensor.id, triggerPin, echoPin, distanceCm, reason };
+    });
   return {
-    inputs: { digital, analog },
+    sensors,
+    inputs: {
+      digital,
+      analog,
+      ...(sensors.length > 0 && {
+        sensors: sensors
+          .filter(({ reason }) => reason === "ready")
+          .map(({ id, triggerPin, echoPin, distanceCm }) => ({
+            id,
+            triggerPin,
+            echoPin,
+            distanceCm,
+          })),
+      }),
+    },
     unsupportedInputs: active
       ? GPIO.filter((name) => signal(pin(active, name)).unsupported)
       : [],

@@ -1,6 +1,6 @@
 # 10 — Experimentar falta de alimentação, fio solto e curto com explicação
 
-Status: open
+Status: done
 Priority: P2
 Milestone: V1 completa — componentes, projetos e falhas
 Blocked by: none
@@ -12,13 +12,13 @@ Executar uma montagem incorreta, observar o efeito no circuito e pedir uma expli
 
 ## Acceptance criteria
 
-- [ ] No circuito GPIO/LED, alimentação ausente e sinal desconectado produzem efeitos e motivos diferenciados; reconectar recupera falhas reversíveis.
-- [ ] Curto direto entre alimentação e GND entra em falha retida na fonte virtual, inativa saídas dependentes e destaca o caminho envolvido.
-- [ ] Retirar curto sozinho não recupera a fonte: remover a condição e reiniciar recupera; reiniciar com curto reaplica a falha.
-- [ ] Conexão através de resistor não é classificada automaticamente como curto direto; circuitos não suportados são distinguíveis de falhas modeladas.
-- [ ] Montagem incorreta continua permitida. Explicação detalhada só aparece em “Por que isso aconteceu?”, com causa e sugestão ligada aos elementos afetados.
-- [ ] Contratos de botão, potenciômetro, sensor e servo usam as mesmas regras conforme forem integrados; validação final cobre todos.
-- [ ] Testes exercitam causar, explicar, corrigir e reiniciar; não alegar previsão física de aquecimento/corrente.
+- [x] No circuito GPIO/LED, alimentação ausente e sinal desconectado produzem efeitos e motivos diferenciados; reconectar recupera falhas reversíveis.
+- [x] Curto direto entre alimentação e GND entra em falha retida na fonte virtual, inativa saídas dependentes e destaca o caminho envolvido.
+- [x] Retirar curto sozinho não recupera a fonte: remover a condição e reiniciar recupera; reiniciar com curto reaplica a falha.
+- [x] Conexão através de resistor não é classificada automaticamente como curto direto; circuitos não suportados são distinguíveis de falhas modeladas.
+- [x] Montagem incorreta continua permitida. Explicação detalhada só aparece em “Por que isso aconteceu?”, com causa e sugestão ligada aos elementos afetados.
+- [x] Contratos de botão, potenciômetro, sensor e servo usam as mesmas regras conforme forem integrados; validação final cobre todos.
+- [x] Testes exercitam causar, explicar, corrigir e reiniciar; não alegar previsão física de aquecimento/corrente.
 
 ## Verificação
 
@@ -35,3 +35,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
 
 - 05/11/2026 — auditoria da main `0db0ca1`: **Parcial**. Desconectar o LED já apaga e reconectar recupera; alguns motivos elétricos estão diferenciados. Faltam distinguir alimentação ausente de sinal solto, curto retido na fonte, destaque do caminho, recuperação por reinício e explicação sob demanda. Nenhum critério composto está integralmente concluído. Evidência: `src/electrical-simulation.js`, `src/electrical-view.js`, `tests/electrical-simulation.test.js`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.
+
+- 05/11/2026 (Enzo): implementação no PR #31. Testes verificam retorno ausente, sinal aberto, reconexão, curto retido, reinício e caminho com resistor sem curto direto. Fechamento após merge.
