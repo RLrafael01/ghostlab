@@ -155,3 +155,32 @@ test("desenvolvimento local ignora configuração remota; somente 404 restaura o
     /configuração.*indisponível/i,
   );
 });
+
+test("execução explícita de artefato verifica hash e recusa sketch editado", async () => {
+  const { loadExampleFirmware } =
+    await import("../src/firmware/compiler-client.js");
+  const request = async (url) => {
+    assert.equal(url, "/pr/firmware/blink.json");
+    return Response.json(artifact);
+  };
+  assert.equal(
+    (
+      await loadExampleFirmware(examples.blink.source, {
+        base: "/pr/",
+        request,
+      })
+    ).origin,
+    "example",
+  );
+  await assert.rejects(
+    loadExampleFirmware(examples.blink.source + "// editado", { request }),
+    /editado/,
+  );
+  await assert.rejects(
+    loadExampleFirmware(examples.blink.source, {
+      request: async () =>
+        Response.json({ ...artifact, sourceHash: "diferente" }),
+    }),
+    /não corresponde/,
+  );
+});

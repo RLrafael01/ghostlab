@@ -1,5 +1,6 @@
 export function createFirmwareSession({
   compile,
+  loadExample = compile,
   createRunner,
   onChange = () => {},
 }) {
@@ -119,18 +120,22 @@ export function createFirmwareSession({
       }
       emit();
     },
-    async execute() {
+    async execute({ example = false } = {}) {
       halt();
       state.phase = "compiling";
       state.diagnostics = [];
-      state.message = "Compilando o código…";
+      state.message = example
+        ? "Carregando firmware pré-compilado…"
+        : "Compilando o código…";
       emit();
       const id = generation,
         source = state.source,
         revision = state.revision;
       request = new AbortController();
       try {
-        const binary = await compile(source, { signal: request.signal });
+        const binary = await (example ? loadExample : compile)(source, {
+          signal: request.signal,
+        });
         if (id !== generation || source !== state.source) return;
         artifact = binary;
         executedSource = source;

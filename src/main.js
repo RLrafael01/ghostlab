@@ -104,7 +104,7 @@ const catalog = {
   },
 };
 document.querySelector("#app").innerHTML =
-  `<header><div class="brand"><img src="${import.meta.env.BASE_URL}tesseract.svg" width="40" height="40" alt=""> <b>ghostlab</b><span>LABORATÓRIO VIRTUAL</span></div><div class="project">Minha primeira bancada <span> / rascunho</span></div><span class="badge">● FIRMWARE REAL · UNO</span></header><main><aside class="toolbox"><div class="eyebrow">SUA CAIXA DE FERRAMENTAS</div><h2>Componentes</h2><input id="search" placeholder="Buscar componente…" aria-label="Buscar componente"><div id="catalog"></div><div class="note">Construa uma ideia.<br>Comece adicionando uma peça à bancada.</div></aside><section class="workspace"><div class="toolbar"><div><b>Bancada 3D</b><span id="count"></span></div><label class="snap-control"><input type="checkbox" id="snap" checked title="Aproxima LED, resistor e botão aos contatos; não valida ligações elétricas"> Encaixe visual</label><button id="fullscreen" aria-pressed="false">⤢ Tela cheia</button><label class="jumper-color" id="new-wire-control">Novo fio <input id="new-wire-color" type="color" value="#e9b640" aria-label="Cor dos novos jumpers"></label><button id="inspector-toggle" aria-controls="inspector" aria-expanded="true">Inspetor</button><button id="home">⌂ Visão inicial</button></div><div id="scene" tabindex="0" aria-label="Bancada 3D interativa"><div class="scene-tag">FIRMWARE AVR · CIRCUITO SIMPLIFICADO</div><div class="scene-overlays"><section class="electrical-panel" aria-label="Estado elétrico"><button class="electrical-toggle" type="button" aria-expanded="true" aria-controls="electrical-body"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2 4 14h7l-1 8 10-13h-7z"/></svg><span>Estado elétrico</span><span class="electrical-chevron" aria-hidden="true">⌃</span></button><div id="electrical-body"><div id="electrical-status" role="status" aria-live="polite"></div><details><summary>Como testar e limites</summary><p>O exemplo liga D9 → resistor → LED → GND. Execute Blink ou Fade no editor. Arraste uma ponta do fio preto para fora do contato: o LED apaga. Reconecte para acender.</p><p>Contatos a–e e f–j conectam-se por coluna. Cada barramento +/− é contínuo e separado dos demais. Encaixe visual das peças não cria ligações: use fios nos terminais.</p><p>Firmware real; circuito simplificado, sem cálculo de corrente ou dano. Ligações sem resistor ou fora do modelo mantêm o LED apagado.</p></details></div></section></div><div class="guide">WASD / setas: navegar · Arraste o fundo: orbitar · Scroll: zoom · Arraste peças: mover</div></div><button id="code-toggle" aria-expanded="false" aria-controls="code-panel">〈/〉 Código</button><div class="editor" id="code-panel"><div class="editor-head"><b>〈/〉 sketch.ino</b><span id="firmware-status">UNO · parado</span><button id="close-code" aria-label="Recolher código">⌄</button></div><div class="firmware-controls" id="firmware-controls"></div><textarea spellcheck="false" aria-label="Código Arduino">// Seu próximo projeto começa aqui.
+  `<header><div class="brand"><img src="${import.meta.env.BASE_URL}tesseract.svg" width="40" height="40" alt=""> <b>ghostlab</b><span>LABORATÓRIO VIRTUAL</span></div><div class="project">Minha primeira bancada <span> / rascunho</span></div><span class="badge">● FIRMWARE REAL · UNO</span></header><main><aside class="toolbox"><div class="eyebrow">SUA CAIXA DE FERRAMENTAS</div><h2>Componentes</h2><input id="search" placeholder="Buscar componente…" aria-label="Buscar componente"><div id="catalog"></div><div class="note">Construa uma ideia.<br>Comece adicionando uma peça à bancada.</div></aside><section class="workspace"><div class="toolbar"><div><b>Bancada 3D</b><span id="count"></span></div><label class="snap-control"><input type="checkbox" id="snap" checked title="Aproxima LED, resistor e botão aos contatos; não valida ligações elétricas"> Encaixe visual</label><button id="fullscreen" aria-pressed="false">⤢ Tela cheia</button><label class="jumper-color" id="new-wire-control">Novo fio <input id="new-wire-color" type="color" value="#e9b640" aria-label="Cor dos novos jumpers"></label><button id="inspector-toggle" aria-controls="inspector" aria-expanded="true">Inspetor</button><button id="home">⌂ Visão inicial</button></div><div id="scene" tabindex="0" aria-label="Bancada 3D interativa"><div class="scene-tag">FIRMWARE AVR · CIRCUITO SIMPLIFICADO</div><div class="scene-overlays"><section class="electrical-panel" aria-label="Estado elétrico"><button class="electrical-toggle" type="button" aria-expanded="true" aria-controls="electrical-body"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2 4 14h7l-1 8 10-13h-7z"/></svg><span>Estado elétrico</span><span class="electrical-chevron" aria-hidden="true">⌃</span></button><div id="electrical-body"><div id="electrical-status" role="status" aria-live="polite"></div><details><summary>Como testar e limites</summary><p>O exemplo liga D9 → resistor → LED → GND. Execute Blink ou Fade no editor. Arraste uma ponta do fio preto para fora do contato: o LED apaga. Reconecte para acender.</p><p>Contatos a–e e f–j conectam-se por coluna. Cada barramento +/− é contínuo e separado dos demais. Encaixe visual das peças não cria ligações: use fios nos terminais.</p><p>Firmware real com circuito simplificado. Ligações energizadas sem resistor provocam dano virtual educativo. O modelo não calcula corrente nem aquecimento.</p></details></div></section></div><div class="guide">WASD / setas: navegar · Arraste o fundo: orbitar · Scroll: zoom · Arraste peças: mover</div></div><button id="code-toggle" aria-expanded="false" aria-controls="code-panel">〈/〉 Código</button><div class="editor" id="code-panel"><div class="editor-head"><b>〈/〉 sketch.ino</b><span id="firmware-status">UNO · parado</span><button id="close-code" aria-label="Recolher código">⌄</button></div><div class="firmware-controls" id="firmware-controls"></div><textarea spellcheck="false" aria-label="Código Arduino">// Seu próximo projeto começa aqui.
 // Nesta prévia, o código não é executado.
 void setup() {
   pinMode(13, OUTPUT);
@@ -112,7 +112,7 @@ void setup() {
 
 void loop() {
   digitalWrite(13, HIGH);
-}</textarea></div></section><aside class="inspector" id="inspector"><button id="close-inspector" aria-label="Recolher inspetor">Recolher</button><div class="eyebrow">DETALHES DA MONTAGEM</div><h2>Inspetor</h2><div id="details"></div><h3>Na bancada</h3><div id="parts"></div><div class="note">Conectividade elétrica disponível.<br>O LED responde ao código e aos fios. Corrente e dano ainda não são simulados.</div></aside></main><footer><span><i></i> Bancada pronta</span><span>UNO · MODELO ELÉTRICO SIMPLIFICADO</span><span>GhostLab / 2026</span></footer>`;
+}</textarea></div></section><aside class="inspector" id="inspector"><button id="close-inspector" aria-label="Recolher inspetor">Recolher</button><div class="eyebrow">DETALHES DA MONTAGEM</div><h2>Inspetor</h2><div id="details"></div><h3>Na bancada</h3><div id="parts"></div><div class="note">Conectividade elétrica disponível.<br>O LED responde ao código e aos fios. Curto e dano virtual seguem regras educativas.</div></aside></main><footer><span><i></i> Bancada pronta</span><span>UNO · MODELO ELÉTRICO SIMPLIFICADO</span><span>GhostLab / 2026</span></footer>`;
 setupWorkspacePanels();
 const host = document.querySelector("#scene"),
   scene = new T.Scene();
@@ -972,8 +972,53 @@ projectControls.addEventListener("click", async (event) => {
       button.disabled = false;
   }
 });
+const frameDiagnostic =
+  new URLSearchParams(location.search).get("diagnostico") === "1"
+    ? createFrameDiagnostic()
+    : null;
+function createFrameDiagnostic() {
+  const panel = document.createElement("div");
+  const button = document.createElement("button");
+  const output = document.createElement("output");
+  button.type = "button";
+  button.textContent = "Medir quadros (5 s)";
+  panel.append(button, output);
+  document.querySelector("#electrical-body").append(panel);
+  let samples, started;
+  button.onclick = (event) => {
+    event.stopPropagation();
+    samples = [];
+    started = null;
+    output.textContent = " Medindo…";
+  };
+  return (now, previousFrame) => {
+    if (!samples) return;
+    if (
+      document.hidden ||
+      firmwareSession.snapshot().phase !== "running" ||
+      !document.querySelector(".serial-monitor")?.open
+    ) {
+      samples = null;
+      output.textContent =
+        " Execute o firmware e abra o monitor serial para medir.";
+      return;
+    }
+    if (started === null) {
+      started = now;
+      return;
+    }
+    samples.push(now - previousFrame);
+    if (now - started < 5000) return;
+    samples.sort((a, b) => a - b);
+    const percentile = (p) =>
+      samples[Math.ceil(samples.length * p) - 1].toFixed(1);
+    output.textContent = ` ${samples.length} quadros · mediana ${percentile(0.5)} ms · p95 ${percentile(0.95)} ms · máximo ${percentile(1)} ms`;
+    samples = null;
+  };
+}
 let lastFrame = performance.now();
 renderer.setAnimationLoop((now) => {
+  frameDiagnostic?.(now, lastFrame);
   const deltaSeconds = Math.max(0, (now - lastFrame) / 1000);
   lastFrame = now;
   if (

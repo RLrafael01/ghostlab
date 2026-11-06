@@ -1,5 +1,8 @@
 import { examples } from "./examples.js";
-import { createConfiguredCompiler } from "./compiler-client.js";
+import {
+  createConfiguredCompiler,
+  loadExampleFirmware,
+} from "./compiler-client.js";
 import { createFirmwareSession } from "./session.js";
 import { createSerialMonitor } from "./serial-monitor.js";
 export function setupFirmwarePanel({
@@ -19,9 +22,10 @@ export function setupFirmwarePanel({
     .map(([id, e]) => `<option value="${id}">${e.name}</option>`)
     .join(
       "",
-    )}<option value="custom" disabled>Personalizado</option></select></label><button data-action="run" class="run-firmware">▶ Compilar e executar</button><button data-action="stop">■ Parar</button><button data-action="restart">↻ Reiniciar</button></div><div class="firmware-state" role="status"></div><details class="firmware-diagnostics" hidden><summary>Diagnósticos de compilação</summary><pre></pre></details><p class="firmware-note">Escolha um exemplo e monte seu circuito. Botão: segure o topo. Potenciômetro: arraste o eixo ou ajuste no inspetor. A compilação pública depende do serviço de demonstração estar online.</p>`;
+    )}<option value="custom" disabled>Personalizado</option></select></label><button data-action="run" class="run-firmware">▶ Compilar e executar</button><button data-action="example">Executar exemplo pré-compilado</button><button data-action="stop">■ Parar</button><button data-action="restart">↻ Reiniciar</button></div><div class="firmware-state" role="status"></div><details class="firmware-diagnostics" hidden><summary>Diagnósticos de compilação</summary><pre></pre></details><p class="firmware-note">Escolha um exemplo e monte seu circuito. Botão: segure o topo. Potenciômetro: arraste o eixo ou ajuste no inspetor. A compilação pública depende do serviço de demonstração estar online.</p>`;
   const select = container.querySelector("select"),
     run = container.querySelector('[data-action="run"]'),
+    runExample = container.querySelector('[data-action="example"]'),
     stop = container.querySelector('[data-action="stop"]'),
     restart = container.querySelector('[data-action="restart"]'),
     message = container.querySelector(".firmware-state"),
@@ -36,6 +40,8 @@ export function setupFirmwarePanel({
       base,
       local: import.meta.env?.DEV ?? false,
     }),
+    loadExample: (source, options) =>
+      loadExampleFirmware(source, { ...options, base }),
     createRunner(hex, output, error, inputs) {
       const worker = new Worker(new URL("./worker.js", import.meta.url), {
         type: "module",
@@ -68,6 +74,9 @@ export function setupFirmwarePanel({
             : "UNO · parado";
       stop.disabled = !["running", "compiling"].includes(state.phase);
       run.disabled = assembling || state.phase === "compiling";
+      runExample.disabled =
+        run.disabled ||
+        !Object.values(examples).some(({ source }) => source === state.source);
       restart.disabled =
         state.executedRevision === null || dirty || state.phase === "compiling";
       errors.hidden = state.diagnostics.length === 0;
@@ -94,6 +103,7 @@ export function setupFirmwarePanel({
       assembling = true;
       assemble.disabled = true;
       run.disabled = true;
+      runExample.disabled = true;
       restart.disabled = true;
       select.disabled = true;
       try {
@@ -112,6 +122,9 @@ export function setupFirmwarePanel({
         assembling = false;
         select.disabled = false;
         run.disabled = false;
+        runExample.disabled = !Object.values(examples).some(
+          ({ source }) => source === editor.value,
+        );
         resetAssembly();
       }
     });
@@ -161,6 +174,9 @@ export function setupFirmwarePanel({
   }
   run.addEventListener("click", () => {
     if (resolveTarget()) session.execute();
+  });
+  runExample.addEventListener("click", () => {
+    if (resolveTarget()) session.execute({ example: true });
   });
   stop.addEventListener("click", () => session.stop());
   restart.addEventListener("click", () => {

@@ -107,6 +107,26 @@ export function createCompilerClient({
     );
   };
 }
+export async function loadExampleFirmware(
+  source,
+  { base = "./", request = fetch, signal } = {},
+) {
+  const match = Object.entries(examples).find(
+    ([, example]) => example.source === source,
+  );
+  if (!match) throw new Error("O código editado precisa ser compilado.");
+  const response = await request(`${base}firmware/${match[0]}.json`, {
+    signal: requestSignal(signal, 10_000),
+  });
+  if (!response.ok) throw new Error("Artefato do exemplo indisponível.");
+  const artifact = await response.json();
+  if (
+    artifact.sourceHash !== (await sourceHash(source)) ||
+    typeof artifact.hex !== "string"
+  )
+    throw new Error("O firmware do exemplo não corresponde ao sketch.");
+  return { ...artifact, origin: "example" };
+}
 function requestSignal(signal, timeoutMs) {
   const timeout = AbortSignal.timeout(timeoutMs);
   return signal ? AbortSignal.any([signal, timeout]) : timeout;
