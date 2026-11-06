@@ -49,7 +49,7 @@ Mantenha o computador acordado, conectado à internet, com os processos do servi
 
 Com endpoint configurado, falhas de rede, rate limit e erro de C++ mostram mensagem recuperável e preservam a edição. Não há troca silenciosa por um exemplo pré-compilado ou firmware antigo. Uma compilação bem-sucedida precisa devolver o hash do código enviado; a sessão também descarta respostas substituídas por edição, parada ou outra compilação.
 
-Somente uma configuração ausente com HTTP **404** ativa o comportamento estático anterior: exemplos originais podem usar seus artefatos pré-compilados, com origem informada. HTTP 503, configuração inválida e falha de rede não ativam esse caminho. O cliente limita a espera pela configuração a 10 s e pela compilação a 35 s.
+Somente uma configuração ausente com HTTP **404** ativa o comportamento estático anterior: exemplos originais podem usar seus artefatos pré-compilados, com origem informada. HTTP 503, configuração inválida e falha de rede não ativam esse caminho. O cliente limita a espera pela configuração a 10 s e pela compilação a 35 s. Para ensaiar o exemplo original durante a indisponibilidade, use **Executar exemplo pré-compilado**. O botão confere o hash e identifica a origem da execução.
 
 ## Isolamento e limites
 

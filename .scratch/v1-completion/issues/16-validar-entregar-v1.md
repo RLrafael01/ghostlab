@@ -1,6 +1,6 @@
 # 16 — Validar e entregar a V1 completa com roteiro de apresentação
 
-Status: open
+Status: in-progress
 Priority: P2
 Milestone: V1 final — validação e apresentação
 Blocked by: v1-completion/07 (GitHub #15), v1-completion/11 (GitHub #19), v1-completion/13 (GitHub #21), v1-completion/14 (GitHub #22), v1-completion/15 (GitHub #23)
@@ -36,3 +36,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
 
 - 05/11/2026 — auditoria da main `0db0ca1`: **Parcial**. CI, prévias identificadas, documentação e testes de bancada/Blink/PWM existem. Faltam matriz de evidências das 34 histórias, fluxos integrados, medição de responsividade, compilação pública, ensaio em outra máquina e versão final estável. As bases atuais não encerram a validação da V1. Evidência: `.github/workflows/pr.yml`, `docs/FIRMWARE-REVIEW.md`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.
+
+- 05/11/2026 (Enzo): PR #35 consolida a matriz, corrige o objeto do sensor, adiciona recuperação explícita com firmware pré-compilado e registra a medição de quadros. Ver docs/V1-FINAL-VALIDATION.md. Compilador HTTPS indisponível no ensaio; repetir em outro computador e após merge antes de encerrar.

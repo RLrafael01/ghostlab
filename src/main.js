@@ -184,6 +184,10 @@ host.addEventListener(
       event.button !== 0 ||
       event.target !== renderer.domElement ||
       !targetObject.visible ||
+      assembling ||
+      drag ||
+      visualWires.active ||
+      boardResize.active ||
       targetPointer
     )
       return;
@@ -578,18 +582,6 @@ peripheralInteraction = setupScenePeripheralControls({
   onSelect: select,
   onChange: () => {
     electricalView.update();
-    const sensor = activeSensor();
-    targetObject.visible = !!sensor;
-    distanceControl.hidden = !sensor;
-    if (sensor) {
-      const cm = sensor.distanceCm ?? 50;
-      distanceSlider.value = String(cm);
-      targetObject.position.set(
-        sensor.group.position.x,
-        0.325,
-        sensor.group.position.z + cm / 50,
-      );
-    }
     peripheralInspector?.refresh();
   },
   isBusy: () =>
@@ -1053,6 +1045,18 @@ renderer.setAnimationLoop((now) => {
       deltaSeconds,
       latestCircuit?.servos.find((servo) => servo.id === item.id),
     );
+  const sensor = activeSensor();
+  targetObject.visible = !!sensor;
+  distanceControl.hidden = !sensor;
+  if (sensor) {
+    const cm = sensor.distanceCm ?? 50;
+    distanceSlider.value = String(cm);
+    targetObject.position.set(
+      sensor.group.position.x,
+      0.325,
+      sensor.group.position.z + cm / 50,
+    );
+  }
   peripheralInspector?.refresh();
   if (selected?.peripheralVisual) outline?.update();
   renderer.render(scene, camera);
