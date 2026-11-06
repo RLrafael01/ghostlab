@@ -1,4 +1,9 @@
 import {
+  importProjectFile,
+  projectDownload,
+  downloadProjectFile,
+} from "./projects/files.js";
+import {
   emptyProject,
   validateProject,
   serializeProject,
@@ -828,7 +833,7 @@ const initialAssembly = loadPresentation();
 const projectControls = document.createElement("fieldset");
 projectControls.className = "project-controls";
 projectControls.innerHTML =
-  '<legend>Projeto local</legend><label>Nome <input maxlength="100" value="Minha primeira bancada"></label><div><button type="button" data-project="new">Nova bancada</button><button type="button" data-project="save">Salvar projeto</button><button type="button" data-project="open">Abrir projeto salvo</button></div><p role="status"></p>';
+  '<legend>Projeto local</legend><label>Nome <input maxlength="100" value="Minha primeira bancada"></label><div><button type="button" data-project="new">Nova bancada</button><button type="button" data-project="save">Salvar projeto</button><button type="button" data-project="open">Abrir projeto salvo</button><button type="button" data-project="import">Importar projeto</button><button type="button" data-project="export">Exportar projeto</button><button type="button" data-project="sketch">Baixar sketch</button><button type="button" data-project="guide">Baixar guia</button></div><input type="file" accept=".json,application/json" aria-label="Arquivo de projeto GhostLab" hidden><p role="status"></p>';
 document.querySelector("#catalog").before(projectControls);
 const projectName = projectControls.querySelector("input");
 const projectMessage = projectControls.querySelector("p");
@@ -905,15 +910,46 @@ initialAssembly
     baseline ??= serializeProject(snapshotProject());
   })
   .catch(() => {});
-projectControls.addEventListener("click", async (event) => {
-  const action = event.target.dataset.project;
-  if (!action || assembling) return;
+const projectFile = projectControls.querySelector('input[type="file"]');
+projectFile.addEventListener("change", async () => {
+  const file = projectFile.files[0];
+  projectFile.value = "";
+  if (!file || assembling) return;
   assembling = true;
   for (const button of projectControls.querySelectorAll("button"))
     button.disabled = true;
   try {
     await initialAssembly;
-    if (action === "save") {
+    const imported = await importProjectFile(file, {
+      confirm: confirmProjectReplacement,
+      apply: replaceProject,
+    });
+    if (imported)
+      projectMessage.textContent = "Projeto importado. Compile para executar.";
+  } catch (error) {
+    projectMessage.textContent = `Falha ao importar: ${error.message}`;
+  } finally {
+    assembling = false;
+    for (const button of projectControls.querySelectorAll("button"))
+      button.disabled = false;
+  }
+});
+projectControls.addEventListener("click", async (event) => {
+  const action = event.target.dataset.project;
+  if (!action || assembling) return;
+  if (action === "import") {
+    projectFile.click();
+    return;
+  }
+  assembling = true;
+  for (const button of projectControls.querySelectorAll("button"))
+    button.disabled = true;
+  try {
+    await initialAssembly;
+    if (["export", "sketch", "guide"].includes(action)) {
+      downloadProjectFile(document, projectDownload(action, snapshotProject()));
+      projectMessage.textContent = "Download preparado.";
+    } else if (action === "save") {
       baseline = saveLocalProject(localStorage, snapshotProject());
       projectMessage.textContent = "Projeto salvo neste navegador.";
     } else {
