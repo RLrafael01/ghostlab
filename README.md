@@ -4,7 +4,9 @@ Monte circuitos, programe um microcontrolador e experimente seu funcionamento no
 
 ## Estado do projeto
 
-A bancada executa firmware real do Uno em dez exemplos, incluindo Blink, Fade/PWM, botão, potenciômetro, sensor de distância, servo e cancela automática. O painel de projetos salva, importa e exporta montagens, sketches e guias. A compilação de código editado funciona localmente ou via serviço HTTPS de demonstração. Use **Executar exemplo pré-compilado** para os sketches originais com artefato disponível. Consulte [Firmware](docs/FIRMWARE.md), [compilação pública](docs/PUBLIC-COMPILER.md) e [validação da V1](docs/V1-FINAL-VALIDATION.md).
+A bancada executa firmware real do Uno com Blink, fade/PWM, botão, potenciômetro, monitor serial, sensor de distância e servo seguindo as ligações. Inclui cancela automática, falhas educativas, dano virtual e projetos locais com importação/exportação. PRs #30–#35 integrados; a validação final continua na [issue #24](https://github.com/RLrafael01/ghostlab/issues/24) e no [relatório de evidências](docs/V1-FINAL-VALIDATION.md).
+
+Compilar código editado requer o serviço próprio local ou o serviço HTTPS de demonstração ativo. O túnel depende do Mac hospedeiro e muda de URL ao reiniciar; consulte [recuperação](docs/PUBLIC-COMPILER.md). Os exemplos originais podem executar explicitamente o firmware pré-compilado, com origem e hash conferidos. Isso não executa edições novas.
 
 Metas originais: **30/10/2026**, interface interativa; **06/11/2026**, V1 funcional. O plano atualizado em 05/11 registra o risco do prazo e organiza a entrega por resultados verificáveis.
 
