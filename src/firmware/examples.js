@@ -133,6 +133,49 @@ void loop() {
 }
 `,
   },
+  gate: {
+    name: "Cancela automática",
+    source: `#include <Servo.h>
+// Trig D7, Echo D6, servo D5, botão D2 com INPUT_PULLUP e LED D9 com resistor.
+const int LIMIAR_CM = 30;
+const int ABERTA = 90;
+const int FECHADA = 0;
+Servo cancela;
+
+void setup() {
+  pinMode(7, OUTPUT);
+  pinMode(6, INPUT);
+  pinMode(2, INPUT_PULLUP);
+  pinMode(9, OUTPUT);
+  cancela.attach(5);
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(7, HIGH);
+  delayMicroseconds(12);
+  digitalWrite(7, LOW);
+  unsigned long eco = pulseIn(6, HIGH, 30000);
+  bool botao = digitalRead(2) == LOW;
+  bool abrir = botao || (eco && eco < LIMIAR_CM * 58UL);
+  int angulo = abrir ? ABERTA : FECHADA;
+  cancela.write(angulo);
+  digitalWrite(9, abrir);
+  Serial.print("Distancia: ");
+  if (eco) {
+    Serial.print(eco / 58.0, 1);
+    Serial.print(" cm");
+  } else {
+    Serial.print("sem eco");
+  }
+  Serial.print(" | Botao: ");
+  Serial.print(botao ? "pressionado" : "solto");
+  Serial.print(" | Angulo: ");
+  Serial.println(angulo);
+  delay(80);
+}
+`,
+  },
   distance: {
     name: "Sensor · distância no serial",
     source: `const int TRIG = 7, ECHO = 6, LED = 9;

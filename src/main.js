@@ -815,12 +815,14 @@ function clearBench() {
 }
 async function assembleExample(id) {
   await initialAssembly;
-  if (!confirmProjectReplacement()) return;
+  if (!confirmProjectReplacement()) return false;
   assembling = true;
-  firmwareSession.stop();
+  firmwareSession.reset(document.querySelector("#code-panel textarea").value);
+  electricalView.reset();
   clearBench();
   try {
     await mountExample(id);
+    projectName.value = id === "gate" ? "Cancela automática" : "Exemplo " + id;
     home();
   } catch (error) {
     clearBench();
@@ -850,6 +852,7 @@ function snapshotProject() {
       position: item.group.position.toArray(),
       rotationY: item.group.rotation.y,
       ...(item.type === "board" && { columns: item.columns }),
+      ...(item.type === "servo" && item.gate && { parameters: { gate: true } }),
       ...(item.type === "pot" && { parameters: { value: item.value } }),
       ...(item.type === "sensor" && {
         parameters: { distanceCm: item.distanceCm ?? 50 },
@@ -885,6 +888,7 @@ async function replaceProject(project) {
     item.group.rotation.y = component.rotationY;
     if (item.type === "board" && item.columns !== component.columns)
       replaceBreadboard(item, component.columns);
+    if (item.type === "servo") item.gate = component.parameters?.gate ?? false;
     if (item.type === "pot") item.value = component.parameters?.value ?? 0.5;
     if (item.type === "sensor")
       item.distanceCm =

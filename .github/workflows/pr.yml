@@ -25,6 +25,7 @@ jobs:
       - run: npm run setup:compiler
       - run: npm test
       - run: npm run test:firmware
+      - run: npm run build:firmware -- distance gate
       - name: Choose publication directory
         id: target
         env:

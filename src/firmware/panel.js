@@ -97,7 +97,14 @@ export function setupFirmwarePanel({
       restart.disabled = true;
       select.disabled = true;
       try {
-        await onAssemble(select.value);
+        const example = examples[select.value];
+        if (
+          (await onAssemble(select.value)) !== false &&
+          editor.value !== example.source
+        ) {
+          editor.value = example.source;
+          editSource();
+        }
       } catch {
         message.textContent =
           "Não foi possível montar o exemplo. Tente novamente.";
@@ -131,6 +138,12 @@ export function setupFirmwarePanel({
     const example = examples[select.value];
     if (!example) {
       editSource();
+      return;
+    }
+    if (onAssemble) {
+      resetAssembly();
+      message.textContent =
+        "Monte o exemplo para carregar seu sketch e circuito.";
       return;
     }
     session.stop();

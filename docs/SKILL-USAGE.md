@@ -1,6 +1,6 @@
 # Uso de skills no GhostLab
 
-**94 aplicações registradas** · Matt Pocock: 78 · pstack: 16
+**96 aplicações registradas** · Matt Pocock: 80 · pstack: 16
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
@@ -9,8 +9,8 @@
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
-| Matt Pocock | `implement` | 12 | 5 | 17 |
-| Matt Pocock | `pr` | 12 | 6 | 18 |
+| Matt Pocock | `implement` | 12 | 6 | 18 |
+| Matt Pocock | `pr` | 12 | 7 | 19 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
 | Matt Pocock | `tdd` | 4 | 2 | 6 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
@@ -18,7 +18,7 @@
 | Matt Pocock | `writing-for-agents` | 5 | 0 | 5 |
 | pstack | `principle-prove-it-works` | 11 | 1 | 12 |
 | pstack | `principle-sequence-verifiable-units` | 4 | 0 | 4 |
-| **Total** | | **78** | **16** | **94** |
+| **Total** | | **78** | **18** | **96** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -136,3 +136,5 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 092 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR de dano e projetos locais. | concluído | PR #32 com roteiro, prévia de teste e fechamento de #19 e #20 no merge. |
 | 093 | 05/11/2026 | Enzo | Matt Pocock | `implement` | Implementar #21 e #22. | concluído | Importação valida arquivo antes de confirmar ou trocar a bancada; exportação versionada, .ino e guia com IDs e terminais. 108 testes locais passaram, 3 ignorados, e build aprovado. |
 | 094 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR de arquivos e guia. | concluído | PR #33 com roteiro, link da prévia e fechamento de #21 e #22 no merge. |
+| 095 | 05/11/2026 | Enzo | Matt Pocock | `implement` | Implementar cancela e exemplos editáveis (#23). | concluído | Cancela com HC-SR04, botão, LED e servo, sketch editável e estado salvo. 110 testes locais aprovados e build aprovado. CI 42143541418 compilou original e variante, testou distância, botão, ângulo e sinal solto. |
+| 096 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR da cancela. | concluído | PR #34 com roteiro em docs/GATE-EXAMPLE.md, prévia publicada e fechamento da #23 no merge. |

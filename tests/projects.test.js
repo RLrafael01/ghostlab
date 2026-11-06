@@ -175,3 +175,18 @@ test("guia identifica GND físico, contato da placa, jumper solto e limites", as
     /Nenhum componente.*Nenhum fio/s,
   );
 });
+
+test("salvamento preserva o braço da cancela sem guardar ângulo transitório", () => {
+  const original = project();
+  original.components.push({
+    id: 17,
+    type: "servo",
+    position: [1, 0, 2],
+    rotationY: 0,
+    parameters: { gate: true },
+    angle: 90,
+  });
+  const restored = parseProject(serializeProject(original));
+  assert.deepEqual(restored.components.at(-1).parameters, { gate: true });
+  assert.equal(restored.components.at(-1).angle, undefined);
+});

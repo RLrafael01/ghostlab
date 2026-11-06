@@ -125,3 +125,20 @@ test("choosing another preset restores its source while Personalizado never repl
   ui.input(examples.on.source);
   assert.equal(ui.select.selectedOptions[0].textContent, "LED ligado");
 });
+
+test("escolher cancela e cancelar a montagem preserva o sketch em edição", async (t) => {
+  const ui = panel(t, { onAssemble: async () => false });
+  const original = "// alterações do aluno";
+  ui.input(original);
+  ui.choose("gate");
+  assert.equal(ui.editor.value, original);
+  const assemble = [...ui.container.querySelectorAll("button")].find(
+    (button) => button.textContent === "Montar circuito do exemplo",
+  );
+  assemble.click();
+  assemble.click();
+  await Promise.resolve();
+  await Promise.resolve();
+  assert.equal(ui.editor.value, original);
+  assert.equal(ui.session.snapshot().source, original);
+});
