@@ -136,5 +136,5 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 092 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR de dano e projetos locais. | concluído | PR #32 com roteiro, prévia de teste e fechamento de #19 e #20 no merge. |
 | 093 | 05/11/2026 | Enzo | Matt Pocock | `implement` | Implementar #21 e #22. | concluído | Importação valida arquivo antes de confirmar ou trocar a bancada; exportação versionada, .ino e guia com IDs e terminais. 108 testes locais passaram, 3 ignorados, e build aprovado. |
 | 094 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR de arquivos e guia. | concluído | PR #33 com roteiro, link da prévia e fechamento de #21 e #22 no merge. |
-| 095 | 05/11/2026 | Enzo | Matt Pocock | `implement` | Implementar cancela e exemplos editáveis (#23). | em andamento | Base beaf7be com sensor, servo e projetos locais integrados. |
-| 096 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR da cancela. | em andamento | Registro inicial antes da implementação. |
+| 095 | 05/11/2026 | Enzo | Matt Pocock | `implement` | Implementar cancela e exemplos editáveis (#23). | concluído | Cancela com HC-SR04, botão, LED e servo, sketch editável e estado salvo. 110 testes locais aprovados e build aprovado. CI 42143541418 compilou original e variante, testou distância, botão, ângulo e sinal solto. |
+| 096 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR da cancela. | concluído | PR #34 com roteiro em docs/GATE-EXAMPLE.md, prévia publicada e fechamento da #23 no merge. |

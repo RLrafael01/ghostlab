@@ -1,6 +1,6 @@
 # 15 — Oferecer exemplos editáveis e cancela automática com firmware real
 
-Status: open
+Status: done
 Priority: P2
 Milestone: V1 completa — componentes, projetos e falhas
 Blocked by: v1-completion/04 (GitHub #12), v1-completion/05 (GitHub #13), v1-completion/06 (GitHub #14), v1-completion/08 (GitHub #16), v1-completion/09 (GitHub #17), v1-completion/12 (GitHub #20)
@@ -36,3 +36,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 - 05/11/2026 — auditoria da main `0db0ca1`: **Parcial**. Blink, Fade, LED ligado e desligado já são presets executáveis. Faltam exemplos como projetos completos, botão/dimmer, cancela sensor→firmware→servo, painel/serial e proteção/salvamento ao trocar exemplo. Nenhum critério integral está concluído. Evidência: `src/firmware/examples.js`, `tests/firmware-circuit.test.js`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.
 
 - 05/11/2026 — contribuição parcial na branch `codex/inputs-serial-servo`: oito sketches e montagem explícita dos demos (botão, serial, potenciômetro e servo, além dos quatro originais), com confirmação de substituição da bancada e testes reais de firmware. Isso não entrega projetos persistidos nem cancela; #17/#20 e os critérios completos desta issue continuam pendentes. Nenhum novo critério integral marcado.
+
+- 05/11/2026 (Enzo): implementação no PR #34. CI 42143541418 passou com código compilado original e editado. Roteiro manual em docs/GATE-EXAMPLE.md; fechamento no merge.
