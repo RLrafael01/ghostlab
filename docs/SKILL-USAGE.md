@@ -1,6 +1,6 @@
 # Uso de skills no GhostLab
 
-**100 aplicações registradas** · Matt Pocock: 83 · pstack: 17
+**102 aplicações registradas** · Matt Pocock: 84 · pstack: 18
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
@@ -10,15 +10,15 @@
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
 | Matt Pocock | `implement` | 12 | 7 | 19 |
-| Matt Pocock | `pr` | 12 | 8 | 20 |
+| Matt Pocock | `pr` | 13 | 8 | 21 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
 | Matt Pocock | `tdd` | 4 | 2 | 6 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
 | Matt Pocock | `to-tickets` | 2 | 0 | 2 |
 | Matt Pocock | `writing-for-agents` | 5 | 0 | 5 |
-| pstack | `principle-prove-it-works` | 11 | 2 | 13 |
+| pstack | `principle-prove-it-works` | 12 | 2 | 14 |
 | pstack | `principle-sequence-verifiable-units` | 4 | 0 | 4 |
-| **Total** | | **78** | **22** | **100** |
+| **Total** | | **80** | **22** | **102** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -142,3 +142,6 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 098 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR da validação final. | concluído | PR #35 com link de prévia, medições, roteiro e pendências. Referencia #24 sem fechamento automático. |
 | 099 | 05/11/2026 | Enzo | Matt Pocock | `diagnosing-bugs` | Reproduzir e corrigir a sessão NaN e investigar montagem repetida (#24). | concluído | Teste reproduziu NaN !== 1 após reset; preservar o contador corrigiu o ciclo e rejeitou saída atrasada. Timeout na confirmação dupla reproduzido antes; após confirmação única, montar, cancelar, remontar e executar funcionaram no navegador. 114 testes locais aprovados. |
 | 100 | 05/11/2026 | Enzo | pstack | `principle-prove-it-works` | Conferir a revisão publicada e os fluxos de validação (#24). | concluído | Sugestão: verificar artefato real. Decisão: rodar a cancela em Chromium/Windows, conferir sessão 1–3, remontagem, tela cheia, serial e arquivo exportado/reimportado. Efeito: 7 peças e 14 fios após importação, console sem erros; DNS do compilador indisponível. CI e SHA publicados conferidos na entrega do PR #35. |
+
+| 101 | 05/11/2026 | Rafael | pstack | `principle-prove-it-works` | Validar publicação e recuperar compilação HTTPS para #24/#8. | em andamento | Decisão: verificar serviço e navegador reais; renovar túnel expirado. Serviço isolado respondeu via HTTPS. Ensaio final e main após merge pendentes. |
+| 102 | 05/11/2026 | Rafael | Matt Pocock | `pr` | Preparar recuperação da compilação e acompanhamento da V1. | em andamento | PR com LINK TESTE, evidências e pendências explícitas; sem fechamento antecipado de #24/#8. |

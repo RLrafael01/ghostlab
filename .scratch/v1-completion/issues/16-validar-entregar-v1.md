@@ -3,7 +3,7 @@
 Status: in-progress
 Priority: P2
 Milestone: V1 final — validação e apresentação
-Blocked by: v1-completion/07 (GitHub #15), v1-completion/11 (GitHub #19), v1-completion/13 (GitHub #21), v1-completion/14 (GitHub #22), v1-completion/15 (GitHub #23)
+Blocked by: validação HTTPS em outra máquina e publicação aprovada na main
 GitHub: https://github.com/RLrafael01/ghostlab/issues/24
 
 ## What to build
@@ -40,3 +40,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 - 05/11/2026 (Enzo): PR #35 consolida a matriz, corrige o objeto do sensor, adiciona recuperação explícita com firmware pré-compilado e registra a medição de quadros. Ver docs/V1-FINAL-VALIDATION.md. Compilador HTTPS indisponível no ensaio; repetir em outro computador e após merge antes de encerrar.
 
 - 05/11/2026 (Enzo): ensaio externo informado para 4bc075f confirmou sensor, LED, servo, UART e pré-compilado. Correções em 8cc85c6 e evidências complementares em docs/V1-FINAL-VALIDATION.md. Compilação HTTPS, ensaio das correções em outro computador e main pós-merge pendentes.
+
+- 05/11/2026 (Rafael): PR #35 integrado em `8a6aa3d`. Recuperação HTTPS em andamento; o endpoint novo respondeu com a toolchain esperada. A entrega permanece em execução até ensaio real da prévia e da main e cobertura das pendências da matriz.

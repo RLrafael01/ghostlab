@@ -9,15 +9,9 @@ A [especificação aprovada](../initial-lab/spec.md) continua sendo a fonte do e
 
 ## Estado verificado
 
-- Auditoria em 05/11/2026 sobre a main `0db0ca1`: bancada 3D, montagem, jumpers, fullscreen/inspetor, redimensionamento e editor flutuante integrados. A auditoria conferiu código, histórico de merges e evidências existentes; não equivale a um novo ensaio completo da V1.
-- Issues #2 e #3 concluídas: PRs #4 e #6 integrados, com conexões, grupos da protoboard e LED. O PR #7 também foi integrado, com conectores acessíveis e apoio do LED nas bordas.
-- Issues #9–#11 concluídas e integradas pelo [PR #26](https://github.com/RLrafael01/ghostlab/pull/26), merge `6a1f31a`: compilação local, firmware real, Blink e PWM. Ver [revisão e testes](../../docs/FIRMWARE-REVIEW.md) e [uso e limites](../../docs/FIRMWARE.md).
-- O [PR #27 do Enzo](https://github.com/RLrafael01/ghostlab/pull/27), revisão `212d3d5`, foi fechado sem merge. Seu trabalho parcial de entradas GPIO, falhas e esquema de projeto não está entregue na main e não encerra as issues correspondentes.
-- Nova auditoria em 05/11/2026: **13 issues de entrega ainda abertas (#12–#24)**, além do acompanhamento #8. Todas as necessidades restantes da V1 já estão cobertas; nenhuma issue duplicada foi criada. Nenhuma dessas 13 tem todos os critérios atendidos na main.
-- O PR #29 foi integrado à main em `3137cad`, base da entrega atual: reconexão em todo o círculo/símbolo do LED, contorno fino de seleção e auditoria do rastreador. A prévia de um PR não comprova entrega na main antes do merge.
-- **#12–#16 concluídas na branch, aguardando merge do [PR #30](https://github.com/RLrafael01/ghostlab/pull/30)**: botão, monitor serial, potenciômetro, compilação pública de demonstração e servo. 119 testes aprovados, revisão sem bloqueadores após correções e navegador nos dois modos, com código editado pelo HTTPS e recuperação após indisponibilidade. [Evidência e roteiro](../../docs/PERIPHERALS-REVIEW.md). Os tickets locais estão `done`; as issues do GitHub permanecem abertas até o merge e a main ainda está em `3137cad`.
-- #15 usa serviço próprio isolado e túnel HTTPS temporário, validado com código editado, erro de C++ e desligamento/recuperação. O build da base main foi validado, mas sua publicação depende do merge. A disponibilidade exige computador e túnel ativos. [Operação e limites](../../docs/PUBLIC-COMPILER.md).
-- #18 e #23 têm bases parciais, sem critérios completos novos: LED reage à desconexão e a branch atual oferece montagem de oito demos. Esses atalhos não implementam projeto persistido, sensor ou cancela. #8 continua parcial até validar toda a V1.
+Main `8a6aa3d`: PRs #30–#35 integrados. Issues #9–#23 encerradas; #24 e #8 permanecem abertas pela validação final. O PR #35 corrigiu sessão serial, remontagem, cancelamento e objeto do sensor. Os resultados antigos abaixo não são o estado vigente.
+
+Pendências atuais: renovar a configuração HTTPS expirada pelo fluxo de PR, testar código editado na prévia e em outro computador, concluir os ensaios manuais e validar a publicação da main após o merge. [Matriz e evidências](../../docs/V1-FINAL-VALIDATION.md).
 
 ## Ordem recomendada
 
@@ -32,7 +26,7 @@ A [especificação aprovada](../initial-lab/spec.md) continua sendo a fonte do e
 | Projetos e montagem física | #20, #21, #22 | Salvar/reabrir, compartilhar arquivo e exportar sketch/lista de ligações. |
 | Entrega final | #24 | Ensaio integrado, evidências, documentação, histórico de skills e versão estável da main. |
 
-#12–#16 estão concluídas na branch do PR #30; não duplicar esse trabalho. #18 e #20 podem avançar em paralelo conforme a capacidade da dupla. #17 espera a integração da #13; #19 espera #18; #21/#22 esperam #20; #23 reúne os componentes e projetos; #24 valida o conjunto. Não transformar quantidade de issues em percentual de software pronto: as entregas têm tamanhos diferentes.
+#12–#23 já foram integradas; não duplicar esse trabalho. O planejamento seguinte é histórico. #18 e #20 podem avançar em paralelo conforme a capacidade da dupla. #17 espera a integração da #13; #19 espera #18; #21/#22 esperam #20; #23 reúne os componentes e projetos; #24 valida o conjunto. Não transformar quantidade de issues em percentual de software pronto: as entregas têm tamanhos diferentes.
 
 Os pré-requisitos de serial e persistência já foram atendidos pelo piloto e pela #3, respectivamente; essas entregas podem avançar sem esperar todos os componentes. Bloqueios são pré-requisitos técnicos, não datas nem uma fila totalmente serial. P0 indica prioridade imediata, P1 os básicos seguintes, e P2 os demais requisitos obrigatórios da V1. Conferir o responsável e assumir a issue antes de iniciar.
 
