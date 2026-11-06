@@ -1,0 +1,4 @@
+{
+  "endpoint": "https://turn-commentary-obviously-gain.trycloudflare.com/api/compile",
+  "availability": "Serviço de demonstração: disponível enquanto o computador do responsável, o compilador e o túnel estiverem ligados. O endereço muda ao reiniciar o túnel."
+}
