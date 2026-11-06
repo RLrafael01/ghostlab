@@ -175,6 +175,19 @@ export function createVisualWires(scene) {
       gesture.wire.ends[gesture.index] = gesture.original;
       gesture = null;
     },
+    restoreWire(saved, items) {
+      const wire = api.connect(null, null, null, null, saved.color);
+      wire.id = saved.id;
+      wire.mesh.userData.wireId = saved.id;
+      serial = Math.max(serial, saved.id);
+      wire.ends = saved.ends.map((end) => ({
+        item: items.get(end.componentId) ?? null,
+        pin: end.pin,
+        occurrence: end.occurrence ?? 0,
+        position: new T.Vector3().fromArray(end.position),
+      }));
+      return wire;
+    },
     connect(from, fromPin, to, toPin, color, lift = 0.7) {
       const mesh = new T.Mesh(
         new T.BufferGeometry(),

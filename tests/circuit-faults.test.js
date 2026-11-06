@@ -57,3 +57,41 @@ test("perda de GND e perda de sinal têm motivos distintos e reconexão recupera
   project.wires.push(wire(4, 1, "5V", 3, "1"), wire(5, 3, "2", 1, "GND"));
   assert.deepEqual(simulation.evaluate(project, firmware).faults, []);
 });
+
+test("dano virtual persiste ao reiniciar e só reaparece na restauração se a ligação continuar incorreta", () => {
+  const simulation = createCircuitSimulation();
+  const project = circuit();
+  const bypass = wire(4, 1, "5V", 2, "Ânodo +");
+  project.wires.push(bypass);
+  assert.equal(simulation.evaluate(project).leds[0].reason, "damaged");
+  simulation.restore();
+  assert.equal(simulation.evaluate(project).leds[0].reason, "damaged");
+  project.wires.pop();
+  simulation.restart();
+  assert.equal(simulation.evaluate(project).leds[0].reason, "damaged");
+  simulation.restore();
+  assert.equal(simulation.evaluate(project).leds[0].on, true);
+  project.wires.push(bypass);
+  simulation.evaluate(project);
+  project.wires.pop();
+  project.components[1].id = 7;
+  for (const wire of project.wires)
+    for (const end of wire.ends) if (end.componentId === 2) end.componentId = 7;
+  assert.equal(simulation.evaluate(project).leds[0].on, true);
+});
+
+test("GPIO sem resistor só causa dano quando fornece energia", () => {
+  const simulation = createCircuitSimulation();
+  const project = circuit();
+  project.wires = [wire(4, 1, "D9", 2, "Ânodo +"), project.wires[2]];
+  const firmware = { unoId: 1, pins: { D9: { output: true, duty: 0 } } };
+  assert.equal(
+    simulation.evaluate(project, firmware).leds[0].reason,
+    "unlimited",
+  );
+  firmware.pins.D9.duty = 0.25;
+  assert.equal(
+    simulation.evaluate(project, firmware).leds[0].reason,
+    "damaged",
+  );
+});

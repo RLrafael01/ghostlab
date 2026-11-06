@@ -1,6 +1,6 @@
 # 12 — Criar bancada vazia, salvar e reabrir projetos no navegador
 
-Status: open
+Status: done
 Priority: P2
 Milestone: V1 completa — componentes, projetos e falhas
 Blocked by: none
@@ -35,3 +35,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
 
 - 05/11/2026 — auditoria da main `0db0ca1`: **Pendente**. Montagem e código vivem em memória. Faltam formato versionado, salvar/reabrir, bancada vazia, proteção contra descarte e recuperação de erro de armazenamento. Evidência: `src/main.js`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.
+
+- 05/11/2026 (Enzo): implementação no PR #32. 105 testes locais aprovados e build aprovado. Fechamento no GitHub após merge.

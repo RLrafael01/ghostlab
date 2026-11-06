@@ -2,12 +2,13 @@ import { breadboardLayout } from "./breadboard-layout.js";
 import { simulatePeripherals } from "./peripheral-circuit.js";
 
 export function createCircuitSimulation() {
-  const state = { shorts: new Map() };
+  const state = { shorts: new Map(), damaged: new Set() };
   return {
     evaluate: (project, firmware) => simulateCircuit(project, firmware, state),
     restart: () => state.shorts.clear(),
     restore() {
       state.shorts.clear();
+      state.damaged.clear();
     },
   };
 }
@@ -16,6 +17,8 @@ export function simulateCircuit({ components, wires }, firmware = null, state) {
   const byId = new Map(
     components.map((component) => [component.id, component]),
   );
+  if (state)
+    for (const id of state.damaged) if (!byId.has(id)) state.damaged.delete(id);
   const boards = new Map(
     components
       .filter((component) => component.type === "board")
@@ -184,6 +187,9 @@ export function simulateCircuit({ components, wires }, firmware = null, state) {
             reason = "signal-open";
         }
       }
+      if (reason === "unlimited" && brightness > 0)
+        state?.damaged.add(component.id);
+      if (state?.damaged.has(component.id)) reason = "damaged";
       if (reason !== "closed") brightness = 0;
       const result = {
         id: component.id,

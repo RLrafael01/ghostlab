@@ -1,3 +1,13 @@
+import {
+  emptyProject,
+  validateProject,
+  serializeProject,
+} from "./projects/schema.js";
+import {
+  readLocalProject,
+  saveLocalProject,
+} from "./projects/local-storage.js";
+import { replaceBreadboard } from "./parametric-board.js";
 import { setupFirmwarePanel } from "./firmware/panel.js";
 import { createDemoCircuit } from "./firmware/demo-circuits.js";
 import { preparePeripheralVisual } from "./peripheral-visuals.js";
@@ -221,6 +231,10 @@ const electricalView = createElectricalView({
   wires: visualWires,
   status: document.querySelector("#electrical-status"),
   getFirmware: () => firmwareOutput ?? { pins: {} },
+  onRestore: () => {
+    if (firmwareSession.snapshot().phase === "running")
+      firmwareSession.restart();
+  },
   onInputs: (inputs) => firmwareSession.setInputs(inputs),
   onState: (state) => {
     latestCircuit = state;
@@ -243,7 +257,7 @@ let selected = null,
   serial = 0,
   outline = null;
 const placements = new Map();
-async function add(type, x, z, animate = false, surfaceY = 0) {
+async function add(type, x, z, animate = false, surfaceY = 0, model) {
   if (type === "wire") {
     const count = visualWires.snapshot().length;
     const wire = visualWires.addLoose(
@@ -264,7 +278,7 @@ async function add(type, x, z, animate = false, surfaceY = 0) {
   const status = document.querySelector("footer span");
   status.textContent = `Carregando ${data.name}…`;
   try {
-    g.add(await loadCAD(type));
+    g.add(model ?? (await loadCAD(type)));
   } catch (error) {
     status.textContent = `Não foi possível carregar ${data.name}. Tente adicionar novamente.`;
     console.error(error);
@@ -368,6 +382,26 @@ function renderPanel() {
     document.querySelector("#wire-color").addEventListener("input", (event) => {
       visualWires.setColor(wire.id, event.target.value);
     });
+  }
+  if (selected?.type === "led") {
+    const old = selected;
+    const replace = document.createElement("button");
+    replace.type = "button";
+    replace.textContent = "Substituir LED (fios serão removidos)";
+    replace.onclick = async () => {
+      replace.disabled = true;
+      const next = await add("led", old.group.position.x, old.group.position.z);
+      if (!next) return;
+      next.group.position.copy(old.group.position);
+      next.group.rotation.copy(old.group.rotation);
+      next.mountedTo = old.mountedTo;
+      if (items.includes(old)) {
+        select(old);
+        remove();
+      }
+      select(next);
+    };
+    document.querySelector("#details").append(replace);
   }
   if (selected)
     peripheralInspector = mountPeripheralInspector(
@@ -776,6 +810,7 @@ function clearBench() {
 }
 async function assembleExample(id) {
   await initialAssembly;
+  if (!confirmProjectReplacement()) return;
   assembling = true;
   firmwareSession.stop();
   clearBench();
@@ -790,6 +825,113 @@ async function assembleExample(id) {
   }
 }
 const initialAssembly = loadPresentation();
+const projectControls = document.createElement("fieldset");
+projectControls.className = "project-controls";
+projectControls.innerHTML =
+  '<legend>Projeto local</legend><label>Nome <input maxlength="100" value="Minha primeira bancada"></label><div><button type="button" data-project="new">Nova bancada</button><button type="button" data-project="save">Salvar projeto</button><button type="button" data-project="open">Abrir projeto salvo</button></div><p role="status"></p>';
+document.querySelector("#catalog").before(projectControls);
+const projectName = projectControls.querySelector("input");
+const projectMessage = projectControls.querySelector("p");
+const projectEditor = document.querySelector("#code-panel textarea");
+let baseline;
+function snapshotProject() {
+  return {
+    version: 1,
+    name: projectName.value.trim(),
+    code: projectEditor.value,
+    components: items.map((item) => ({
+      id: item.id,
+      type: item.type,
+      position: item.group.position.toArray(),
+      rotationY: item.group.rotation.y,
+      ...(item.type === "board" && { columns: item.columns }),
+      ...(item.type === "pot" && { parameters: { value: item.value } }),
+      ...(item.type === "sensor" && {
+        parameters: { distanceCm: item.distanceCm ?? 50 },
+      }),
+    })),
+    wires: visualWires.snapshot(),
+    environment: { distanceCm: 50 },
+  };
+}
+function confirmProjectReplacement() {
+  return (
+    JSON.stringify(snapshotProject()) ===
+      JSON.stringify(JSON.parse(baseline ?? "null")) ||
+    window.confirm(
+      "Descartar as alterações da bancada atual? Cancele para salvar primeiro.",
+    )
+  );
+}
+async function replaceProject(project) {
+  const data = validateProject(project);
+  const models = await Promise.all(
+    data.components.map(({ type }) => loadCAD(type)),
+  );
+  clearBench();
+  firmwareSession.reset(data.code);
+  electricalView.reset();
+  const restored = new Map();
+  for (const [index, component] of data.components.entries()) {
+    const item = await add(component.type, 0, 0, false, 0, models[index]);
+    item.id = component.id;
+    serial = Math.max(serial, item.id);
+    item.group.position.fromArray(component.position);
+    item.group.rotation.y = component.rotationY;
+    if (item.type === "board" && item.columns !== component.columns)
+      replaceBreadboard(item, component.columns);
+    if (item.type === "pot") item.value = component.parameters?.value ?? 0.5;
+    if (item.type === "sensor")
+      item.distanceCm =
+        component.parameters?.distanceCm ?? data.environment.distanceCm;
+    restored.set(item.id, item);
+  }
+  for (const component of data.components) {
+    const item = restored.get(component.id);
+    if (item.type !== "board") {
+      placeComponent(item, items, false);
+      item.group.position.fromArray(component.position);
+    }
+  }
+  for (const wire of data.wires) visualWires.restoreWire(wire, restored);
+  projectEditor.value = data.code;
+  projectEditor.dispatchEvent(new Event("input", { bubbles: true }));
+  projectName.value = data.name;
+  select(null);
+  baseline = serializeProject(snapshotProject());
+}
+initialAssembly
+  .then(() => {
+    baseline ??= serializeProject(snapshotProject());
+  })
+  .catch(() => {});
+projectControls.addEventListener("click", async (event) => {
+  const action = event.target.dataset.project;
+  if (!action || assembling) return;
+  assembling = true;
+  for (const button of projectControls.querySelectorAll("button"))
+    button.disabled = true;
+  try {
+    await initialAssembly;
+    if (action === "save") {
+      baseline = saveLocalProject(localStorage, snapshotProject());
+      projectMessage.textContent = "Projeto salvo neste navegador.";
+    } else {
+      const next =
+        action === "new" ? emptyProject() : readLocalProject(localStorage);
+      if (!confirmProjectReplacement()) return;
+      await replaceProject(next);
+      projectMessage.textContent =
+        action === "new" ? "Bancada vazia criada." : "Projeto salvo aberto.";
+    }
+  } catch (error) {
+    projectMessage.textContent = `Não foi possível concluir: ${error.message}`;
+  } finally {
+    assembling = false;
+    for (const button of projectControls.querySelectorAll("button"))
+      button.disabled = false;
+  }
+});
 let lastFrame = performance.now();
 renderer.setAnimationLoop((now) => {
   const deltaSeconds = Math.max(0, (now - lastFrame) / 1000);
