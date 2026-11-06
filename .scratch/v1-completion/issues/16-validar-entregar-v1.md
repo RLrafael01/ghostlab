@@ -3,7 +3,7 @@
 Status: in-progress
 Priority: P2
 Milestone: V1 final — validação e apresentação
-Blocked by: v1-completion/07 (GitHub #15), v1-completion/11 (GitHub #19), v1-completion/13 (GitHub #21), v1-completion/14 (GitHub #22), v1-completion/15 (GitHub #23)
+Blocked by: validação HTTPS em outra máquina e publicação aprovada na main
 GitHub: https://github.com/RLrafael01/ghostlab/issues/24
 
 ## What to build
@@ -13,10 +13,10 @@ Disponibilizar uma versão estável e reproduzível que cumpra o escopo aprovado
 ## Acceptance criteria
 
 - [ ] Matriz liga todas as 34 histórias da especificação e o novo Fade/PWM a testes/evidências; lacunas são corrigidas e não marcadas como prontas por existir apenas interface.
-- [ ] Verificar botão→firmware→LED→serial, dimmer analógico/PWM e objeto→sensor→firmware→servo com sketches realmente compilados.
+- [x] Verificar botão→firmware→LED→serial, dimmer analógico/PWM e objeto→sensor→firmware→servo com sketches realmente compilados.
 - [ ] Cobrir montagem livre, todos os componentes, falhas, dano/reinício/restauração e round-trip incluindo parâmetros de sensor/servo/potenciômetro e protoboard variável.
 - [ ] Regressões de arraste, cabos, altura nas bordas, redimensionamento, seleção, teclado, foco e tela cheia passam em navegadores de computador definidos a partir da medição.
-- [ ] Medir responsividade com execução, serial e cena ativos; corrigir travamentos e documentar configuração/limites em vez de prometer FPS ou precisão não medidos.
+- [x] Medir responsividade com execução, serial e cena ativos; corrigir travamentos e documentar configuração/limites em vez de prometer FPS ou precisão não medidos.
 - [ ] Prévia do PR usa revisão identificada e compilação própria; testes/build verdes, revisão de outra pessoa e merge aprovado precedem validação do link fixo da main.
 - [ ] Documentar instalação local, serviço de compilação, exemplos, limites, roteiro, commit/tag estável e recuperação se a internet falhar sem apresentar demo como código novo executado.
 - [ ] Consolidar evidências e registros de skills por responsável, reconciliar IDs/totais dos PRs e encerrar issues somente com critérios atendidos.
@@ -40,3 +40,7 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 - 05/11/2026 (Enzo): PR #35 consolida a matriz, corrige o objeto do sensor, adiciona recuperação explícita com firmware pré-compilado e registra a medição de quadros. Ver docs/V1-FINAL-VALIDATION.md. Compilador HTTPS indisponível no ensaio; repetir em outro computador e após merge antes de encerrar.
 
 - 05/11/2026 (Enzo): ensaio externo informado para 4bc075f confirmou sensor, LED, servo, UART e pré-compilado. Correções em 8cc85c6 e evidências complementares em docs/V1-FINAL-VALIDATION.md. Compilação HTTPS, ensaio das correções em outro computador e main pós-merge pendentes.
+
+- 05/11/2026 (Rafael): PR #35 integrado em `8a6aa3d`. Recuperação HTTPS em andamento; o endpoint novo respondeu com a toolchain esperada. A entrega permanece em execução até ensaio real da prévia e da main e cobertura das pendências da matriz.
+
+- 05/11/2026 (Rafael): PR #36 recupera HTTPS. 137 testes aprovados, zero ignorados; prévia compilou cancela editada a 120°, diagnosticou C++ inválido e recuperou. Curto/dano/restauração exercitados via UI. Rafael confirmou roteiro remoto no Chrome do Enzo (SO não informado). Main `8a6aa3d` validada com cancela/serial/fullscreen, p95 17,6 ms. Falta publicar configuração na main por merge aprovado e repetir compilação nela; #24/#8 permanecem abertas.

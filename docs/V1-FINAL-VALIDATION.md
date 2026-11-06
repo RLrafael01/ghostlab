@@ -85,3 +85,30 @@ A primeira inspeção revelou que o objeto e o controle de distância só eram a
 2. Use o Mac hospedeiro para restaurar o HTTPS conforme o manual. Altere limiar para 60 e ângulo para 120, compile a 50 cm e confira a origem remota e o serial. Introduza erro C++, confira diagnóstico e edição preservada, corrija e compile novamente.
 3. Teste botão e dimmer, entrada/saída de tela cheia, posição/tamanho da janela flutuante e inspetor. Meça quadros com serial ativo. Em bancada livre, mova peças e cabos nas bordas e redimensione a protoboard; provoque curto/dano e verifique reinício/restauração.
 4. Salve, recarregue e reabra; exporte e importe em sessão limpa e tente um arquivo inválido. Registre diferenças, console e resultados. Após aprovação e merge, compare o SHA na main e repita o ensaio na publicação final.
+
+
+## Recuperação e ensaio de Rafael — PR #36
+
+Base integrada: main `8a6aa3d1c67ecf8a6ea1bc78b5ed45b90f8e276c`, confirmada no `main/revision.txt` após merge aprovado do PR #35. Configuração recuperada e publicada na prévia #36, revisão funcional `2f89f19fab29727464830233dfd36efe83b1d1de`. Ambiente local: macOS 26.6.2, navegador integrado Chromium, viewport observado 1280 × 720.
+
+| Verificação executada | Evidência observada |
+| --- | --- |
+| Suíte completa da base integrada | `GHOSTLAB_TEST_SANDBOX=1 npm test`: 117 aprovados, zero ignorados. `npm run test:firmware`: 20 aprovados. Build aprovado. |
+| Serviço público próprio | Novo túnel HTTPS encaminha para o compilador isolado em loopback. Metadados: CLI 1.5.1, AVR 1.8.6, Servo 1.3.0. |
+| Compilação HTTP e execução | Blink de 1000 ms e 250 ms compilados via HTTPS; SHA-256 conferido e transições HIGH/LOW/HIGH verificadas no AVR. C++ inválido: HTTP 422 `compile-error`. |
+| Sketch alterado na prévia | Cancela: LIMIAR_CM=60 e ABERTA=120. A 50 cm, painel mostrou brilho 100%, eco 50 cm e alvo 120°. Origem: “Executando código compilado no serviço de demonstração”, revisão 4. |
+| Erro e recuperação pelo navegador | Acrescentado erro C++; diagnóstico exibido e fonte preservada. Após correção e recompilação, revisão 6, sessão 3, servo a 120° e LED aceso. |
+| Outro computador | Rafael confirmou na conversa que o roteiro da cancela editada, erro C++ e recuperação deu certo no computador do Enzo, usando Chrome. Sistema operacional e versão do navegador não foram informados; não foram inferidos. Evidência relatada pelo usuário, distinta do ensaio observado diretamente. |
+| Main após PR #35 | Cancela original a 20 cm: LED 100%, alvo 90°, sessão 1. Parar apagou LED e mostrou UNO parado. |
+| Responsividade na main | Tela cheia com cancela, editor e serial abertos: 300 intervalos em 5 s, mediana 16,7 ms, p95 17,6 ms, máximo 17,8 ms. Amostra única; não garante desempenho em outros equipamentos. |
+| Projeto e falha retida | Cancela editada exportada pelo navegador. Arquivo de teste derivado adicionou fio direto 5V→GND. Ao importar, fonte em falha; retirar o fio não limpou a falha. “Reiniciar fonte virtual” recuperou a fonte. |
+| Dano e restauração | Arquivo de teste derivado ligou 5V diretamente ao ânodo. Dano identificado, sem emissão. Remover fio e recompilar manteve dano; “Restaurar simulação” recuperou LED 100% com resistor e sketch editado. |
+| Console | Nenhum erro capturado nos ensaios da prévia. |
+
+Os arquivos de falha usados no ensaio foram derivados do projeto exportado, preservando IDs e conexões e acrescentando um único jumper. São testes de regras educativas, não previsões físicas de corrente/aquecimento.
+
+### Pendência para encerramento
+
+A recuperação está na prévia #36, não na main até merge. Após revisão de outra pessoa e merge aprovado, conferir `main/revision.txt` e a URL em `main/compiler-config.json`, repetir compilação do sketch editado, erro e recuperação na main. Registrar o SHA final antes de encerrar #24 e #8. Os ensaios manuais históricos da matriz continuam identificados como tais; não afirmar uma nova execução manual de cada gesto a partir de testes automatizados.
+
+O túnel é temporário: manter o Mac, o compilador e o processo cloudflared ativos durante a apresentação. Não contratar hospedagem nem prometer permanência deste endereço. Se reiniciar o túnel, seguir o procedimento de recuperação e publicar a nova configuração por PR.
