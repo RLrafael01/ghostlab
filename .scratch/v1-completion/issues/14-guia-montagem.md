@@ -1,6 +1,6 @@
 # 14 — Exportar sketch e guia de componentes e ligações para montagem física
 
-Status: open
+Status: done
 Priority: P2
 Milestone: V1 completa — componentes, projetos e falhas
 Blocked by: v1-completion/12 (GitHub #20)
@@ -33,3 +33,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
 
 - 05/11/2026 — auditoria da main `0db0ca1`: **Pendente**. Editor e referências dos fios existem; faltam download do sketch e guia com componentes, parâmetros, contatos, pontas livres e limites da simulação. Evidência: `src/main.js`, `src/visual-wires.js`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.
+
+- 05/11/2026 (Enzo): implementação no PR #33. Testes de arquivo, rejeição/cancelamento e rastreabilidade do guia em tests/projects.test.js. 108 testes locais aprovados e build aprovado. Fechamento no merge.

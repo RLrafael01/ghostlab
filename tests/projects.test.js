@@ -99,3 +99,79 @@ test("armazenamento reabre projeto sem estado transitório e preserva o último 
   stored = "{";
   assert.throws(() => readLocalProject(storage), SyntaxError);
 });
+
+test("arquivo exportado abre em outra sessão preservando montagem e sketch", async () => {
+  const { importProjectFile, projectDownload } =
+    await import("../src/projects/files.js");
+  const original = project();
+  original.name = "<img src=x onerror=alert(1)>";
+  const file = projectDownload("export", original);
+  const other = { current: null };
+  assert.equal(
+    await importProjectFile(new Blob([file.text]), {
+      confirm: () => true,
+      apply: (data) => {
+        other.current = data;
+      },
+    }),
+    true,
+  );
+  assert.deepEqual(other.current, original);
+  assert.equal(projectDownload("sketch", original).text, original.code);
+  assert.match(file.name, /^[a-zA-Z0-9_-]+\.ghostlab\.json$/);
+});
+
+test("arquivo inválido, grande ou cancelado preserva projeto em edição", async () => {
+  const { importProjectFile } = await import("../src/projects/files.js");
+  const original = project();
+  let current = original;
+  let confirmations = 0;
+  const callbacks = {
+    confirm: () => {
+      confirmations++;
+      return false;
+    },
+    apply: (next) => {
+      current = next;
+    },
+  };
+  for (const text of ["{", JSON.stringify({ ...original, version: 2 })])
+    await assert.rejects(importProjectFile(new Blob([text]), callbacks));
+  await assert.rejects(
+    importProjectFile({ size: 1_000_001 }, callbacks),
+    /limite/,
+  );
+  assert.equal(confirmations, 0);
+  assert.equal(
+    await importProjectFile(new Blob([serializeProject(original)]), callbacks),
+    false,
+  );
+  assert.equal(confirmations, 1);
+  assert.equal(current, original);
+});
+
+test("guia identifica GND físico, contato da placa, jumper solto e limites", async () => {
+  const { assemblyGuide } = await import("../src/projects/files.js");
+  const original = project();
+  original.components.push({
+    id: 13,
+    type: "resistor",
+    position: [0, 0, 0],
+    rotationY: 0,
+  });
+  const before = structuredClone(original);
+  const guide = assemblyGuide(original);
+  assert.match(guide, /83 colunas/);
+  assert.match(
+    guide,
+    /Fio #3 .*Arduino Uno #4 \/ segundo GND após 5V, junto a VIN ↔ Protoboard #9 \/ a80/,
+  );
+  assert.match(guide, /Fio #7 .*Potenciômetro #12 \/ Sinal ↔ ponta livre/);
+  assert.match(guide, /70%/);
+  assert.match(guide, /não valida um valor em ohms/);
+  assert.deepEqual(original, before);
+  assert.match(
+    assemblyGuide({ ...original, components: [], wires: [] }),
+    /Nenhum componente.*Nenhum fio/s,
+  );
+});

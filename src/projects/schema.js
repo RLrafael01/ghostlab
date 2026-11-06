@@ -10,7 +10,13 @@ const pins = {
   sensor: ["VCC", "Trig", "Echo", "GND"],
   pot: ["VCC", "Sinal", "GND"],
 };
-const MAX_FILE = 1_000_000;
+export function componentPins(component) {
+  return component.type === "board"
+    ? breadboardLayout(component.columns).terminals.map(({ name }) => name)
+    : pins[component.type];
+}
+
+export const MAX_FILE = 1_000_000;
 const record = (value) =>
   value && typeof value === "object" && !Array.isArray(value);
 const between = (value, min, max) =>
@@ -99,12 +105,7 @@ export function validateProject(value) {
           between(columns, BOARD_COLUMN_LIMITS.min, BOARD_COLUMN_LIMITS.max),
         "colunas da protoboard",
       );
-    terminals.set(
-      componentId,
-      type === "board"
-        ? breadboardLayout(columns).terminals.map(({ name }) => name)
-        : pins[type],
-    );
+    terminals.set(componentId, componentPins(component));
     const parameters = parametersFor(component);
     return {
       id: componentId,

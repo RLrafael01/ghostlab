@@ -1,6 +1,6 @@
 # 13 — Compartilhar projeto por exportação e importação de arquivo
 
-Status: open
+Status: done
 Priority: P2
 Milestone: V1 completa — componentes, projetos e falhas
 Blocked by: v1-completion/12 (GitHub #20)
@@ -33,3 +33,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
 
 - 05/11/2026 — auditoria da main `0db0ca1`: **Pendente**. Faltam arquivo de projeto, importação/exportação, validação de versão/limites/referências e preservação da bancada em caso de arquivo inválido. Depende do formato e dos dados de #20. Evidência: `src/main.js`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.
+
+- 05/11/2026 (Enzo): implementação no PR #33. Testes de arquivo, rejeição/cancelamento e rastreabilidade do guia em tests/projects.test.js. 108 testes locais aprovados e build aprovado. Fechamento no merge.
