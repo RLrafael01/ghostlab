@@ -37,6 +37,12 @@ function parametersFor(component) {
     servo: { minPulseUs: [400, 1499], maxPulseUs: [1500, 2600] },
   };
   for (const [key, value] of Object.entries(parameters)) {
+    if (
+      component.type === "servo" &&
+      key === "gate" &&
+      typeof value === "boolean"
+    )
+      continue;
     const range = limits[component.type]?.[key];
     requireValid(
       Array.isArray(range) && between(value, ...range),

@@ -23,7 +23,7 @@ export async function createDemoCircuit(id, { add, connect }) {
       throw new Error("Não foi possível carregar o potenciômetro.");
     peripheral.value = 0.5;
   }
-  if (id === "distance") {
+  if (id === "distance" || id === "gate") {
     peripheral = await add("sensor", 3.2, 1.5);
     if (!peripheral) throw new Error("Não foi possível carregar o sensor.");
     connect(uno, "5V", peripheral, "VCC", "#c43c34");
@@ -53,6 +53,20 @@ export async function createDemoCircuit(id, { add, connect }) {
     connect(uno, "5V", peripheral, "5V", "#c43c34", 0.65);
     connect(uno, "GND", peripheral, "GND", "#4c5360", 0.8);
     connect(uno, "D6", peripheral, "Sinal", "#e9b640", 0.9);
+  }
+  if (id === "gate") {
+    const [servo, button] = await Promise.all([
+      add("servo", 1.2, 2.3),
+      add("button", -0.5, 2.2),
+    ]);
+    if (!servo || !button)
+      throw new Error("Não foi possível carregar a cancela.");
+    servo.gate = true;
+    connect(uno, "5V", servo, "5V", "#c43c34");
+    connect(uno, "GND", servo, "GND", "#4c5360");
+    connect(uno, "D5", servo, "Sinal", "#e9b640");
+    connect(uno, "D2", button, "1", "#e9b640");
+    connect(button, "2", uno, "GND", "#4c5360");
   }
   return { uno, board, led, resistor, peripheral };
 }

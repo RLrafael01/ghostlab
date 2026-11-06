@@ -88,6 +88,28 @@ export function preparePeripheralVisual(item) {
     hub.position.y = horn.position.y;
     pivot.add(horn, hub);
     let angle = 90;
+    let gate;
+    function updateGate() {
+      if (!item.gate) return;
+      if (!gate) {
+        gate = new T.Group();
+        gate.name = "gate-arm";
+        gate.position.copy(pivot.position);
+        gate.position.y += horn.position.y;
+        for (let index = 0; index < 8; index++) {
+          const stripe = new T.Mesh(
+            new T.BoxGeometry(0.22, 0.1, 0.1),
+            new T.MeshStandardMaterial({
+              color: index % 2 ? "#f4eee3" : "#d63734",
+            }),
+          );
+          stripe.position.x = 0.11 + index * 0.22;
+          gate.add(stripe);
+        }
+        item.group.add(gate);
+      }
+      gate.rotation.z = T.MathUtils.degToRad(angle);
+    }
     pivot.rotation.y = Math.PI / 2;
     pivot.updateWorldMatrix(true, true);
     return {
@@ -99,6 +121,7 @@ export function preparePeripheralVisual(item) {
           pivot.rotation.y = (angle * Math.PI) / 180;
           pivot.updateWorldMatrix(true, true);
         }
+        updateGate();
       },
     };
   }
