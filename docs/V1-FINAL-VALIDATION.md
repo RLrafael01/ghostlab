@@ -70,3 +70,18 @@ A primeira inspeção revelou que o objeto e o controle de distância só eram a
 - Repetir a compilação de um sketch editado pelo link publicado com o serviço HTTPS ativo. No ensaio de 05/11, o endpoint configurado estava indisponível. O botão explícito de firmware pré-compilado permite ensaiar o exemplo original.
 - Repetir o roteiro em outro computador e registrar navegador, configuração, resultados e medição. As evidências locais e de CI não substituem esse ensaio.
 - Obter aprovação de outra pessoa, integrar o PR e validar a revisão publicada na main. Só então registrar a revisão estável e encerrar #24 e a issue de acompanhamento #8.
+
+## Revalidação do PR #35
+
+- **Ensaio externo informado pelo solicitante, 4bc075f:** sensor visível; a 20 cm LED ligado e servo a 90°, a 75 cm LED apagado e servo a 0°. UART acompanhou a leitura. Execução pré-compilada funcionou e ficou indisponível após editar. Não foi registrado o navegador/SO dessa máquina nem confirmada compilação remota.
+- **Windows, Chromium integrado, build local 8cc85c6:** a montagem com firmware pré-compilado apresentou sessões 1, 2 e 3 após executar, reiniciar e remontar. Cancelamento preservou a bancada. Salvar, reabrir, exportar e reimportar mantiveram 7 componentes e 14 fios. Após reabrir, UART aguardava Serial.begin. Tela cheia mostrou sensor e inspetor; abri o editor flutuante pelo dock, observei Restaurar janela e retornei ao modo normal. Nenhum erro de console capturado nesses fluxos.
+- **Diagnóstico:** antes da correção, o teste mostrou NaN no lugar de 1 após reset. No navegador, a confirmação de remontagem duplicada coincidiu com timeout da automação. O fluxo continha uma chamada nativa a confirm depois da confirmação no painel. Com a confirmação única, a automação completou remontagem e cancelamento; o timeout original isoladamente não demonstrou travamento da cena.
+- **Testes locais:** 114 passaram, 3 ignorados, build aprovado. Os três casos são de isolamento do compilador público e exigem macOS compatível e GHOSTLAB_TEST_SANDBOX=1. Os testes de sessão cobrem parada, reinício, recompilação, pré-compilado, limpeza e descarte de saída atrasada. Curto, dano/restauração, cabos, apoio, redimensionamento e round-trip foram exercitados na suíte; o ensaio manual de todos esses fluxos segue no roteiro.
+- **Compilador público:** o hostname configurado no PR falhou na resolução DNS, antes de qualquer resposta HTTP. A máquina Windows não fornece o adaptador público isolado. Recuperação e teste de erro/recompilação estão em [Compilador público](PUBLIC-COMPILER.md#ensaio-de-recuperação-pelo-link-rafael).
+
+### Roteiro curto para Rafael
+
+1. Confira revision.txt, anote navegador/SO e abra sessão limpa em outro computador. Monte a cancela duas vezes, cancele uma tentativa e confirme outra. Pare, reinicie e limpe o serial; confira número inteiro e ausência de saída antiga.
+2. Use o Mac hospedeiro para restaurar o HTTPS conforme o manual. Altere limiar para 60 e ângulo para 120, compile a 50 cm e confira a origem remota e o serial. Introduza erro C++, confira diagnóstico e edição preservada, corrija e compile novamente.
+3. Teste botão e dimmer, entrada/saída de tela cheia, posição/tamanho da janela flutuante e inspetor. Meça quadros com serial ativo. Em bancada livre, mova peças e cabos nas bordas e redimensione a protoboard; provoque curto/dano e verifique reinício/restauração.
+4. Salve, recarregue e reabra; exporte e importe em sessão limpa e tente um arquivo inválido. Registre diferenças, console e resultados. Após aprovação e merge, compare o SHA na main e repita o ensaio na publicação final.

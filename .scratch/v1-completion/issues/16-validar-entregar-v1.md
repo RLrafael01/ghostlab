@@ -38,3 +38,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 - 05/11/2026 — auditoria da main `0db0ca1`: **Parcial**. CI, prévias identificadas, documentação e testes de bancada/Blink/PWM existem. Faltam matriz de evidências das 34 histórias, fluxos integrados, medição de responsividade, compilação pública, ensaio em outra máquina e versão final estável. As bases atuais não encerram a validação da V1. Evidência: `.github/workflows/pr.yml`, `docs/FIRMWARE-REVIEW.md`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.
 
 - 05/11/2026 (Enzo): PR #35 consolida a matriz, corrige o objeto do sensor, adiciona recuperação explícita com firmware pré-compilado e registra a medição de quadros. Ver docs/V1-FINAL-VALIDATION.md. Compilador HTTPS indisponível no ensaio; repetir em outro computador e após merge antes de encerrar.
+
+- 05/11/2026 (Enzo): ensaio externo informado para 4bc075f confirmou sensor, LED, servo, UART e pré-compilado. Correções em 8cc85c6 e evidências complementares em docs/V1-FINAL-VALIDATION.md. Compilação HTTPS, ensaio das correções em outro computador e main pós-merge pendentes.
