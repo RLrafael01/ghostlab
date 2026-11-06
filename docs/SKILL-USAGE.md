@@ -1,6 +1,6 @@
 # Uso de skills no GhostLab
 
-**96 aplicações registradas** · Matt Pocock: 80 · pstack: 16
+**98 aplicações registradas** · Matt Pocock: 82 · pstack: 16
 
 | Conjunto | Skill | Rafael | Enzo | Total |
 | --- | --- | ---: | ---: | ---: |
@@ -9,8 +9,8 @@
 | Matt Pocock | `domain-modeling` | 3 | 0 | 3 |
 | Matt Pocock | `grill-with-docs` | 1 | 0 | 1 |
 | Matt Pocock | `grilling` | 1 | 0 | 1 |
-| Matt Pocock | `implement` | 12 | 6 | 18 |
-| Matt Pocock | `pr` | 12 | 7 | 19 |
+| Matt Pocock | `implement` | 12 | 7 | 19 |
+| Matt Pocock | `pr` | 12 | 8 | 20 |
 | Matt Pocock | `setup-matt-pocock-skills` | 1 | 0 | 1 |
 | Matt Pocock | `tdd` | 4 | 2 | 6 |
 | Matt Pocock | `to-spec` | 2 | 0 | 2 |
@@ -18,7 +18,7 @@
 | Matt Pocock | `writing-for-agents` | 5 | 0 | 5 |
 | pstack | `principle-prove-it-works` | 11 | 1 | 12 |
 | pstack | `principle-sequence-verifiable-units` | 4 | 0 | 4 |
-| **Total** | | **78** | **18** | **96** |
+| **Total** | | **78** | **20** | **98** |
 
 Responsável é a pessoa que conduziu a tarefa, inclusive com auxílio do agente. Os registros 001–035 foram atribuídos retrospectivamente a Rafael com base nas tarefas desta conversa e nos commits de RLrafael01. Os totais refletem apenas os usos documentados.
 
@@ -138,3 +138,5 @@ Inclua o registro e os totais atualizados no PR da tarefa. Se dois PRs usarem o 
 | 094 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR de arquivos e guia. | concluído | PR #33 com roteiro, link da prévia e fechamento de #21 e #22 no merge. |
 | 095 | 05/11/2026 | Enzo | Matt Pocock | `implement` | Implementar cancela e exemplos editáveis (#23). | concluído | Cancela com HC-SR04, botão, LED e servo, sketch editável e estado salvo. 110 testes locais aprovados e build aprovado. CI 42143541418 compilou original e variante, testou distância, botão, ângulo e sinal solto. |
 | 096 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR da cancela. | concluído | PR #34 com roteiro em docs/GATE-EXAMPLE.md, prévia publicada e fechamento da #23 no merge. |
+| 097 | 05/11/2026 | Enzo | Matt Pocock | `implement` | Validar e preparar a entrega V1 (#24). | em andamento | Base 3077c98. Matriz, verificações e roteiro de apresentação. |
+| 098 | 05/11/2026 | Enzo | Matt Pocock | `pr` | Preparar PR da validação final. | em andamento | PR dedicado e registro consolidado. |
