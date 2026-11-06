@@ -1085,3 +1085,24 @@ button.board-resize-handle:focus-visible {
 .resizing-board .board-resize-handle {
   cursor: ew-resize;
 }
+
+.project-controls {
+  min-width: 0;
+  margin: 0 0 12px;
+  padding: 8px;
+  border: 1px solid #394849;
+  border-radius: 8px;
+}
+.project-controls input {
+  width: 100%;
+}
+.project-controls div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+.project-controls p {
+  margin: 4px 0 0;
+  font-size: 11px;
+}

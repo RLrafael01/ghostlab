@@ -91,6 +91,19 @@ export function createFirmwareSession({
       inputSignature = signature;
       runner?.setInputs?.(inputs);
     },
+    reset(source) {
+      halt();
+      artifact = executedSource = null;
+      state.source = source;
+      state.revision++;
+      state.executedRevision = null;
+      state.origin = null;
+      state.diagnostics = [];
+      state.phase = "idle";
+      state.message = "Projeto pronto para compilar.";
+      state.serial = { text: "", dropped: 0, droppedBytes: 0, baud: null };
+      emit();
+    },
     clearSerial() {
       state.serial = { ...state.serial, text: "", dropped: 0, droppedBytes: 0 };
       emit();

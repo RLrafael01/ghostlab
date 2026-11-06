@@ -1,6 +1,6 @@
 # 11 — Simular dano no LED e permitir substituição ou restauração
 
-Status: open
+Status: done
 Priority: P2
 Milestone: V1 completa — componentes, projetos e falhas
 Blocked by: v1-completion/10 (GitHub #18)
@@ -34,3 +34,5 @@ Plano e regras de entrega: [README](../README.md). Relações de bloqueio també
 - 05/11/2026: publicado a pedido de Rafael; prioridade imediata para execução real, Blink e dimmer/PWM. Critérios ainda não implementados por esta tarefa de planejamento.
 
 - 05/11/2026 — auditoria da main `0db0ca1`: **Pendente**. Ligação sem resistor mantém o LED apagado, sem dano persistente. Faltam estado de dano, substituição/restauração e testes que distingam reinício de recuperação. Evidência: `src/electrical-simulation.js`, `tests/electrical-simulation.test.js`. Issue permanece aberta; PR #27 fechado sem merge não conta como entrega.
+
+- 05/11/2026 (Enzo): implementação no PR #32. 105 testes locais aprovados e build aprovado. Fechamento no GitHub após merge.

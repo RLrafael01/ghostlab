@@ -1,6 +1,7 @@
 import { createCircuitSimulation } from "./electrical-simulation.js";
 
 const reasons = {
+  damaged: "dano virtual · substitua o LED ou restaure a simulação",
   short: "fonte em falha · corrija e reinicie",
   closed: "circuito fechado com resistor",
   open: "circuito aberto ou sem alimentação suportada",
@@ -22,6 +23,7 @@ export function createElectricalView({
   wires,
   status,
   getFirmware = () => null,
+  onRestore = () => {},
   onInputs = () => {},
   onState = () => {},
 }) {
@@ -33,7 +35,15 @@ export function createElectricalView({
   const restart = status.ownerDocument.createElement("button");
   restart.type = "button";
   restart.textContent = "Reiniciar fonte virtual";
-  details.append(summary, explanation, restart);
+  const restore = status.ownerDocument.createElement("button");
+  restore.type = "button";
+  restore.textContent = "Restaurar simulação";
+  details.append(summary, explanation, restart, restore);
+  restore.onclick = () => {
+    view.reset();
+    onRestore();
+    view.update();
+  };
   restart.onclick = () => {
     simulation.restart();
     previous = "";
@@ -54,6 +64,10 @@ export function createElectricalView({
     status.append(row);
   }
   const view = {
+    reset() {
+      simulation.restore();
+      previous = "";
+    },
     restart() {
       simulation.restart();
       previous = "";
@@ -91,7 +105,10 @@ export function createElectricalView({
           : 0;
       }
       const disconnected = result.leds.filter(
-        ({ reason }) => reason === "unpowered" || reason === "signal-open",
+        ({ reason }) =>
+          reason === "unpowered" ||
+          reason === "signal-open" ||
+          reason === "damaged",
       );
       details.hidden = result.faults.length === 0 && disconnected.length === 0;
       restart.hidden = result.faults.length === 0;
@@ -103,9 +120,11 @@ export function createElectricalView({
         )
         .concat(
           disconnected.map(({ id, reason }) =>
-            reason === "unpowered"
-              ? `LED #${id}: o cátodo está sem retorno. Reconecte o caminho até GND.`
-              : `LED #${id}: o ânodo não recebe 5 V nem sinal de uma saída GPIO. Confira o fio e o pino configurado no sketch.`,
+            reason === "damaged"
+              ? `LED #${id}: a ligação energizada sem resistor provocou dano virtual. Corrija o circuito e substitua o LED ou restaure. A regra é educativa e não calcula corrente.`
+              : reason === "unpowered"
+                ? `LED #${id}: o cátodo está sem retorno. Reconecte o caminho até GND.`
+                : `LED #${id}: o ânodo não recebe 5 V nem sinal de uma saída GPIO. Confira o fio e o pino configurado no sketch.`,
           ),
         )
         .join(" ");
