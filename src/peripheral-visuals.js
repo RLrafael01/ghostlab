@@ -92,6 +92,7 @@ export function preparePeripheralVisual(item) {
     function updateGate() {
       if (!item.gate) return;
       if (!gate) {
+        angle = 0;
         gate = new T.Group();
         gate.name = "gate-arm";
         gate.position.copy(pivot.position);
@@ -108,12 +109,12 @@ export function preparePeripheralVisual(item) {
         }
         item.group.add(gate);
       }
-      gate.rotation.z = T.MathUtils.degToRad(angle);
     }
     pivot.rotation.y = Math.PI / 2;
     pivot.updateWorldMatrix(true, true);
     return {
       update(deltaSeconds, state) {
+        updateGate();
         if (state?.active && Number.isFinite(state.angle)) {
           const target = T.MathUtils.clamp(state.angle, 0, 180);
           const step = Math.max(0, deltaSeconds) * 300;
@@ -121,7 +122,7 @@ export function preparePeripheralVisual(item) {
           pivot.rotation.y = (angle * Math.PI) / 180;
           pivot.updateWorldMatrix(true, true);
         }
-        updateGate();
+        if (gate) gate.rotation.z = T.MathUtils.degToRad(angle);
       },
     };
   }
