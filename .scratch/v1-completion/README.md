@@ -1,6 +1,6 @@
 # GhostLab — implementação restante até a V1
 
-Status: in-progress
+Status: done
 GitHub: https://github.com/RLrafael01/ghostlab/issues/8
 
 Atualizado em 05/11/2026 a pedido de Rafael. [Acompanhar plano no GitHub](https://github.com/RLrafael01/ghostlab/issues/8).
@@ -9,13 +9,11 @@ A [especificação aprovada](../initial-lab/spec.md) continua sendo a fonte do e
 
 ## Estado verificado
 
-Main `8a6aa3d`: PRs #30–#35 integrados. Issues #9–#23 encerradas; #24 e #8 permanecem abertas pela validação final. O PR #35 corrigiu sessão serial, remontagem, cancelamento e objeto do sensor. Os resultados antigos abaixo não são o estado vigente.
+V1 validada na main `ab52b0a`, após aprovação do Enzo e merge/publicação do PR #36. Issues #2, #3 e #9–#24 concluídas; acompanhamento #8 encerrado. Compilação HTTPS de sketch editado, diagnóstico e recuperação comprovados na main. [Matriz e encerramento](../../docs/V1-FINAL-VALIDATION.md#encerramento-pós-merge--05112026).
 
-Pendências atuais: renovar a configuração HTTPS expirada pelo fluxo de PR, testar código editado na prévia e em outro computador, concluir os ensaios manuais e validar a publicação da main após o merge. [Matriz e evidências](../../docs/V1-FINAL-VALIDATION.md).
+A compilação remota permanece um serviço de demonstração dependente do computador e túnel ativos. O escopo não inclui hospedagem permanente nem simulação analógica geral.
 
-## Ordem recomendada
-
-**Entrega pronta para revisão/merge: #12–#16 — botão, serial, potenciômetro, compilação pública e servo.** Piloto, Blink e PWM (#9–#11) já estão integrados. Após integrar o PR #30, avançar com sensor #17, falhas #18 e projetos #20; depois, cancela, recuperação, compartilhamento e entrega final. Editar e compilar pelo link exige o serviço de demonstração ativo; hospedagem estática sozinha não fornece compilação.
+## Ordem original de implementação — histórico
 
 | Frente restante | Issues | Resultado para considerar pronto |
 | --- | --- | --- |
@@ -26,7 +24,7 @@ Pendências atuais: renovar a configuração HTTPS expirada pelo fluxo de PR, te
 | Projetos e montagem física | #20, #21, #22 | Salvar/reabrir, compartilhar arquivo e exportar sketch/lista de ligações. |
 | Entrega final | #24 | Ensaio integrado, evidências, documentação, histórico de skills e versão estável da main. |
 
-A tabela abaixo preserva a ordem e as dependências originais. As entregas 01–15 foram integradas. A entrega 16 concentra o ensaio final; os pré-requisitos técnicos não são bloqueios abertos.
+A tabela abaixo preserva a ordem e as dependências originais. As entregas 01–15 foram integradas. A entrega 16 foi encerrada após a validação publicada.
 
 | Ordem | Prioridade | Entrega e espelho local | GitHub | Pré-requisitos (inclui concluídos) |
 | --- | --- | --- | --- | --- |

@@ -112,3 +112,21 @@ Os arquivos de falha usados no ensaio foram derivados do projeto exportado, pres
 A recuperação está na prévia #36, não na main até merge. Após revisão de outra pessoa e merge aprovado, conferir `main/revision.txt` e a URL em `main/compiler-config.json`, repetir compilação do sketch editado, erro e recuperação na main. Registrar o SHA final antes de encerrar #24 e #8. Os ensaios manuais históricos da matriz continuam identificados como tais; não afirmar uma nova execução manual de cada gesto a partir de testes automatizados.
 
 O túnel é temporário: manter o Mac, o compilador e o processo cloudflared ativos durante a apresentação. Não contratar hospedagem nem prometer permanência deste endereço. Se reiniciar o túnel, seguir o procedimento de recuperação e publicar a nova configuração por PR.
+
+
+## Encerramento pós-merge — 05/11/2026
+
+Revisão validada da main: `ab52b0a84be68f3efcc000a4f2ffc50e18105aec`, merge do PR #36 aprovado por `enzokhalil` na revisão `d1db958`. [CI e publicação](https://github.com/RLrafael01/ghostlab/actions/runs/42152432612) aprovados. `main/revision.txt` e `main/compiler-config.json` conferidos após o deploy: revisão correta e novo endpoint HTTPS.
+
+Ensaio direto na main publicada, Chromium integrado no macOS:
+
+- Montagem da cancela e compilação remota do sketch editado com `LIMIAR_CM=60`, `ABERTA=120`: a 50 cm, LED 100%, eco 50 cm e alvo 120°. Painel identificou execução compilada no serviço de demonstração.
+- C++ inválido produziu diagnóstico e manteve o texto. Após correção, nova compilação executou a revisão 6, sessão 2, com LED aceso e servo a 120°.
+- Alterar distância para 75 cm apagou LED, mostrou eco 75 cm e alvo 0°.
+- Entrada/saída de tela cheia preservou o controle do sensor. Parar mostrou GPIO sem sinal ativo e LED apagado. Nenhum erro de console capturado.
+
+A evidência final soma este ensaio pós-merge à matriz, aos 137 testes locais da mesma implementação, ao CI do merge, aos ensaios anteriores de projetos/falhas e ao teste no Chrome do Enzo confirmado pelo usuário. Não implica uma nova execução manual de cada gesto da matriz nesta rodada. O sistema operacional do teste externo não foi informado.
+
+Com a publicação e a compilação da main verificadas, as pendências pós-merge foram satisfeitas. Issues #24 e #8 encerradas com esta revisão como referência. As seções anteriores preservam o histórico das pendências e seus resultados.
+
+Limitação operacional mantida: compilação remota exige Mac, compilador e túnel ativos. Suspensão ou reinício do túnel pode exigir nova configuração por PR. Exemplos pré-compilados continuam explicitamente identificados e não executam código editado.
