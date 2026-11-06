@@ -102,3 +102,45 @@ test("bloqueio do Worker informa erro recuperável ao executar e reiniciar", asy
   assert.equal(session.snapshot().phase, "error");
   assert.match(session.snapshot().message, /Worker indisponível/);
 });
+
+test("remontagem, parada, reinício e recompilação preservam o contador e isolam o serial", async () => {
+  const output = [];
+  const session = createFirmwareSession({
+    compile: async () => artifact,
+    loadExample: async () => ({ ...artifact, origin: "example" }),
+    createRunner(_hex, emit) {
+      output.push((text) => emit({ serial: { text, baud: 9600 } }));
+      return { terminate() {} };
+    },
+  });
+  const serial = () => session.snapshot().serial;
+  session.reset("primeira montagem");
+  await session.execute();
+  assert.equal(serial().session, 1);
+  output[0]("primeira");
+  session.stop();
+  output[0]("atrasada");
+  assert.equal(serial().text, "primeira");
+  session.restart();
+  assert.equal(serial().session, 2);
+  assert.equal(serial().text, "");
+  output[0]("atrasada");
+  output[1]("segunda");
+  session.clearSerial();
+  assert.equal(serial().session, 2);
+  assert.equal(serial().text, "");
+  output[1]("continua");
+  assert.equal(serial().text, "continua");
+  session.edit("editado");
+  await session.execute();
+  assert.equal(serial().session, 3);
+  assert.equal(serial().text, "");
+  session.reset("exemplo original");
+  assert.equal(serial().session, 3);
+  await session.execute({ example: true });
+  assert.equal(serial().session, 4);
+  assert.equal(session.snapshot().origin, "example");
+  output[2]("anterior");
+  output[3]("exemplo");
+  assert.equal(serial().text, "exemplo");
+});

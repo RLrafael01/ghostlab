@@ -102,7 +102,13 @@ export function createFirmwareSession({
       state.diagnostics = [];
       state.phase = "idle";
       state.message = "Projeto pronto para compilar.";
-      state.serial = { text: "", dropped: 0, droppedBytes: 0, baud: null };
+      state.serial = {
+        text: "",
+        dropped: 0,
+        droppedBytes: 0,
+        baud: null,
+        session: state.serial.session,
+      };
       emit();
     },
     clearSerial() {

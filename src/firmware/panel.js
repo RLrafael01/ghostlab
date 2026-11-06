@@ -32,6 +32,7 @@ export function setupFirmwarePanel({
     errors = container.querySelector("details");
   let target,
     assemble,
+    cancelAssembly,
     confirmAssembly = false,
     assembling = false;
   const serial = createSerialMonitor(container, () => session.clearSerial());
@@ -90,17 +91,29 @@ export function setupFirmwarePanel({
     assemble = document.createElement("button");
     assemble.type = "button";
     assemble.textContent = "Montar circuito do exemplo";
-    container.querySelector(".firmware-actions").append(assemble);
+    cancelAssembly = document.createElement("button");
+    cancelAssembly.type = "button";
+    cancelAssembly.textContent = "Cancelar montagem";
+    cancelAssembly.hidden = true;
+    cancelAssembly.onclick = () => {
+      resetAssembly();
+      message.textContent = "Montagem cancelada.";
+    };
+    container
+      .querySelector(".firmware-actions")
+      .append(assemble, cancelAssembly);
     assemble.addEventListener("click", async () => {
       if (!examples[select.value]) return;
       if (!confirmAssembly) {
         confirmAssembly = true;
+        cancelAssembly.hidden = false;
         assemble.textContent = "Confirmar: substituir montagem";
         message.textContent =
-          "A montagem atual será substituída. Clique novamente no botão para confirmar.";
+          "A montagem e o sketch atuais serão substituídos. Para guardar o trabalho, cancele e salve o projeto.";
         return;
       }
       assembling = true;
+      cancelAssembly.hidden = true;
       assemble.disabled = true;
       run.disabled = true;
       runExample.disabled = true;
@@ -132,6 +145,7 @@ export function setupFirmwarePanel({
   function resetAssembly() {
     confirmAssembly = false;
     if (assemble) {
+      cancelAssembly.hidden = true;
       assemble.textContent = "Montar circuito do exemplo";
       assemble.disabled = assembling || select.value === "custom";
     }

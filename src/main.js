@@ -807,7 +807,6 @@ function clearBench() {
 }
 async function assembleExample(id) {
   await initialAssembly;
-  if (!confirmProjectReplacement()) return false;
   assembling = true;
   firmwareSession.reset(document.querySelector("#code-panel textarea").value);
   electricalView.reset();

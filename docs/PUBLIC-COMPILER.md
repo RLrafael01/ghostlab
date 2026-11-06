@@ -79,3 +79,12 @@ GHOSTLAB_TEST_SANDBOX=1 node --test tests/public-compiler-isolation.test.js
 O segundo comando exige o macOS e a toolchain acima. Executa compilação real, inclui arquivos de teste fora do sandbox para confirmar bloqueio sem vazamento, verifica rede negada, toolchain somente leitura, escrita no job, limite de arquivo, timeout/recuperação e resposta HTTP com hash da edição. Sem a variável, essa suíte fica explicitamente ignorada: os testes HTTP portáveis não provam isolamento no Linux.
 
 Na apresentação, teste também pelo link publicado em uma sessão limpa: editar o delay do Blink, compilar e observar o novo ritmo; provocar erro de C++; verificar botão, potenciômetro, monitor serial e servo; interromper o serviço, confirmar erro recuperável e retomar. Os testes locais não substituem essa verificação do endereço HTTPS e do deploy atual.
+
+## Ensaio de recuperação pelo link (Rafael)
+
+1. No Mac hospedeiro compatível, inicie o serviço isolado e o túnel pelos comandos acima. Mantenha os dois processos e a máquina ativos. Se a URL mudou, atualize compiler-config.json no PR, aguarde Pages e recarregue a prévia.
+2. Abra a prévia em outra máquina e confira revision.txt. Monte a cancela. A 50 cm, altere LIMIAR_CM para 60 e ABERTA para 120. Clique **Compilar e executar**. Registre a indicação de compilação remota, LED aceso e ângulo 120 no serial. Isso verifica o sketch alterado, sem usar o botão pré-compilado.
+3. Introduza um erro C++, compile e confirme que o diagnóstico aparece, a edição é preservada e não há execução nova. Corrija o erro e compile novamente para verificar recuperação.
+4. Registre data, navegador, SO, revisão e resultados em V1-FINAL-VALIDATION.md. Se o endpoint não resolver, reinicie o túnel e atualize a URL. Uma prévia estática ou um HEX pré-compilado não demonstra compilação remota.
+
+Em 05/11/2026 o hostname configurado na prévia do PR #35 falhou na resolução DNS (getaddrinfo 11001). O serviço atual depende de um hospedeiro macOS compatível e do endereço temporário do túnel. O Windows usado neste ensaio não hospeda esse serviço isolado.

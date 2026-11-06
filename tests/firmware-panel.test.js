@@ -142,3 +142,28 @@ test("escolher cancela e cancelar a montagem preserva o sketch em edição", asy
   assert.equal(ui.editor.value, original);
   assert.equal(ui.session.snapshot().source, original);
 });
+
+test("cancelar a confirmação de montagem preserva o sketch e exige nova confirmação", async (t) => {
+  let mounts = 0;
+  const ui = panel(t, {
+    onAssemble: async () => {
+      mounts++;
+    },
+  });
+  ui.input("// trabalho em edição");
+  ui.choose("gate");
+  const button = (text) =>
+    [...ui.container.querySelectorAll("button")].find(
+      (b) => b.textContent === text,
+    );
+  button("Montar circuito do exemplo").click();
+  button("Cancelar montagem").click();
+  assert.equal(mounts, 0);
+  assert.equal(ui.editor.value, "// trabalho em edição");
+  button("Montar circuito do exemplo").click();
+  assert.equal(mounts, 0);
+  button("Confirmar: substituir montagem").click();
+  await Promise.resolve();
+  assert.equal(mounts, 1);
+  assert.equal(ui.editor.value, examples.gate.source);
+});
